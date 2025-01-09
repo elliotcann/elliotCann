@@ -5,10 +5,11 @@
 	<head>
 
 		<meta charset="utf-8">
-
 		<title>Table of GeoNames API Examples</title>
 		<meta name="description" content="Table of GeoNames API Examples">
 		<meta name="author" content="Elliot Cann">
+
+        <link rel="stylesheet" type="text/css" href="libs/css/index.css">
 
 	</head>
 
@@ -25,7 +26,7 @@
 
             <tbody>
                 <tr >
-                    <td>Ocean</td>
+                    <td>1. Ocean</td>
                     <td>
                         <label for="lat">Latitude (-90 to 90 degrees)</label>
                         <input type="number" id="lat" name="lat" min="-90" max="90">
@@ -36,7 +37,7 @@
                     <td><button id="oceanSubmit">Submit</button></td>
                 </tr>
                 <tr>
-                    <td>Earthquakes</td>
+                    <td>2. Earthquakes</td>
                     <td>
                         <label for="North"> North Latitude (0 to 90 degrees)</label>
                         <input type="number" id="northEarthquakes" name="North" min="0" max="90">
@@ -53,8 +54,8 @@
                     <td><button id="earthquakeSubmit">Submit</button></td>
                 </tr>
                 <tr>
-                    <td>Weather</td>
-                    <td>
+                    <td>3. Weather</td>
+                    <td class="apiDescription">
                         <label for="North"> North Latitude (0 to 90 degrees)</label>
                         <input type="number" id="northWeather" name="North" min="0" max="90">
                         <br>
@@ -72,7 +73,7 @@
             </tbody>
 
             <tfoot>
-                <div class="divResults">
+                <tr class="divResults">
                     <div id="oceanResults">
                         
                     </div>
@@ -82,8 +83,8 @@
                     <div id="weatherResult">
         
                     </div>
-                </div>
-        </tfoot>
+                </tr>
+            </tfoot>
 
         </table>
 

@@ -1,0 +1,28 @@
+/* CSS styling of html.index */
+
+/* Text styling for all text */
+* {
+    text-align: center;
+    font-family: sans-serif;
+}
+
+/* Table styling */
+table, th, td, tr {
+    border: 1px solid;
+    border-collapse: collapse;
+    padding: 2em;
+}
+
+/* Spacing between inputs in API description */
+input {
+    margin: 0.5em;
+}
+
+/* Button styling */
+button {
+    background-color: cornflowerblue;
+    color: white;
+    border: none;
+    padding: 0.5em;
+    border-radius: 5px;
+}
