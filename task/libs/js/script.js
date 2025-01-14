@@ -47,9 +47,9 @@ $('#eqSubmit').click(function() {
             console.log(JSON.stringify(result));
 
             if (result.status.name == "ok") {
-                $('#eqDateTime').html(result['data'][0]['datetime']);
-                $('#eqSrc').html(result['data'][0]['src']);
-                $('#eqMagnitude').html(result['data'][0]['magnitude']);
+                $('#eqDateTime').html(result['data']['earthquakes'][0]['datetime']);
+                $('#eqSrc').html(result['data']['earthquakes'][0]['src']);
+                $('#eqMagnitude').html(result['data']['earthquakes'][0]['magnitude']);
             }
         
         },
