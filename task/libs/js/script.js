@@ -2,7 +2,7 @@
 $('#oceanSubmit').click(function() {
 
     $.ajax({
-        url: "php/getOceanInfo.php",
+        url: "libs/php/getOceanInfo.php",
         type: 'POST',
         dataType: 'json',
         data: {
@@ -14,13 +14,13 @@ $('#oceanSubmit').click(function() {
             console.log(JSON.stringify(result));
 
             if (result.status.name == "ok") {
-                $('#oceanName').html(result['ocean']['name']);
+                $('#oceanName').html(result['data']['name']);
+                $('#oceanId').html(result['data']['geonameId']);
             }
         
         },
         error: function(jqXHR, textStatus, errorThrown) {
-            // your error code
-            alert( "Sorry, there was a problem!" );
+            alert( "Coordinates are over land!" );
             console.log( "Error: " + errorThrown );
             console.log( "Status: " + textStatus );
             console.dir( jqXHR );
@@ -28,3 +28,5 @@ $('#oceanSubmit').click(function() {
     }); 
 
 });
+
+/* JS script for Earthquakes */
