@@ -62,3 +62,35 @@ $('#eqSubmit').click(function() {
     }); 
 
 });
+
+/* JS script for Weather */
+$('#weatherSubmit').click(function() {
+
+    $.ajax({
+        url: "libs/php/getWeatherInfo.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            north: $('#weatherNorth').val(),
+            south: $('#weatherSouth').val(),
+            east: $('#weatherEast').val(),
+            west: $('#weatherWest').val()
+        },
+        success: function(result) {
+
+            console.log(JSON.stringify(result));
+
+            if (result.status.name == "ok") {
+
+            }
+        
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            alert( "No weather report here!" );
+            console.log( "Error: " + errorThrown );
+            console.log( "Status: " + textStatus );
+            console.dir( jqXHR );
+        }
+    }); 
+
+});
