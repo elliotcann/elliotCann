@@ -81,7 +81,12 @@ $('#weatherSubmit').click(function() {
             console.log(JSON.stringify(result));
 
             if (result.status.name == "ok") {
-
+                $('#weatherDateTime').html(result['data']['weatherObservations'][0]['datetime']);
+                $('#weatherTemperature').html(result['data']['weatherObservations'][0]['temperature']);
+                $('#weatherHumidity').html(result['data']['weatherObservations'][0]['humidity']);
+                $('#weatherClouds').html(result['data']['weatherObservations'][0]['clouds']);
+                $('#weatherWindDirection').html(result['data']['weatherObservations'][0]['windDirection']);
+                $('#weatherWindSpeed').html(result['data']['weatherObservations'][0]['windSpeed']);
             }
         
         },
