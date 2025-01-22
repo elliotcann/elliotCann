@@ -23,7 +23,11 @@ var basemaps = {
 
 // buttons
 
-var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
+var infoBtn = L.easyButton('<img src="libs/assets/img/info-lg.svg" class="img-responsive">', function (btn, map) {
+  $("#infoModal").modal("show");
+});
+
+var weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class="img-responsive">', function (btn, map) {
   $("#exampleModal").modal("show");
 });
 
@@ -45,5 +49,7 @@ $(document).ready(function () {
   layerControl = L.control.layers(basemaps).addTo(map);
 
   infoBtn.addTo(map);
+
+  weatherBtn.addTo(map);
 
 })

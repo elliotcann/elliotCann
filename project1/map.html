@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="libs/css/marker-cluster.default.css">
     <link rel="stylesheet" href="libs/css/marker-cluster.css">
     <link rel="stylesheet" href="libs/css/extra-markers.min.css">
-    <!-- Need to add icons stylesheet in here and link to html elements! -->
     <link rel="stylesheet" href="libs/css/bootstrap.min.css">
     <link rel="stylesheet" href="libs/css/easy-buttons.css">
     <link rel="stylesheet" href="libs/css/map.css">
@@ -31,11 +30,11 @@
 
     <!-- example modal layout -->
 
-    <div id="exampleModal" class="modal" data-bs-backdrop="false" tabindex="-1">
+    <div id="infoModal" class="modal" data-bs-backdrop="false" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
         <div class="modal-header bg-success bg-gradient text-white">
-            <h5 class="modal-title">Overview</h5>
+            <h5 class="modal-title">Country Name</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -43,11 +42,11 @@
             <tr>
 
                 <td class="text-center">
-                <i class="fa-solid fa-street-view fa-xl text-success"></i>
+                <img src="libs/assets/img/geo-alt.svg">
                 </td>
 
                 <td>
-                Attribute
+                Country Code
                 </td>
 
                 <td class="text-end">
@@ -58,11 +57,11 @@
             <tr>
 
                 <td class="text-center">
-                <i class="fa-solid fa-heart fa-xl text-success"></i>
+                <img src="libs/assets/img/flag.svg">
                 </td>
 
                 <td>
-                Attribute
+                Flag
                 </td>
 
                 <td class="text-end">
@@ -73,11 +72,11 @@
             <tr>
 
                 <td class="text-center">
-                <i class="fa-solid fa-car fa-xl text-success"></i>
+                <img src="libs/assets/img/people.svg">
                 </td>
 
                 <td>
-                Attribute
+                Population
                 </td>
 
                 <td class="text-end">
@@ -88,11 +87,11 @@
             <tr>
 
                 <td class="text-center">
-                <i class="fa-solid fa-book fa-xl text-success"></i>
+                <img src="libs/assets/img/arrows-angle-expand.svg">
                 </td>
 
                 <td>
-                Attribute
+                Area
                 </td>
 
                 <td class="text-end">
@@ -103,11 +102,11 @@
             <tr>
 
                 <td class="text-center">
-                <i class="fa-solid fa-bath fa-xl text-success"></i>
+                <img src="libs/assets/img/translate.svg">
                 </td>
 
                 <td>
-                Attribute
+                Native Languages
                 </td>
 
                 <td class="text-end">
@@ -115,14 +114,15 @@
                 </td>
 
             </tr>
+
             <tr>
 
                 <td class="text-center">
-                <i class="fa-solid fa-bell fa-xl text-success"></i>
+                <img src="libs/assets/img/cash-coin.svg">
                 </td>
 
                 <td>
-                Attribute
+                Currency
                 </td>
 
                 <td class="text-end">
@@ -130,6 +130,7 @@
                 </td>
 
             </tr>
+
             <tr>
 
                 <td class="text-center">
