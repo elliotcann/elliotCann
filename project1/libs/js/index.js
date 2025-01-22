@@ -31,6 +31,31 @@ var weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class="i
   $("#exampleModal").modal("show");
 });
 
+// input JSON response from getCountries.php
+
+async function populateDropdown() {
+  try {
+      // Make an AJAX call to the PHP script
+      const response = await fetch('libs/php/getCountries.php');
+      if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const countries = await response.json();
+      const dropdown = document.getElementById('countrySelect');
+
+      // Populate the dropdown
+      countries.forEach(country => {
+          const option = document.createElement('option');
+          option.value = country.iso2;
+          option.textContent = `${country.name} (${country.iso2})`;
+          dropdown.appendChild(option);
+      });
+  } catch (error) {
+      console.error('Failed to populate dropdown:', error);
+  }
+};
+
 // ---------------------------------------------------------
 // EVENT HANDLERS
 // ---------------------------------------------------------
@@ -52,4 +77,8 @@ $(document).ready(function () {
 
   weatherBtn.addTo(map);
 
-})
+  // Call the populateDropdown function to populate the dropdown
+  populateDropdown();
+
+});
+
