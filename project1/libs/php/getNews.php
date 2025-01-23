@@ -9,7 +9,7 @@ if (!$countryCode) {
 }
 
 $apiKey = 'pub_6879606accb66b25869ebd1ffdf9126bb991c'; // Replace with your Newsdata.io key
-$newsApiUrl = "https://newsdata.io/api/1/news?country={$countryCode}&category=top&image=1&removeduplicate=1&apikey={$apiKey}";
+$newsApiUrl = "https://newsdata.io/api/1/latest?country={$countryCode}&category=top&language=en&image=1&removeduplicate=1&apikey={$apiKey}";
 
 $response = file_get_contents($newsApiUrl);
 if ($response === FALSE) {

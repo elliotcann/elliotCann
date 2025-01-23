@@ -525,7 +525,7 @@ function fetchNewsArticles(countryCode) {
       } else {
         const articles = data.results;
         for (let i = 0; i < articles.length; i++) {
-          if (i >= 2) break; // Limit to 2 articles for this example
+          if (i >= 10) break; // Limit to 2 articles for this example
           $(`#newsTitle${i + 1}`).text(articles[i].title);
           $(`#newsImage${i + 1}`).attr('src', articles[i].image_url).attr('alt', articles[i].title);
           $(`#newsDescription${i + 1}`).text(articles[i].description);

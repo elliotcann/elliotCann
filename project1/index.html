@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <title>Gazeteer</title>
     <!-- StyleSheet Libraries -->
@@ -14,14 +13,14 @@
     <link rel="stylesheet" href="libs/css/extra-markers.min.css">
     <link rel="stylesheet" href="libs/css/bootstrap.min.css">
     <link rel="stylesheet" href="libs/css/easy-buttons.css">
-    <!-- Customer StyleSheet -->
+    <!-- Custom StyleSheet -->
     <link rel="stylesheet" href="libs/css/styles.css">
 
 </head>
 
 <body>
 
-    <!-- loading indicator -->
+    <!-- Loading Indicator -->
     <div id="loadingIndicator">
         <img src="libs/assets/img/loading.svg" alt="Loading...">
     </div>
@@ -36,7 +35,7 @@
     <!-- Map Container -->
     <div id="map"></div>
 
-    <!-- infoModal -->
+    <!-- Info Modal -->
     <div id="infoModal" class="modal fade" data-bs-backdrop="true" tabindex="-1" data-mdb-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
@@ -104,7 +103,7 @@
 
     <!-- Weather Modal -->
     <div id="weatherModal" class="modal fade" data-bs-backdrop="true" tabindex="-1" data-mdb-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content shadow">
             <div class="modal-header bg-success bg-gradient text-white">
                 <h5 class="modal-title">Weather Forecast</h5>
@@ -133,7 +132,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="text-center">
+                            <tr class="text-center align-middle">
                                 <td id="dateDay1"></td>
                                 <td><img id="iconDay1" src="" alt="Day 1 Weather" class="weather-icon"></td>
                                 <td id="lowTempDay1"></td>
@@ -142,7 +141,7 @@
                                 <td id="windDay1"></td>
                                 <td id="descriptionDay1"></td>
                             </tr>
-                            <tr class="text-center">
+                            <tr class="text-center align-middle">
                                 <td id="dateDay2"></td>
                                 <td><img id="iconDay2" src="" alt="Day 2 Weather" class="weather-icon"></td>
                                 <td id="lowTempDay2"></td>
@@ -151,7 +150,7 @@
                                 <td id="windDay2"></td>
                                 <td id="descriptionDay2"></td>
                             </tr>
-                            <tr class="text-center">
+                            <tr class="text-center align-middle">
                                 <td id="dateDay3"></td>
                                 <td><img id="iconDay3" src="" alt="Day 3 Weather" class="weather-icon"></td>
                                 <td id="lowTempDay3"></td>
@@ -160,7 +159,7 @@
                                 <td id="windDay3"></td>
                                 <td id="descriptionDay3"></td>
                             </tr>
-                            <tr class="text-center">
+                            <tr class="text-center align-middle">
                                 <td id="dateDay4"></td>
                                 <td><img id="iconDay4" src="" alt="Day 4 Weather" class="weather-icon"></td>
                                 <td id="lowTempDay4"></td>
@@ -169,7 +168,7 @@
                                 <td id="windDay4"></td>
                                 <td id="descriptionDay4"></td>
                             </tr>
-                            <tr class="text-center">
+                            <tr class="text-center align-middle">
                                 <td id="dateDay5"></td>
                                 <td><img id="iconDay5" src="" alt="Day 5 Weather" class="weather-icon"></td>
                                 <td id="lowTempDay5"></td>
@@ -215,7 +214,7 @@
 
     <!-- Wikipedia Modal -->
     <div id="wikipediaModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="wikipediaModalLabel" aria-hidden="true" data-mdb-backdrop="static" data-bs-backdrop="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content shadow">
                 <div class="modal-header bg-success bg-gradient text-white">
                     <h5 class="modal-title" id="wikipediaModalLabel">Wikipedia Page</h5>
@@ -230,7 +229,7 @@
 
     <!-- News Modal -->
     <div id="newsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newsModalLabel" aria-hidden="true" data-mdb-backdrop="static" data-bs-backdrop="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content shadow">
                 <div class="modal-header bg-success bg-gradient text-white">
                     <h5 class="modal-title" id="newsModalLabel">Top News Articles</h5>
@@ -238,27 +237,71 @@
                 </div>
                 <div class="modal-body">
                     <div id="newsContent">
-                        <div class="news-article">
-                            <h5 id="newsTitle1"></h5>
-                            <img id="newsImage1" src="" alt="" style="width: 100%; height: auto;">
-                            <p id="newsDescription1"></p>
-                            <a id="newsLink1" href="" target="_blank">Read more</a>
-                            <hr>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle1" class="mb-2"></h5>
+                            <img id="newsImage1" src="" alt="" class="img-fluid mb-2 rounded">
+                            <p id="newsDescription1" class="mb-2"></p>
+                            <a id="newsLink1" href="" target="_blank" class="btn btn-primary">Read more</a>
                         </div>
-                        <div class="news-article">
-                            <h5 id="newsTitle2"></h5>
-                            <img id="newsImage2" src="" alt="" style="width: 100%; height: auto;">
-                            <p id="newsDescription2"></p>
-                            <a id="newsLink2" href="" target="_blank">Read more</a>
-                            <hr>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle2" class="mb-2"></h5>
+                            <img id="newsImage2" src="" alt="" class="img-fluid mb-2 rounded">
+                            <p id="newsDescription2" class="mb-2"></p>
+                            <a id="newsLink2" href="" target="_blank" class="btn btn-primary">Read more</a>
                         </div>
-                        <!-- Add more news-article divs as needed -->
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle3" class="mb-2"></h5>
+                            <img id="newsImage3" src="" alt="" class="img-fluid mb-2 rounded">
+                            <p id="newsDescription3" class="mb-2"></p>
+                            <a id="newsLink3" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle4" class="mb-2"></h5>
+                            <img id="newsImage4" src="" alt="" class="img-fluid mb-2 rounded">
+                            <p id="newsDescription4" class="mb-2"></p>
+                            <a id="newsLink4" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle5" class="mb-2"></h5>
+                            <img id="newsImage5" src="" alt="" class="img-fluid mb-2 rounded">
+                            <p id="newsDescription5" class="mb-2"></p>
+                            <a id="newsLink5" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle6" class="mb-2"></h5>
+                            <img id="newsImage6" src="" alt="" class="img-fluid mb-2 rounded">
+                            <p id="newsDescription6" class="mb-2"></p>
+                            <a id="newsLink6" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle7" class="mb-2"></h5>
+                            <img id="newsImage7" src="" alt="" class="img-fluid mb-2 rounded">
+                            <p id="newsDescription7" class="mb-2"></p>
+                            <a id="newsLink7" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle8" class="mb-2"></h5>
+                            <img id="newsImage8" src="" alt="" class="img-fluid mb-2 rounded">
+                            <p id="newsDescription8" class="mb-2"></p>
+                            <a id="newsLink8" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle9" class="mb-2"></h5>
+                            <img id="newsImage9" src="" alt="" class="img-fluid mb-2 rounded">
+                            <p id="newsDescription9" class="mb-2"></p>
+                            <a id="newsLink9" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle10" class="mb-2"></h5>
+                            <img id="newsImage10" src="" alt="" class="img-fluid mb-2 rounded">
+                            <p id="newsDescription10" class="mb-2"></p>
+                            <a id="newsLink10" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Libraries -->
     <script src="libs/js/libraries/jquery.js"></script>
     <script src="libs/js/libraries/leaflet.min.js"></script>
