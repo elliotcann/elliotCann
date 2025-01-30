@@ -32,28 +32,26 @@ var weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class="i
 });
 
 // input JSON response from getCountries.php
-
-async function populateDropdown() {
-  try {
-      // Make an AJAX call to the PHP script
-      const response = await fetch('libs/php/getCountries.php');
-      if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const countries = await response.json();
+function populateDropdown() {
+  $.ajax({
+    url: 'libs/php/getCountries.php',
+    method: 'GET',
+    dataType: 'json',
+    success: function (countries) {
       const $dropdown = $('#countrySelect');
 
       // Populate the dropdown
       countries.forEach(country => {
-          const $option = $('<option></option>')
-              .val(country.iso2)
-              .text(`${country.name} (${country.iso2})`);
-          $dropdown.append($option);
+        const $option = $('<option></option>')
+          .val(country.iso2)
+          .text(`${country.name} (${country.iso2})`);
+        $dropdown.append($option);
       });
-  } catch (error) {
-      console.error('Failed to populate dropdown:', error);
-  }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.error('Failed to populate dropdown:', textStatus, errorThrown);
+    }
+  });
 };
 
 // ---------------------------------------------------------
@@ -61,7 +59,6 @@ async function populateDropdown() {
 // ---------------------------------------------------------
 
 // initialise and add controls once DOM is ready
-
 $(document).ready(function () {
   
   map = L.map("map", {
@@ -81,4 +78,3 @@ $(document).ready(function () {
   populateDropdown();
 
 });
-
