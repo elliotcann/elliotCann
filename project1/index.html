@@ -15,15 +15,18 @@
     <link rel="stylesheet" href="libs/css/bootstrap.min.css">
     <link rel="stylesheet" href="libs/css/easy-buttons.css">
     <link rel="stylesheet" href="libs/css/styles.css">
+
 </head>
 
 <body>
     <!-- loading indicator -->
-    <div id="loadingIndicator" style="display:none;">Loading...</div>
+    <div id="loadingIndicator">
+        <img src="libs/assets/img/loading.svg" alt="Loading...">
+    </div>
     <!-- partial:index.partial.html -->
     <span id="selectContainer">
     <select id="countrySelect" class="form-select shadow-sm">
-        <option id="countryValue" value="" disabled selected>Select a country</option>
+        <option id="countryValue" value="" disabled selected></option>
     </select>
     </span>
 

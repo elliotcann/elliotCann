@@ -34,12 +34,27 @@ const weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class=
 // NAVIGATIOR FUNCTION & LOADING INDICATOR
 // ---------------------------------------------------------
 
+// Function to show the loading indicator
+function showLoadingIndicator() {
+  $('#loadingIndicator').show();
+  $('#map').hide();
+  $('#selectContainer').hide();
+}
+
+// Function to hide the loading indicator
+function hideLoadingIndicator() {
+  $('#loadingIndicator').hide();
+  $('#map').show();
+  $('#selectContainer').show();
+  map.invalidateSize(); // Ensure the map is displayed correctly
+}
+
 // Function to get the user's current location and highlight the country
 function autoSelectUserCountry() {
   if (navigator.geolocation) {
-    // Show loading indicator
-    $('#loadingIndicator').show();
+    showLoadingIndicator();
 
+    // Get the user's current position
     navigator.geolocation.getCurrentPosition(function (position) {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
@@ -53,27 +68,27 @@ function autoSelectUserCountry() {
           longitude: lng,
           localityLanguage: 'en'
         },
+        // On success, set the dropdown value to the country code
         success: function (data) {
           const countryCode = data.countryCode;
           if (countryCode) {
             $('#countrySelect').val(countryCode).change();
           }
-          // Hide loading indicator
-          $('#loadingIndicator').hide();
+          hideLoadingIndicator();
         },
+        // on error, log the error
         error: function (jqXHR, textStatus, errorThrown) {
           console.error('Failed to get country code:', textStatus, errorThrown);
-          // Hide loading indicator
-          $('#loadingIndicator').hide();
+          hideLoadingIndicator();
         }
       });
     }, function (error) {
       console.error('Geolocation error:', error);
-      // Hide loading indicator
-      $('#loadingIndicator').hide();
+      hideLoadingIndicator();
     });
   } else {
     console.error('Geolocation is not supported by this browser.');
+    hideLoadingIndicator();
   }
 }
 

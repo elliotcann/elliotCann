@@ -1,28 +1,39 @@
-
-/* Page styles */
+/* Page */
 html, body {
     margin: 0;
     padding: 0;
   }
   
-  /* Map styles */
-  #map {
-    width: 100%;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-  }
-  
-  /* Select styles */
-  #selectContainer {
-    position: fixed;
-    top: 0;
-    z-index: 1000;
-    width: 100%;
-    padding: 11px 0;
-  }
-  
-  #countrySelect {
-    width: fit-content;
-    margin: 0 auto;
-  }
+/* Map */
+#map {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: none; /* Hide the map initially */
+}
+
+/* Select */
+#selectContainer {
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  padding: 11px 0;
+  display: none; /* Hide the select container initially */
+}
+
+#countrySelect {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+/* Loading indicator */
+#loadingIndicator {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
