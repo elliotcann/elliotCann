@@ -42,14 +42,14 @@ async function populateDropdown() {
       }
 
       const countries = await response.json();
-      const dropdown = document.getElementById('countrySelect');
+      const $dropdown = $('#countrySelect');
 
       // Populate the dropdown
       countries.forEach(country => {
-          const option = document.createElement('option');
-          option.value = country.iso2;
-          option.textContent = `${country.name} (${country.iso2})`;
-          dropdown.appendChild(option);
+          const $option = $('<option></option>')
+              .val(country.iso2)
+              .text(`${country.name} (${country.iso2})`);
+          $dropdown.append($option);
       });
   } catch (error) {
       console.error('Failed to populate dropdown:', error);
