@@ -3,6 +3,7 @@
 // ---------------------------------------------------------
 
 let map;
+let currentBorderLayer;
 
 // tile layers
 
@@ -31,6 +32,10 @@ const weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class=
   $("#exampleModal").modal("show");
 });
 
+// ---------------------------------------------------------
+// AJAX FUNCTIONS
+// ---------------------------------------------------------
+
 // input JSON response from getCountries.php
 function populateDropdown() {
   $.ajax({
@@ -50,15 +55,20 @@ function populateDropdown() {
           .text(`${country.name} (${country.iso2})`);
         $dropdown.append($option);
       });
+      
     },
     error: function (jqXHR, textStatus, errorThrown) {
       console.error('Failed to populate dropdown:', textStatus, errorThrown);
     }
   });
-};
+}
 
-// inputv JSON response from getCountryBorder.php
+// input JSON response from getCountryBorder.php
 function getCountryBorder(iso2) {
+  if (currentBorderLayer) {
+    map.removeLayer(currentBorderLayer);
+  }
+
   $.ajax({
     url: 'libs/php/getCountryBorder.php',
     method: 'GET',
@@ -68,18 +78,21 @@ function getCountryBorder(iso2) {
     dataType: 'json',
     success: function (data) {
       // Convert the GeoJSON data to a Leaflet layer
-      const countryBorder = L.geoJSON(data, {
+      currentBorderLayer = L.geoJSON(data, {
         style: {
-          color: 'red',
-          weight: 2
+          color: 'blue',
+          weight: 1,
+          opacity: 0.4,
+          fillOpacity: 0.1
         }
-      });
+      }).addTo(map);
 
       // Fit the map to the country border
-      map.fitBounds(countryBorder.getBounds());
+      map.fitBounds(currentBorderLayer.getBounds());
     },
     error: function (jqXHR, textStatus, errorThrown) {
       console.error('Failed to get country border:', textStatus, errorThrown);
+      console.error('Response text:', jqXHR.responseText);
     }
   });
 }
@@ -94,17 +107,23 @@ $(document).ready(function () {
   map = L.map("map", {
     layers: [streets]
   }).setView([54.5, -4], 6);
-  
-  // setView is not required in your application as you will be
-  // deploying map.fitBounds() on the country border polygon
 
   layerControl = L.control.layers(basemaps).addTo(map);
 
+  // Add the buttons to the map
   infoBtn.addTo(map);
-
   weatherBtn.addTo(map);
 
   // Call the populateDropdown function to populate the dropdown
   populateDropdown();
+
+  // Auto-select the user's country based on their location
+  autoSelectUserCountry();
+
+  // Event listener for dropdown change
+  $('#countrySelect').on('change', function () {
+      const iso2 = $(this).val();
+      getCountryBorder(iso2);
+  });
 
 });

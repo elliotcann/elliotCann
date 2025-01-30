@@ -2,8 +2,8 @@
 // Path to the countryBorders.geo.json file
 define('COUNTRY_BORDERS_FILE', '../geojson/countryBorders.geo.json');
 
-// Returns a JSON object with ISO codes and country names.
-function getCountriesAsJSON() {
+// Returns a JSON object with the borders of the specified country.
+function getCountryBorderAsJSON($iso2) {
     if (!file_exists(COUNTRY_BORDERS_FILE)) {
         http_response_code(404);
         header('Content-Type: application/json');
@@ -19,24 +19,22 @@ function getCountriesAsJSON() {
         exit;
     }
 
-    $countries = [];
-    foreach ($data['features'] as $feature) {
-        $iso2 = $feature['properties']['iso_a2'] ?? '';
-        $name = $feature['properties']['name'] ?? '';
-        if ($iso2 && $name) {
-            $countries[] = [
-                "iso2" => $iso2,
-                "name" => $name
-            ];
-        }
-    }
+    $borders = array_filter($data['features'], function ($feature) use ($iso2) {
+        return $feature['properties']['iso_a2'] === $iso2;
+    });
 
     // Return the JSON response
     header('Content-Type: application/json');
-    echo json_encode($countries);
+    echo json_encode(array_values($borders));
     exit;
 }
 
-// Output the JSON response
-getCountriesAsJSON();
+if (isset($_GET['iso2'])) {
+    getCountryBorderAsJSON($_GET['iso2']);
+} else {
+    http_response_code(400);
+    header('Content-Type: application/json');
+    echo json_encode(["error" => "Invalid request"]);
+    exit;
+}
 ?>
