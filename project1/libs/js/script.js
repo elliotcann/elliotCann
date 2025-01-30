@@ -97,6 +97,39 @@ function getCountryBorder(iso2) {
   });
 }
 
+// Get the user's current location and highlight the country
+function autoSelectUserCountry() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      $.ajax({
+        url: 'libs/php/getCountryByLocation.php',
+        method: 'GET',
+        data: {
+          lat: lat,
+          lng: lng
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.status.name == "ok") {
+            const iso2 = data.countryCode;
+            getCountryBorder(iso2);
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.error('Failed to get country by location:', textStatus, errorThrown);
+        }
+      });
+    }, function (error) {
+      console.error('Geolocation error:', error);
+    });
+  } else {
+    console.error('Geolocation is not supported by this browser.');
+  }
+}
+
 // ---------------------------------------------------------
 // EVENT HANDLERS
 // ---------------------------------------------------------
