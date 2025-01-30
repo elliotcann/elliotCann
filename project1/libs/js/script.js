@@ -40,6 +40,9 @@ function populateDropdown() {
     success: function (countries) {
       const $dropdown = $('#countrySelect');
 
+      // Sort countries alphabetically by name
+      countries.sort((a, b) => a.name.localeCompare(b.name));
+
       // Populate the dropdown
       countries.forEach(country => {
         const $option = $('<option></option>')
@@ -53,6 +56,33 @@ function populateDropdown() {
     }
   });
 };
+
+// inputv JSON response from getCountryBorder.php
+function getCountryBorder(iso2) {
+  $.ajax({
+    url: 'libs/php/getCountryBorder.php',
+    method: 'GET',
+    data: {
+      iso2: iso2
+    },
+    dataType: 'json',
+    success: function (data) {
+      // Convert the GeoJSON data to a Leaflet layer
+      const countryBorder = L.geoJSON(data, {
+        style: {
+          color: 'red',
+          weight: 2
+        }
+      });
+
+      // Fit the map to the country border
+      map.fitBounds(countryBorder.getBounds());
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.error('Failed to get country border:', textStatus, errorThrown);
+    }
+  });
+}
 
 // ---------------------------------------------------------
 // EVENT HANDLERS
