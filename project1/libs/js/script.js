@@ -6,7 +6,6 @@ let map;
 let currentBorderLayer;
 
 // tile layers
-
 const streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
     attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
   }
@@ -23,7 +22,6 @@ const basemaps = {
 };
 
 // buttons
-
 const infoBtn = L.easyButton('<img src="libs/assets/img/info-lg.svg" class="img-responsive">', function (btn, map) {
   $("#infoModal").modal("show");
 });
@@ -31,6 +29,53 @@ const infoBtn = L.easyButton('<img src="libs/assets/img/info-lg.svg" class="img-
 const weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class="img-responsive">', function (btn, map) {
   $("#exampleModal").modal("show");
 });
+
+// ---------------------------------------------------------
+// NAVIGATIOR FUNCTION & LOADING INDICATOR
+// ---------------------------------------------------------
+
+// Function to get the user's current location and highlight the country
+function autoSelectUserCountry() {
+  if (navigator.geolocation) {
+    // Show loading indicator
+    $('#loadingIndicator').show();
+
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      // Use a reverse geocoding service to get the country code from the coordinates
+      $.ajax({
+        url: 'https://api.bigdatacloud.net/data/reverse-geocode-client',
+        dataType: 'json',
+        data: {
+          latitude: lat,
+          longitude: lng,
+          localityLanguage: 'en'
+        },
+        success: function (data) {
+          const countryCode = data.countryCode;
+          if (countryCode) {
+            $('#countrySelect').val(countryCode).change();
+          }
+          // Hide loading indicator
+          $('#loadingIndicator').hide();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.error('Failed to get country code:', textStatus, errorThrown);
+          // Hide loading indicator
+          $('#loadingIndicator').hide();
+        }
+      });
+    }, function (error) {
+      console.error('Geolocation error:', error);
+      // Hide loading indicator
+      $('#loadingIndicator').hide();
+    });
+  } else {
+    console.error('Geolocation is not supported by this browser.');
+  }
+}
 
 // ---------------------------------------------------------
 // AJAX FUNCTIONS
@@ -95,39 +140,6 @@ function getCountryBorder(iso2) {
       console.error('Response text:', jqXHR.responseText);
     }
   });
-}
-
-// Get the user's current location and highlight the country
-function autoSelectUserCountry() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-
-      $.ajax({
-        url: 'libs/php/getCountryByLocation.php',
-        method: 'GET',
-        data: {
-          lat: lat,
-          lng: lng
-        },
-        dataType: 'json',
-        success: function (data) {
-          if (data.status.name == "ok") {
-            const iso2 = data.countryCode;
-            getCountryBorder(iso2);
-          }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-          console.error('Failed to get country by location:', textStatus, errorThrown);
-        }
-      });
-    }, function (error) {
-      console.error('Geolocation error:', error);
-    });
-  } else {
-    console.error('Geolocation is not supported by this browser.');
-  }
 }
 
 // ---------------------------------------------------------
