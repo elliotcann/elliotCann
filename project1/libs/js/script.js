@@ -186,25 +186,4 @@ $(document).ready(function () {
       getCountryBorder(iso2);
   });
 
-  // Get the user's current location and add a marker
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      const userLat = position.coords.latitude;
-      const userLng = position.coords.longitude;
-
-      // Create a marker and add it to the map
-      const userMarker = L.marker([userLat, userLng]).addTo(map);
-
-      // Optionally, you can bind a popup to the marker
-      userMarker.bindPopup("You are here!").openPopup();
-
-      // Optionally, you can set the view to the user's location
-      map.setView([userLat, userLng], 13);
-    }, function (error) {
-      console.error("Error getting user's location:", error);
-    });
-  } else {
-    console.error("Geolocation is not supported by this browser.");
-  }
-
 });
