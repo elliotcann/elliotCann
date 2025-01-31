@@ -6,29 +6,27 @@ let map;
 let currentBorderLayer;
 let lat, lng;
 
-// Get the user's current position
-navigator.geolocation.getCurrentPosition(function (position) {
-    lat = position.coords.latitude;
-    lng = position.coords.longitude;
+// ---------------------------------------------------------
+// TILE LAYERS
+// ---------------------------------------------------------
+
+const streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+  attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
 });
 
-// tile layers
-const streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
-    attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
-  }
-);
-
 const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-    attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-  }
-);
+  attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+});
 
 const basemaps = {
   "Streets": streets,
   "Satellite": satellite
 };
 
-// buttons
+// ---------------------------------------------------------
+// BUTTONS
+// ---------------------------------------------------------
+
 const infoBtn = L.easyButton('<img src="libs/assets/img/info-lg.svg" class="img-responsive">', function (btn, map) {
   $("#infoModal").modal("show");
 });
@@ -38,43 +36,65 @@ const weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class=
 });
 
 // ---------------------------------------------------------
-// NAVIGATIOR FUNCTION & LOADING INDICATOR
+// LOADING INDICATOR FUNCTIONS
 // ---------------------------------------------------------
 
-// Function to show the loading indicator
 function showLoadingIndicator() {
+  console.log('Showing loading indicator...');
   $('#loadingIndicator').show();
   $('#map').hide();
   $('#selectContainer').hide();
 }
 
-// Function to hide the loading indicator
 function hideLoadingIndicator() {
+  console.log('Hiding loading indicator...');
   $('#loadingIndicator').hide();
   $('#map').show();
   $('#selectContainer').show();
   map.invalidateSize(); // Ensure the map is displayed correctly
 }
 
-// Function to get the user's current location and highlight the country
-function autoSelectUserCountry() {
+// ---------------------------------------------------------
+// GEOLOCATION FUNCTIONS
+// ---------------------------------------------------------
 
+function getUserLocation() {
+  console.log('Attempting to get user location...');
+  showLoadingIndicator();
   if (navigator.geolocation) {
-    showLoadingIndicator();
+    navigator.geolocation.getCurrentPosition(function (position) {
+      lat = position.coords.latitude;
+      lng = position.coords.longitude;
+      console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+      autoSelectUserCountry(); // Call the function to select the user's country
+    }, function (error) {
+      console.error('Geolocation error:', error);
+      hideLoadingIndicator();
+    });
+  } else {
+    console.error('Geolocation is not supported by this browser.');
+    hideLoadingIndicator();
+  }
+}
 
-    // Use a reverse geocoding service to get the country code from the coordinates
+function autoSelectUserCountry() {
+  if (lat !== undefined && lng !== undefined) {
+    console.log(`Requesting country code for Latitude: ${lat}, Longitude: ${lng}`);
+
+    // Use the PHP routine to get the country code from the coordinates
     $.ajax({
-      url: 'https://api.bigdatacloud.net/data/reverse-geocode-client',
+      url: 'libs/php/getCountryFromCoords.php',
+      method: 'GET',
       dataType: 'json',
       data: {
-        latitude: lat,
-        longitude: lng,
-        localityLanguage: 'en'
+        lat: lat,
+        lng: lng
       },
       // On success, set the dropdown value to the country code
       success: function (data) {
         const countryCode = data.countryCode;
         if (countryCode) {
+          console.log(`Country code received: ${countryCode}`);
           $('#countrySelect').val(countryCode).change();
         }
         hideLoadingIndicator();
@@ -86,7 +106,7 @@ function autoSelectUserCountry() {
       }
     });
   } else {
-    console.error('Geolocation is not supported by this browser.');
+    console.error('Latitude and longitude are not defined.');
     hideLoadingIndicator();
   }
 }
@@ -118,6 +138,7 @@ function populateDropdown() {
     },
     error: function (jqXHR, textStatus, errorThrown) {
       console.error('Failed to populate dropdown:', textStatus, errorThrown);
+      console.error('Response text:', jqXHR.responseText);
     }
   });
 }
@@ -162,7 +183,8 @@ function getCountryBorder(iso2) {
 
 // initialise and add controls once DOM is ready
 $(document).ready(function () {
-  
+  console.log('Document is ready.');
+
   map = L.map("map", {
     layers: [streets]
   });
@@ -176,13 +198,12 @@ $(document).ready(function () {
   // Call the populateDropdown function to populate the dropdown
   populateDropdown();
 
-  // Auto-select the user's country based on their location
-  autoSelectUserCountry();
+  // Get the user's location and auto-select the user's country based on their location
+  getUserLocation();
 
   // Event listener for dropdown change
   $('#countrySelect').on('change', function () {
-      const iso2 = $(this).val();
-      getCountryBorder(iso2);
+    const iso2 = $(this).val();
+    getCountryBorder(iso2);
   });
-
 });
