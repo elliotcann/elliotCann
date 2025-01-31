@@ -4,6 +4,13 @@
 
 let map;
 let currentBorderLayer;
+let lat, lng;
+
+// Get the user's current position
+navigator.geolocation.getCurrentPosition(function (position) {
+    lat = position.coords.latitude;
+    lng = position.coords.longitude;
+});
 
 // tile layers
 const streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
@@ -27,7 +34,7 @@ const infoBtn = L.easyButton('<img src="libs/assets/img/info-lg.svg" class="img-
 });
 
 const weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class="img-responsive">', function (btn, map) {
-  $("#exampleModal").modal("show");
+  $("#weatherModal").modal("show");
 });
 
 // ---------------------------------------------------------
@@ -51,40 +58,32 @@ function hideLoadingIndicator() {
 
 // Function to get the user's current location and highlight the country
 function autoSelectUserCountry() {
+
   if (navigator.geolocation) {
     showLoadingIndicator();
 
-    // Get the user's current position
-    navigator.geolocation.getCurrentPosition(function (position) {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-
-      // Use a reverse geocoding service to get the country code from the coordinates
-      $.ajax({
-        url: 'https://api.bigdatacloud.net/data/reverse-geocode-client',
-        dataType: 'json',
-        data: {
-          latitude: lat,
-          longitude: lng,
-          localityLanguage: 'en'
-        },
-        // On success, set the dropdown value to the country code
-        success: function (data) {
-          const countryCode = data.countryCode;
-          if (countryCode) {
-            $('#countrySelect').val(countryCode).change();
-          }
-          hideLoadingIndicator();
-        },
-        // on error, log the error
-        error: function (jqXHR, textStatus, errorThrown) {
-          console.error('Failed to get country code:', textStatus, errorThrown);
-          hideLoadingIndicator();
+    // Use a reverse geocoding service to get the country code from the coordinates
+    $.ajax({
+      url: 'https://api.bigdatacloud.net/data/reverse-geocode-client',
+      dataType: 'json',
+      data: {
+        latitude: lat,
+        longitude: lng,
+        localityLanguage: 'en'
+      },
+      // On success, set the dropdown value to the country code
+      success: function (data) {
+        const countryCode = data.countryCode;
+        if (countryCode) {
+          $('#countrySelect').val(countryCode).change();
         }
-      });
-    }, function (error) {
-      console.error('Geolocation error:', error);
-      hideLoadingIndicator();
+        hideLoadingIndicator();
+      },
+      // on error, log the error
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.error('Failed to get country code:', textStatus, errorThrown);
+        hideLoadingIndicator();
+      }
     });
   } else {
     console.error('Geolocation is not supported by this browser.');
