@@ -177,6 +177,63 @@ function getCountryBorder(iso2) {
   });
 }
 
+// Create a marker cluster group
+const markers = L.markerClusterGroup();
+
+// Define the custom icon
+const customIcon = L.icon({
+  iconUrl: 'libs/assets/img/bigcity.png', // Path to the marker image
+  shadowUrl: 'libs/assets/img/marker-shadow.png', // Path to the shadow image
+  iconSize: [25, 30], // Size of the icon
+  shadowSize: [41, 41], // Size of the shadow
+  iconAnchor: [12, 30], // Point of the icon which will correspond to marker's location
+  shadowAnchor: [12, 41], // Point of the shadow which will correspond to marker's location
+  popupAnchor: [1, -24] // Point from which the popup should open relative to the iconAnchor
+});
+
+// Function to add city markers to the cluster group
+function addCityMarkers(cities) {
+  console.log('Adding city markers:', cities); // Log the cities data
+  cities.forEach(function(city) {
+    const marker = L.marker([city.lat, city.lng], { icon: customIcon });
+    marker.bindPopup(`<div style="text-align: center;"><b>${city.name}</b><br>Population: ${city.population}</div>`);
+    markers.addLayer(marker);
+  });
+}
+
+// Function to get cities for the selected country
+function getCities(countryCode) {
+  // Clear existing markers
+  markers.clearLayers();
+
+  $.ajax({
+    url: 'libs/php/getCities.php',
+    type: 'GET',
+    data: { country: countryCode },
+    success: function(response) {
+      console.log('API response:', response); // Log the API response
+      const data = JSON.parse(response);
+      if (data.geonames) {
+        const cities = data.geonames.map(function(city) {
+          return {
+            name: city.name,
+            lat: city.lat,
+            lng: city.lng,
+            population: city.population // Ensure population is included
+          };
+        });
+        addCityMarkers(cities);
+        markers.addTo(map);
+      } else {
+        console.error('No cities found for the selected country');
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error('Failed to get cities:', textStatus, errorThrown);
+    }
+  });
+}
+
 // ---------------------------------------------------------
 // EVENT HANDLERS
 // ---------------------------------------------------------
@@ -195,6 +252,9 @@ $(document).ready(function () {
   infoBtn.addTo(map);
   weatherBtn.addTo(map);
 
+  // Add the marker cluster group to the map
+  markers.addTo(map);
+
   // Call the populateDropdown function to populate the dropdown
   populateDropdown();
 
@@ -205,5 +265,6 @@ $(document).ready(function () {
   $('#countrySelect').on('change', function () {
     const iso2 = $(this).val();
     getCountryBorder(iso2);
+    getCities(iso2); // Get cities for the selected country
   });
 });
