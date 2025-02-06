@@ -102,6 +102,71 @@
     </div>
     </div>
 
+    <div id="weatherModal" class="modal fade" data-bs-backdrop="true" tabindex="-1" data-mdb-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+        <div class="modal-header bg-success bg-gradient text-white">
+            <h5 class="modal-title">Todays Forecast</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <table class="table table-striped">
+            <tr>
+                <td class="text-center"><img class="todayWeather" src="" alt=""></td>
+                <td class="text-center" class="todayTemp"></td>
+            </tr>
+            <tr>
+                <td class="text-start" class="dateMon"></td>
+                <td class="text-center"><img class="iconMon" src="" alt=""></td>
+                <td class="text-end" id="lowTempMon"></td>
+                <td class="text-end" id="highTempMon"></td>
+            </tr>
+            <tr>
+                <td class="text-center"><img src="libs/assets/img/region.svg" alt="Region"></td>
+                <td>Region</td>
+                <td class="text-end" id="countryRegion"></td>
+            </tr>
+            <tr>
+                <td class="text-center"><img src="libs/assets/img/capital-city.svg" alt="Capital City"></td>
+                <td>Capital City</td>
+                <td class="text-end" id="countryCapital"></td>
+            </tr>
+            <tr>
+                <td class="text-center"><img src="libs/assets/img/people.svg" alt="People"></td>
+                <td>Population</td>
+                <td class="text-end" id="countryPopulation"></td>
+            </tr>
+            <tr>
+                <td class="text-center"><img src="libs/assets/img/arrows-angle-expand.svg" alt="Area"></td>
+                <td>Area</td>
+                <td class="text-end" id="countryArea"></td>
+            </tr>
+            <tr>
+                <td class="text-center"><img src="libs/assets/img/translate.svg" alt="Languages"></td>
+                <td>Native Languages</td>
+                <td class="text-end" id="countryLanguages"></td>
+            </tr>
+            <tr>
+                <td class="text-center"><img src="libs/assets/img/cash-coin.svg" alt="Currency"></td>
+                <td>Currency</td>
+                <td class="text-end" id="countryCurrency"></td>
+            </tr>
+            <tr>
+                <td class="text-center"><img src="libs/assets/img/calling-code.svg" alt="Calling Code"></td>
+                <td>Calling code</td>
+                <td class="text-end" id="countryCallingCode"></td>
+            </tr>
+            <tr>
+                <td class="text-center"><img src="libs/assets/img/time-zone.svg" alt="Time Zone"></td>
+                <td>Time Zone</td>
+                <td class="text-end" id="countryTimeZone"></td>
+            </tr>
+            </table>
+        </div>
+        </div>
+    </div>
+    </div>
+
     <!-- Libraries -->
     <script src="libs/js/libraries/jquery.js"></script>
     <script src="libs/js/libraries/leaflet.min.js"></script>
