@@ -35,6 +35,18 @@ const weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class=
   $("#weatherModal").modal("show");
 });
 
+// Custom zoom control buttons
+const zoomInBtn = L.easyButton('<img src="libs/assets/img/plus.svg" class="img-responsive">', function (btn, map) {
+  map.zoomIn();
+});
+
+const zoomOutBtn = L.easyButton('<img src="libs/assets/img/minus.svg" class="img-responsive">', function (btn, map) {
+  map.zoomOut();
+});
+
+// Group the zoom buttons together and place them in the top right corner
+const zoomControl = L.easyBar([zoomInBtn, zoomOutBtn], { position: 'topright' });
+
 // ---------------------------------------------------------
 // LOADING INDICATOR FUNCTIONS
 // ---------------------------------------------------------
@@ -290,14 +302,17 @@ $(document).ready(function () {
   console.log('Document is ready.');
 
   map = L.map("map", {
-    layers: [streets]
+    layers: [streets],
+    zoomControl: false // Disable default zoom control
   });
 
-  L.control.layers(basemaps).addTo(map);
+  // Move the tile layers control to the bottom right corner
+  L.control.layers(basemaps, null, { position: 'bottomright' }).addTo(map);
 
   // Add the buttons to the map
   infoBtn.addTo(map);
   weatherBtn.addTo(map);
+  zoomControl.addTo(map); // Add the grouped zoom control in the top right corner
 
   // Add the marker cluster group to the map
   markers.addTo(map);

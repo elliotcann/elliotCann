@@ -2,6 +2,7 @@
 html, body {
     margin: 0;
     padding: 0;
+    text-decoration: none !important;
   }
   
 /* Map */
@@ -35,4 +36,18 @@ html, body {
   transform: translate(-50%, -50%);
   z-index: 1000;
   text-align: center;
+}
+
+/* Custom zoom control styles */
+.leaflet-bar a img {
+  width: 20px;
+  height: 20px;
+}
+
+.leaflet-bar a {
+  border-bottom: none; /* Remove bottom border for all buttons */
+}
+
+.leaflet-bar a:last-child {
+  border-bottom: 1px solid #ccc; /* Add bottom border to the last button */
 }
