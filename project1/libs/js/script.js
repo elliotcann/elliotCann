@@ -28,7 +28,7 @@ const basemaps = {
 // ---------------------------------------------------------
 
 const infoBtn = L.easyButton('<img src="libs/assets/img/info-lg.svg" class="img-responsive">', function (btn, map) {
-  $("#infoModal").modal("show");
+  $('#infoModal').modal('show');
 });
 
 const weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class="img-responsive">', function (btn, map) {
@@ -234,6 +234,53 @@ function getCities(countryCode) {
   });
 }
 
+//function to fetch and display country details
+function fetchAndDisplayCountryDetails(countryCode, callback) {
+  if (countryCode) {
+    $.ajax({
+      url: 'libs/php/getCountryDetails.php',
+      method: 'GET',
+      dataType: 'json',
+      data: {
+        countryCode: countryCode
+      },
+      success: function(data) {
+        if (data.error) {
+          console.error(data.error);
+        } else {
+          console.log('Country details:', data);
+          // Update the UI with the country details
+          $('#countryName').text(data.countryName);
+          $('#countryFlag').attr('src', data.flag);
+          $('#countryCode').text(data.countryCode);
+          $('#countryRegion').text(data.region);
+          $('#countryCapital').text(data.capitalCity);
+          $('#countryPopulation').text(data.population);
+          $('#countryArea').text(data.area);
+          $('#countryLanguages').text(data.nativeLanguages);
+          $('#countryCurrency').text(data.currency);
+          $('#countryCallingCode').text(data.callingCode);
+          $('#countryTimeZone').text(data.timeZone);
+          if (callback) {
+            callback(data);
+          }
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.error('Failed to get country details:', textStatus, errorThrown);
+      }
+    });
+  }
+}
+
+// Function to update the modal with country details
+const updateInfoModal = iso2 => {
+  fetchAndDisplayCountryDetails(iso2, data => {
+    $('#countryDetails').text(JSON.stringify(data, null, 2)); // Display JSON data
+    $('#infoModal').modal('show'); // Show the modal
+  });
+}
+
 // ---------------------------------------------------------
 // EVENT HANDLERS
 // ---------------------------------------------------------
@@ -246,7 +293,7 @@ $(document).ready(function () {
     layers: [streets]
   });
 
-  layerControl = L.control.layers(basemaps).addTo(map);
+  L.control.layers(basemaps).addTo(map);
 
   // Add the buttons to the map
   infoBtn.addTo(map);
@@ -264,7 +311,11 @@ $(document).ready(function () {
   // Event listener for dropdown change
   $('#countrySelect').on('change', function () {
     const iso2 = $(this).val();
-    getCountryBorder(iso2);
-    getCities(iso2); // Get cities for the selected country
+    if (iso2) {
+      getCountryBorder(iso2);
+      getCities(iso2); // Get cities for the selected country
+      fetchAndDisplayCountryDetails(iso2, function() {
+      }); // Fetch and display country details
+    }
   });
 });
