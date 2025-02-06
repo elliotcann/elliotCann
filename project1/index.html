@@ -5,7 +5,7 @@
 
     <meta charset="UTF-8">
     <title>Gazeteer</title>
-
+    <!-- StyleSheet Libraries -->
     <link rel="stylesheet" href="libs/css/normalize.min.css">
     <link rel='stylesheet' href="libs/css/leaflet.css">
     <link rel="stylesheet" href="libs/css/toastify.min.css">
@@ -14,26 +14,29 @@
     <link rel="stylesheet" href="libs/css/extra-markers.min.css">
     <link rel="stylesheet" href="libs/css/bootstrap.min.css">
     <link rel="stylesheet" href="libs/css/easy-buttons.css">
+    <!-- Customer StyleSheet -->
     <link rel="stylesheet" href="libs/css/styles.css">
 
 </head>
 
 <body>
+
     <!-- loading indicator -->
     <div id="loadingIndicator">
         <img src="libs/assets/img/loading.svg" alt="Loading...">
     </div>
-    <!-- partial:index.partial.html -->
+
+    <!-- Select Dropdown -->
     <span id="selectContainer">
     <select id="countrySelect" class="form-select shadow-sm">
         <option id="countryValue" value="" disabled selected></option>
     </select>
     </span>
 
+    <!-- Map Container -->
     <div id="map"></div>
 
-    <!-- example modal layout -->
-
+    <!-- infoModal -->
     <div id="infoModal" class="modal" data-bs-backdrop="false" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
@@ -44,155 +47,54 @@
         <div class="modal-body">
             <table class="table table-striped">
             <tr>
-
-                <td class="text-center">
-                <img src="libs/assets/img/flag.svg" alt="Flag">
-                </td>
-
-                <td>
-                Flag
-                </td>
-
-                <td class="text-end">
-                <img id="countryFlag" src="" alt="Country Flag">
-                </td>
-
+                <td class="text-center"><img src="libs/assets/img/flag.svg" alt="Flag"></td>
+                <td>Flag</td>
+                <td class="text-end"><img id="countryFlag" src="" alt="Country Flag"></td>
             </tr>
             <tr>
-
-                <td class="text-center">
-                <img src="libs/assets/img/geo-alt.svg" alt="Geo Icon">
-                </td>
-
-                <td>
-                Country Code
-                </td>
-
-                <td class="text-end" id="countryCode">
-                
-                </td>
-
+                <td class="text-center"><img src="libs/assets/img/geo-alt.svg" alt="Geo Icon"></td>
+                <td>Country Code</td>
+                <td class="text-end" id="countryCode"></td>
             </tr>
             <tr>
-
-                <td class="text-center">
-                <img src="libs/assets/img/region.svg" alt="Region">
-                </td>
-
-                <td>
-                Region
-                </td>
-
-                <td class="text-end" id="countryRegion">
-                
-                </td>
-
+                <td class="text-center"><img src="libs/assets/img/region.svg" alt="Region"></td>
+                <td>Region</td>
+                <td class="text-end" id="countryRegion"></td>
             </tr>
             <tr>
-
-                <td class="text-center">
-                <img src="libs/assets/img/capital-city.svg" alt="Capital City">
-                </td>
-
-                <td>
-                Capital City
-                </td>
-
-                <td class="text-end" id="countryCapital">
-               
-                </td>
-
+                <td class="text-center"><img src="libs/assets/img/capital-city.svg" alt="Capital City"></td>
+                <td>Capital City</td>
+                <td class="text-end" id="countryCapital"></td>
             </tr>
             <tr>
-
-                <td class="text-center">
-                <img src="libs/assets/img/people.svg" alt="People">
-                </td>
-
-                <td>
-                Population
-                </td>
-
-                <td class="text-end" id="countryPopulation">
-                
-                </td>
-
+                <td class="text-center"><img src="libs/assets/img/people.svg" alt="People"></td>
+                <td>Population</td>
+                <td class="text-end" id="countryPopulation"></td>
             </tr>
             <tr>
-
-                <td class="text-center">
-                <img src="libs/assets/img/arrows-angle-expand.svg" alt="Area">
-                </td>
-
-                <td>
-                Area
-                </td>
-
-                <td class="text-end" id="countryArea">
-                
-                </td>
-
+                <td class="text-center"><img src="libs/assets/img/arrows-angle-expand.svg" alt="Area"></td>
+                <td>Area</td>
+                <td class="text-end" id="countryArea"></td>
             </tr>
             <tr>
-
-                <td class="text-center">
-                <img src="libs/assets/img/translate.svg" alt="Languages">
-                </td>
-
-                <td>
-                Native Languages
-                </td>
-
-                <td class="text-end" id="countryLanguages">
-                
-                </td>
-
-            </tr>
-
-            <tr>
-
-                <td class="text-center">
-                <img src="libs/assets/img/cash-coin.svg" alt="Currency">
-                </td>
-
-                <td>
-                Currency
-                </td>
-
-                <td class="text-end" id="countryCurrency">
-                
-                </td>
-
+                <td class="text-center"><img src="libs/assets/img/translate.svg" alt="Languages"></td>
+                <td>Native Languages</td>
+                <td class="text-end" id="countryLanguages"></td>
             </tr>
             <tr>
-
-                <td class="text-center">
-                <img src="libs/assets/img/calling-code.svg" alt="Calling Code">
-                </td>
-
-                <td>
-                Calling code
-                </td>
-
-                <td class="text-end" id="countryCallingCode">
-                
-                </td>
-
+                <td class="text-center"><img src="libs/assets/img/cash-coin.svg" alt="Currency"></td>
+                <td>Currency</td>
+                <td class="text-end" id="countryCurrency"></td>
             </tr>
             <tr>
-
-                <td class="text-center">
-                <img src="libs/assets/img/time-zone.svg" alt="Time Zone">
-                </td>
-
-                <td>
-                Time Zone
-                </td>
-
-                <td class="text-end" id="countryTimeZone">
-                
-                </td>
-
+                <td class="text-center"><img src="libs/assets/img/calling-code.svg" alt="Calling Code"></td>
+                <td>Calling code</td>
+                <td class="text-end" id="countryCallingCode"></td>
+            </tr>
+            <tr>
+                <td class="text-center"><img src="libs/assets/img/time-zone.svg" alt="Time Zone"></td>
+                <td>Time Zone</td>
+                <td class="text-end" id="countryTimeZone"></td>
             </tr>
             </table>
         </div>
@@ -203,7 +105,7 @@
     </div>
     </div>
 
-<!-- partial -->
+    <!-- Libraries -->
     <script src="libs/js/libraries/jquery.js"></script>
     <script src="libs/js/libraries/leaflet.min.js"></script>
     <script src="libs/js/libraries/toastify.mins.js"></script>
@@ -211,6 +113,7 @@
     <script src="libs/js/libraries/extraMarkers.min.js"></script>
     <script src="libs/js/libraries/bootstrap.bundle.min.js"></script>
     <script src="libs/js/libraries/easyButtons.min.js"></script>
+    <!-- Custom JS -->
     <script src="libs/js/script.js"></script>
 
 </body>

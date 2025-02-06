@@ -234,7 +234,7 @@ function getCities(countryCode) {
   });
 }
 
-//function to fetch and display country details
+// Function to fetch and display country details
 function fetchAndDisplayCountryDetails(countryCode, callback) {
   if (countryCode) {
     $.ajax({
@@ -274,8 +274,8 @@ function fetchAndDisplayCountryDetails(countryCode, callback) {
 }
 
 // Function to update the modal with country details
-const updateInfoModal = iso2 => {
-  fetchAndDisplayCountryDetails(iso2, data => {
+const updateInfoModal = countryCode => {
+  fetchAndDisplayCountryDetails(countryCode, data => {
     $('#countryDetails').text(JSON.stringify(data, null, 2)); // Display JSON data
     $('#infoModal').modal('show'); // Show the modal
   });
@@ -310,11 +310,11 @@ $(document).ready(function () {
 
   // Event listener for dropdown change
   $('#countrySelect').on('change', function () {
-    const iso2 = $(this).val();
-    if (iso2) {
-      getCountryBorder(iso2);
-      getCities(iso2); // Get cities for the selected country
-      fetchAndDisplayCountryDetails(iso2, function() {
+    const countryCode = $(this).val();
+    if (countryCode) {
+      getCountryBorder(countryCode);
+      getCities(countryCode); // Get cities for the selected country
+      fetchAndDisplayCountryDetails(countryCode, function() {
       }); // Fetch and display country details
     }
   });
