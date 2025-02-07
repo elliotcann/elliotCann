@@ -42,6 +42,10 @@ const weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class=
   }
 });
 
+const currencyBtn = L.easyButton('<img src="libs/assets/img/currency-exchange.svg" class="img-responsive">', function (btn, map) {
+  $('#currencyModal').modal('show');
+});
+
 // Custom zoom control buttons
 const zoomInBtn = L.easyButton('<img src="libs/assets/img/plus.svg" class="img-responsive">', function (btn, map) {
   map.zoomIn();
@@ -214,7 +218,7 @@ const customIcon = L.icon({
 const pinIcon = L.icon({
   iconUrl: 'libs/assets/img/pin.png', // Path to the pin icon image
   shadowUrl: 'libs/assets/img/marker-shadow.png', // Path to the shadow image
-  iconSize: [30, 45], // Size of the icon
+  iconSize: [35, 45], // Size of the icon
   shadowSize: [41, 41], // Size of the shadow
   iconAnchor: [15, 40], // Point of the icon which will correspond to marker's location
   shadowAnchor: [12, 41], // Point of the shadow which will correspond to marker's location
@@ -336,11 +340,13 @@ function requestWeatherReport() {
         } else {
           console.log('Weather forecast:', data);
           // Update the weather modal with the forecast data
-          let placeName = data.city.name + ' (' + data.city.country + '), today...';
+          let placeName = data.city.name + ' (' + data.city.country + ')';
           if (!data.city.name) {
-            placeName = 'Sea Area, today...';
+            placeName = 'Sea Area';
           }
-          $('#placeName').text(placeName);
+          const timezoneOffset = data.city.timezone;
+          const localTime = new Date(new Date().getTime() + timezoneOffset * 1000).toLocaleTimeString();
+          $('#placeName').text(`${placeName} - ${localTime}`);
           $('#placeCoords').text(`Latitude: ${centerLat.toFixed(2)}, Longitude: ${centerLng.toFixed(2)}`);
           $('#todayWeatherIcon').attr('src', `http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`);
           $('#todayTemp').text(`${data.list[0].main.temp.toFixed(1)} °C`);
@@ -409,7 +415,8 @@ $(document).ready(function () {
   // Add the buttons to the map
   infoBtn.addTo(map);
   weatherBtn.addTo(map);
-  zoomControl.addTo(map); // Add the grouped zoom control in the top right corner
+  zoomControl.addTo(map); 
+  currencyBtn.addTo(map); 
 
   // Add the marker cluster group to the map
   markers.addTo(map);
