@@ -5,6 +5,8 @@
 let map;
 let currentBorderLayer;
 let lat, lng;
+let centerLat, centerLng;
+let pinMarker;
 
 // ---------------------------------------------------------
 // TILE LAYERS
@@ -32,7 +34,12 @@ const infoBtn = L.easyButton('<img src="libs/assets/img/info-lg.svg" class="img-
 });
 
 const weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class="img-responsive">', function (btn, map) {
-  $("#weatherModal").modal("show");
+  if (pinMarker) {
+    requestWeatherReport(); // Request the weather report
+    $("#weatherModal").modal("show");
+  } else {
+    alert("Please place a pin on the map first.");
+  }
 });
 
 // Custom zoom control buttons
@@ -203,6 +210,17 @@ const customIcon = L.icon({
   popupAnchor: [1, -24] // Point from which the popup should open relative to the iconAnchor
 });
 
+// Define the custom icon for the dropped pin
+const pinIcon = L.icon({
+  iconUrl: 'libs/assets/img/pin.png', // Path to the pin icon image
+  shadowUrl: 'libs/assets/img/marker-shadow.png', // Path to the shadow image
+  iconSize: [30, 45], // Size of the icon
+  shadowSize: [41, 41], // Size of the shadow
+  iconAnchor: [15, 40], // Point of the icon which will correspond to marker's location
+  shadowAnchor: [12, 41], // Point of the shadow which will correspond to marker's location
+  popupAnchor: [0, -40] // Point from which the popup should open relative to the iconAnchor
+});
+
 // Function to add city markers to the cluster group
 function addCityMarkers(cities) {
   console.log('Adding city markers:', cities); // Log the cities data
@@ -293,6 +311,85 @@ const updateInfoModal = countryCode => {
   });
 }
 
+// Function to update the coordinates based on the pin location
+function updatePinCoordinates(lat, lng) {
+  centerLat = lat;
+  centerLng = lng;
+  console.log(`Pin location updated: Latitude: ${centerLat}, Longitude: ${centerLng}`);
+}
+
+// Function to request weather reports using the pin coordinates
+function requestWeatherReport() {
+  if (centerLat !== undefined && centerLng !== undefined) {
+    console.log(`Requesting weather report for Latitude: ${centerLat}, Longitude: ${centerLng}`);
+    $.ajax({
+      url: 'libs/php/getWeatherForecast.php',
+      method: 'GET',
+      dataType: 'json',
+      data: {
+        lat: centerLat,
+        lng: centerLng
+      },
+      success: function(data) {
+        if (data.error) {
+          console.error(data.error);
+        } else {
+          console.log('Weather forecast:', data);
+          // Update the weather modal with the forecast data
+          let placeName = data.city.name + ' (' + data.city.country + '), today...';
+          if (!data.city.name) {
+            placeName = 'Sea Area, today...';
+          }
+          $('#placeName').text(placeName);
+          $('#placeCoords').text(`Latitude: ${centerLat.toFixed(2)}, Longitude: ${centerLng.toFixed(2)}`);
+          $('#todayWeatherIcon').attr('src', `http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`);
+          $('#todayTemp').text(`${data.list[0].main.temp.toFixed(1)} °C`);
+          $('#todayHumidity').text(`Humidity: ${data.list[0].main.humidity}%`);
+          $('#todayWind').text(`Wind: ${data.list[0].wind.speed} m/s`);
+          $('#todayDescription').text(data.list[0].weather[0].description);
+
+          // Update the next 5 days forecast
+          for (let i = 1; i <= 5; i++) {
+            const forecastIndex = i * 8 - 1;
+            if (data.list[forecastIndex]) {
+              const forecast = data.list[forecastIndex];
+              const date = new Date(forecast.dt * 1000);
+              const day = date.toLocaleDateString('en-US', { weekday: 'short' });
+              const dayOfMonth = date.getDate();
+              const suffix = (dayOfMonth % 10 === 1 && dayOfMonth !== 11) ? 'st' :
+                             (dayOfMonth % 10 === 2 && dayOfMonth !== 12) ? 'nd' :
+                             (dayOfMonth % 10 === 3 && dayOfMonth !== 13) ? 'rd' : 'th';
+              const formattedDate = `${day} ${dayOfMonth}${suffix}`;
+              $(`#dateDay${i}`).text(formattedDate);
+              $(`#iconDay${i}`).attr('src', `http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`);
+              $(`#lowTempDay${i}`).text(`${forecast.main.temp_min.toFixed(1)} °C`);
+              $(`#highTempDay${i}`).text(`${forecast.main.temp_max.toFixed(1)} °C`);
+              $(`#humidityDay${i}`).text(`${forecast.main.humidity}%`);
+              $(`#windDay${i}`).text(`${forecast.wind.speed} m/s`);
+              $(`#descriptionDay${i}`).text(forecast.weather[0].description);
+            } else {
+              $(`#dateDay${i}`).text('N/A');
+              $(`#iconDay${i}`).attr('src', '');
+              $(`#lowTempDay${i}`).text('N/A');
+              $(`#highTempDay${i}`).text('N/A');
+              $(`#humidityDay${i}`).text('N/A');
+              $(`#windDay${i}`).text('N/A');
+              $(`#descriptionDay${i}`).text('N/A');
+            }
+          }
+
+          $("#weatherModal").modal("show");
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.error('Failed to get weather report:', textStatus, errorThrown);
+      }
+    });
+  } else {
+    console.error('Pin coordinates are not defined.');
+  }
+}
+
 // ---------------------------------------------------------
 // EVENT HANDLERS
 // ---------------------------------------------------------
@@ -316,6 +413,15 @@ $(document).ready(function () {
 
   // Add the marker cluster group to the map
   markers.addTo(map);
+
+  // Add click event to the map to drop a pin
+  map.on('click', function(e) {
+    if (pinMarker) {
+      map.removeLayer(pinMarker);
+    }
+    pinMarker = L.marker(e.latlng, { icon: pinIcon }).addTo(map);
+    updatePinCoordinates(e.latlng.lat, e.latlng.lng);
+  });
 
   // Call the populateDropdown function to populate the dropdown
   populateDropdown();

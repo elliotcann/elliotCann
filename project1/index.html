@@ -45,7 +45,7 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <table class="table table-striped">
+            <table class="table">
             <tr>
                 <td class="text-center"><img src="libs/assets/img/flag.svg" alt="Flag"></td>
                 <td>Flag</td>
@@ -105,64 +105,82 @@
     <div id="weatherModal" class="modal fade" data-bs-backdrop="true" tabindex="-1" data-mdb-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
-        <div class="modal-header bg-success bg-gradient text-white">
-            <h5 class="modal-title">Todays Forecast</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <table class="table table-striped">
-            <tr>
-                <td class="text-center"><img class="todayWeather" src="" alt=""></td>
-                <td class="text-center" class="todayTemp"></td>
-            </tr>
-            <tr>
-                <td class="text-start" class="dateMon"></td>
-                <td class="text-center"><img class="iconMon" src="" alt=""></td>
-                <td class="text-end" id="lowTempMon"></td>
-                <td class="text-end" id="highTempMon"></td>
-            </tr>
-            <tr>
-                <td class="text-center"><img src="libs/assets/img/region.svg" alt="Region"></td>
-                <td>Region</td>
-                <td class="text-end" id="countryRegion"></td>
-            </tr>
-            <tr>
-                <td class="text-center"><img src="libs/assets/img/capital-city.svg" alt="Capital City"></td>
-                <td>Capital City</td>
-                <td class="text-end" id="countryCapital"></td>
-            </tr>
-            <tr>
-                <td class="text-center"><img src="libs/assets/img/people.svg" alt="People"></td>
-                <td>Population</td>
-                <td class="text-end" id="countryPopulation"></td>
-            </tr>
-            <tr>
-                <td class="text-center"><img src="libs/assets/img/arrows-angle-expand.svg" alt="Area"></td>
-                <td>Area</td>
-                <td class="text-end" id="countryArea"></td>
-            </tr>
-            <tr>
-                <td class="text-center"><img src="libs/assets/img/translate.svg" alt="Languages"></td>
-                <td>Native Languages</td>
-                <td class="text-end" id="countryLanguages"></td>
-            </tr>
-            <tr>
-                <td class="text-center"><img src="libs/assets/img/cash-coin.svg" alt="Currency"></td>
-                <td>Currency</td>
-                <td class="text-end" id="countryCurrency"></td>
-            </tr>
-            <tr>
-                <td class="text-center"><img src="libs/assets/img/calling-code.svg" alt="Calling Code"></td>
-                <td>Calling code</td>
-                <td class="text-end" id="countryCallingCode"></td>
-            </tr>
-            <tr>
-                <td class="text-center"><img src="libs/assets/img/time-zone.svg" alt="Time Zone"></td>
-                <td>Time Zone</td>
-                <td class="text-end" id="countryTimeZone"></td>
-            </tr>
-            </table>
-        </div>
+            <div class="modal-header bg-success bg-gradient text-white">
+                <h5 class="modal-title">Weather Forecast</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 id="placeName" class="text-center mb-3"></h5>
+                <div class="current-weather text-center mb-4">
+                    <img id="todayWeatherIcon" src="" alt="Today's Weather" class="weather-icon">
+                    <div id="todayTemp" class="temp"></div>
+                    <div id="todayHumidity" class="humidity"></div>
+                    <div id="todayWind" class="wind"></div>
+                    <div id="todayDescription" class="description"></div>
+                </div>
+                <div class="forecast">
+                    <table class="table">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Date</th>
+                                <th>Icon</th>
+                                <th>Low Temp</th>
+                                <th>High Temp</th>
+                                <th>Humidity</th>
+                                <th>Wind</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-center">
+                                <td id="dateDay1"></td>
+                                <td><img id="iconDay1" src="" alt="Day 1 Weather" class="weather-icon"></td>
+                                <td id="lowTempDay1"></td>
+                                <td id="highTempDay1"></td>
+                                <td id="humidityDay1"></td>
+                                <td id="windDay1"></td>
+                                <td id="descriptionDay1"></td>
+                            </tr>
+                            <tr class="text-center">
+                                <td id="dateDay2"></td>
+                                <td><img id="iconDay2" src="" alt="Day 2 Weather" class="weather-icon"></td>
+                                <td id="lowTempDay2"></td>
+                                <td id="highTempDay2"></td>
+                                <td id="humidityDay2"></td>
+                                <td id="windDay2"></td>
+                                <td id="descriptionDay2"></td>
+                            </tr>
+                            <tr class="text-center">
+                                <td id="dateDay3"></td>
+                                <td><img id="iconDay3" src="" alt="Day 3 Weather" class="weather-icon"></td>
+                                <td id="lowTempDay3"></td>
+                                <td id="highTempDay3"></td>
+                                <td id="humidityDay3"></td>
+                                <td id="windDay3"></td>
+                                <td id="descriptionDay3"></td>
+                            </tr>
+                            <tr class="text-center">
+                                <td id="dateDay4"></td>
+                                <td><img id="iconDay4" src="" alt="Day 4 Weather" class="weather-icon"></td>
+                                <td id="lowTempDay4"></td>
+                                <td id="highTempDay4"></td>
+                                <td id="humidityDay4"></td>
+                                <td id="windDay4"></td>
+                                <td id="descriptionDay4"></td>
+                            </tr>
+                            <tr class="text-center">
+                                <td id="dateDay5"></td>
+                                <td><img id="iconDay5" src="" alt="Day 5 Weather" class="weather-icon"></td>
+                                <td id="lowTempDay5"></td>
+                                <td id="highTempDay5"></td>
+                                <td id="humidityDay5"></td>
+                                <td id="windDay5"></td>
+                                <td id="descriptionDay5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     </div>
