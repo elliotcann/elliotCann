@@ -35,7 +35,6 @@ const infoBtn = L.easyButton('<img src="libs/assets/img/info-lg.svg" class="img-
 
 const weatherBtn = L.easyButton('<img src="libs/assets/img/cloud-sun.svg" class="img-responsive">', function (btn, map) {
   if (pinMarker) {
-    requestWeatherReport(); // Request the weather report
     $("#weatherModal").modal("show");
   } else {
     alert("Please place a pin on the map first.");
@@ -383,8 +382,6 @@ function requestWeatherReport() {
               $(`#descriptionDay${i}`).text('N/A');
             }
           }
-
-          $("#weatherModal").modal("show");
         }
       },
       error: function(jqXHR, textStatus, errorThrown) {
@@ -428,6 +425,7 @@ $(document).ready(function () {
     }
     pinMarker = L.marker(e.latlng, { icon: pinIcon }).addTo(map);
     updatePinCoordinates(e.latlng.lat, e.latlng.lng);
+    requestWeatherReport(); // Request the weather report when the pin is dropped
   });
 
   // Call the populateDropdown function to populate the dropdown
