@@ -346,7 +346,7 @@ function requestWeatherReport() {
           }
           const timezoneOffset = data.city.timezone;
           const localTime = new Date(new Date().getTime() + timezoneOffset * 1000).toLocaleTimeString();
-          $('#placeName').text(`${placeName} - ${localTime}`);
+          $('#placeName').text(`${placeName}  -  ${localTime}`);
           $('#placeCoords').text(`Latitude: ${centerLat.toFixed(2)}, Longitude: ${centerLng.toFixed(2)}`);
           $('#todayWeatherIcon').attr('src', `http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`);
           $('#todayTemp').text(`${data.list[0].main.temp.toFixed(1)} °C`);
