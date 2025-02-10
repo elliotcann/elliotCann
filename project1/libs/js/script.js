@@ -54,6 +54,15 @@ const zoomOutBtn = L.easyButton('<img src="libs/assets/img/minus.svg" class="img
   map.zoomOut();
 });
 
+const wikipediaBtn = L.easyButton('<img src="libs/assets/img/wikipedia.svg" class="img-responsive">', function (btn, map) {
+  const countryName = $('#countryName').text();
+  if (countryName) {
+    openWikipediaPage(countryName);
+  } else {
+    alert("Please select a country first.");
+  }
+});
+
 // Group the zoom buttons together and place them in the top right corner
 const zoomControl = L.easyBar([zoomInBtn, zoomOutBtn], { position: 'topright' });
 
@@ -464,6 +473,30 @@ function convertCurrency() {
 // Event listener for currency conversion
 $('#currencyNumber, #currencySelect').on('input change', convertCurrency);
 
+
+function openWikipediaPage(countryName) {
+  $.ajax({
+    url: 'libs/php/getWikipediaUrl.php',
+    method: 'GET',
+    dataType: 'json',
+    data: {
+      countryName: countryName
+    },
+    success: function(data) {
+      if (data.error) {
+        console.error(data.error);
+      } else {
+        $('#wikipediaIframe').attr('src', data.url);
+        $('#wikipediaModal').modal('show');
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error('Failed to get Wikipedia URL:', textStatus, errorThrown);
+    }
+  });
+}
+
+
 // ---------------------------------------------------------
 // EVENT HANDLERS
 // ---------------------------------------------------------
@@ -485,6 +518,7 @@ $(document).ready(function () {
   weatherBtn.addTo(map);
   zoomControl.addTo(map); 
   currencyBtn.addTo(map); 
+  wikipediaBtn.addTo(map);
 
   // Add the marker cluster group to the map
   markers.addTo(map);
