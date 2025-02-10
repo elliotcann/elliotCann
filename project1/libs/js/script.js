@@ -63,6 +63,15 @@ const wikipediaBtn = L.easyButton('<img src="libs/assets/img/wikipedia.svg" clas
   }
 });
 
+const newsBtn = L.easyButton('<img src="libs/assets/img/newspaper.svg" class="img-responsive">', function (btn, map) {
+  const countryCode = $('#countrySelect').val();
+  if (countryCode) {
+    fetchNewsArticles(countryCode);
+  } else {
+    alert("Please select a country first.");
+  }
+});
+
 // Group the zoom buttons together and place them in the top right corner
 const zoomControl = L.easyBar([zoomInBtn, zoomOutBtn], { position: 'topright' });
 
@@ -313,6 +322,11 @@ function fetchAndDisplayCountryDetails(countryCode, callback) {
           $('#countryCurrency').text(data.currency);
           $('#countryCallingCode').text(data.callingCode);
           $('#countryTimeZone').text(data.timeZone);
+          
+          // Update the placeholder text in the currency input field
+          const currencySymbol = data.currencySymbol || '';
+          $('#currencyNumber').attr('placeholder', `Enter Amount in ${data.currency} ${currencySymbol}`);
+          
           if (callback) {
             callback(data);
           }
@@ -461,7 +475,7 @@ function convertCurrency() {
         console.error(data.error);
       } else {
         const convertedAmount = (amount * data.rate).toFixed(2);
-          $('#currencyResult').text(`${amount} ${fromCurrency} -> ${convertedAmount} ${toCurrency}`);
+          $('#currencyResult').text(`${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`);
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -496,6 +510,35 @@ function openWikipediaPage(countryName) {
   });
 }
 
+// Function to fetch and display news articles
+function fetchNewsArticles(countryCode) {
+  $.ajax({
+    url: 'libs/php/getNews.php',
+    method: 'GET',
+    dataType: 'json',
+    data: {
+      countryCode: countryCode
+    },
+    success: function(data) {
+      if (data.error) {
+        console.error(data.error);
+      } else {
+        const articles = data.results;
+        for (let i = 0; i < articles.length; i++) {
+          if (i >= 2) break; // Limit to 2 articles for this example
+          $(`#newsTitle${i + 1}`).text(articles[i].title);
+          $(`#newsImage${i + 1}`).attr('src', articles[i].image_url).attr('alt', articles[i].title);
+          $(`#newsDescription${i + 1}`).text(articles[i].description);
+          $(`#newsLink${i + 1}`).attr('href', articles[i].link);
+        }
+        $('#newsModal').modal('show');
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error('Failed to fetch news articles:', textStatus, errorThrown);
+    }
+  });
+}
 
 // ---------------------------------------------------------
 // EVENT HANDLERS
@@ -515,10 +558,11 @@ $(document).ready(function () {
 
   // Add the buttons to the map
   infoBtn.addTo(map);
+  wikipediaBtn.addTo(map);
   weatherBtn.addTo(map);
   zoomControl.addTo(map); 
   currencyBtn.addTo(map); 
-  wikipediaBtn.addTo(map);
+  newsBtn.addTo(map);
 
   // Add the marker cluster group to the map
   markers.addTo(map);
@@ -533,8 +577,11 @@ $(document).ready(function () {
     requestWeatherReport(); // Request the weather report when the pin is dropped
   });
 
-  // Call the populateDropdown function to populate the dropdown
+  // Call the populateDropdown function to populate the country dropdown
   populateDropdown();
+
+  // Call the populateCurrencyDropdown function to populate the currency dropdown
+  populateCurrencyDropdown();
 
   // Get the user's location and auto-select the user's country based on their location
   getUserLocation();
@@ -543,6 +590,11 @@ $(document).ready(function () {
   $('#countrySelect').on('change', function () {
     const countryCode = $(this).val();
     if (countryCode) {
+      // Clear input fields
+      $('#currencyNumber').val('');
+      $('#currencyResult').text('Please enter an Amount');
+      $('#currencySelect').val(''); // Reset the "Convert to" dropdown
+
       getCountryBorder(countryCode);
       getCities(countryCode); // Get cities for the selected country
       fetchAndDisplayCountryDetails(countryCode, function() {
