@@ -393,6 +393,72 @@ function requestWeatherReport() {
   }
 }
 
+// Function to populate the currency dropdown
+function populateCurrencyDropdown() {
+  $.ajax({
+    url: 'libs/php/getCurrencyData.php',
+    method: 'GET',
+    dataType: 'json',
+    data: {
+      action: 'getCurrencies'
+    },
+    success: function(currencies) {
+      const $dropdown = $('#currencySelect');
+      $dropdown.empty();
+      $dropdown.append('<option value="" disabled selected>Select Currency</option>');
+      $.each(currencies, function(code, name) {
+        $dropdown.append(`<option value="${code}">${name} (${code})</option>`);
+      });
+      console.log('Currency dropdown populated:', currencies);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error('Failed to populate currency dropdown:', textStatus, errorThrown);
+    }
+  });
+}
+
+// Function to convert currency
+function convertCurrency() {
+  const amount = parseFloat($('#currencyNumber').val());
+  const fromCurrency = $('#countryCurrency').text().split(' ')[0]; // Get the currency code from the country details
+  const toCurrency = $('#currencySelect').val();
+
+  console.log('Amount:', amount);
+  console.log('From Currency:', fromCurrency);
+  console.log('To Currency:', toCurrency);
+
+  if (!amount || !fromCurrency || !toCurrency) {
+    console.error('Invalid input values for currency conversion');
+    return;
+  }
+
+  $.ajax({
+    url: 'libs/php/getCurrencyData.php',
+    method: 'GET',
+    dataType: 'json',
+    data: {
+      action: 'getExchangeRate',
+      from: fromCurrency,
+      to: toCurrency
+    },
+    success: function(data) {
+      if (data.error) {
+        console.error(data.error);
+      } else {
+        const convertedAmount = (amount * data.rate).toFixed(2);
+        console.log('Converted Amount:', convertedAmount);
+        $('#currencyResult').text(`${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error('Failed to convert currency:', textStatus, errorThrown);
+    }
+  });
+}
+
+// Event listener for currency conversion
+$('#currencyNumber, #currencySelect').on('input change', convertCurrency);
+
 // ---------------------------------------------------------
 // EVENT HANDLERS
 // ---------------------------------------------------------
