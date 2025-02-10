@@ -423,10 +423,6 @@ function convertCurrency() {
   const fromCurrency = $('#countryCurrency').text().split(' ')[0]; // Get the currency code from the country details
   const toCurrency = $('#currencySelect').val();
 
-  console.log('Amount:', amount);
-  console.log('From Currency:', fromCurrency);
-  console.log('To Currency:', toCurrency);
-
   if (!amount || !fromCurrency || !toCurrency) {
     console.error('Invalid input values for currency conversion');
     return;
@@ -446,8 +442,11 @@ function convertCurrency() {
         console.error(data.error);
       } else {
         const convertedAmount = (amount * data.rate).toFixed(2);
-        console.log('Converted Amount:', convertedAmount);
-        $('#currencyResult').text(`${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`);
+        if (isNaN(amount) || isNaN(convertedAmount)) {
+          $('#currencyResult').text('Please enter a valid amount');
+        } else {
+          $('#currencyResult').text(`${amount} ${fromCurrency} -> ${convertedAmount} ${toCurrency}`);
+        }
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
