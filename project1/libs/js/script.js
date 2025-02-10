@@ -442,11 +442,7 @@ function convertCurrency() {
         console.error(data.error);
       } else {
         const convertedAmount = (amount * data.rate).toFixed(2);
-        if (isNaN(amount) || isNaN(convertedAmount)) {
-          $('#currencyResult').text('Please enter a valid amount');
-        } else {
           $('#currencyResult').text(`${amount} ${fromCurrency} -> ${convertedAmount} ${toCurrency}`);
-        }
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
