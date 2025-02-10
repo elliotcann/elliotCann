@@ -229,7 +229,17 @@ function addCityMarkers(cities) {
   console.log('Adding city markers:', cities); // Log the cities data
   cities.forEach(function(city) {
     const marker = L.marker([city.lat, city.lng], { icon: customIcon });
-    marker.bindPopup(`<div style="text-align: center;"><b>${city.name}</b><br>Population: ${city.population}</div>`);
+
+    // Add mouseover and mouseout events for the marker
+    marker.on('mouseover', function() {
+      const popupContent = `<div style="text-align: center;"><b>${city.name}</b><br>Population: ${city.population}</div>`;
+      marker.bindPopup(popupContent).openPopup();
+    });
+
+    marker.on('mouseout', function() {
+      marker.closePopup();
+    });
+
     markers.addLayer(marker);
   });
 }
