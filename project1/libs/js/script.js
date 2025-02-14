@@ -242,6 +242,17 @@ const pinIcon = L.icon({
   popupAnchor: [0, -40] // Point from which the popup should open relative to the iconAnchor
 });
 
+// Define the custom icon for Wikipedia markers
+const wikipediaIcon = L.icon({
+  iconUrl: 'libs/assets/img/wikipedia-icon.png', // Path to the Wikipedia icon image
+  shadowUrl: 'libs/assets/img/marker-shadow.png', // Path to the shadow image
+  iconSize: [25, 30], // Size of the icon
+  shadowSize: [41, 41], // Size of the shadow
+  iconAnchor: [12, 30], // Point of the icon which will correspond to marker's location
+  shadowAnchor: [6, 43], // Point of the shadow which will correspond to marker's location
+  popupAnchor: [1, -24] // Point from which the popup should open relative to the iconAnchor
+});
+
 // Function to add city markers to the cluster group
 function addCityMarkers(cities) {
   console.log('Adding city markers:', cities); // Log the cities data
@@ -255,7 +266,11 @@ function addCityMarkers(cities) {
     });
 
     marker.on('mouseout', function() {
-      marker.closePopup();
+      setTimeout(function() {
+        if (!$('.leaflet-popup:hover').length) {
+          marker.closePopup();
+        }
+      }, 100);
     });
 
     markers.addLayer(marker);
@@ -382,6 +397,7 @@ function requestWeatherReport() {
           $('#placeCoords').text(`Latitude: ${centerLat.toFixed(2)}, Longitude: ${centerLng.toFixed(2)}`);
           $('#todayWeatherIcon').attr('src', `http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`);
           $('#todayTemp').text(`${data.list[0].main.temp.toFixed(1)} °C`);
+          $('#todayFeelsLike').text(`Feels Like: ${data.list[0].main.feels_like.toFixed(1)} °C`);
           $('#todayHumidity').text(`Humidity: ${data.list[0].main.humidity}%`);
           $('#todayWind').text(`Wind: ${data.list[0].wind.speed} m/s`);
           $('#todayDescription').text(data.list[0].weather[0].description);
@@ -402,6 +418,7 @@ function requestWeatherReport() {
               $(`#iconDay${i}`).attr('src', `http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`);
               $(`#lowTempDay${i}`).text(`${forecast.main.temp_min.toFixed(1)} °C`);
               $(`#highTempDay${i}`).text(`${forecast.main.temp_max.toFixed(1)} °C`);
+              $(`#feelsLikeDay${i}`).text(`${forecast.main.feels_like.toFixed(1)} °C`);
               $(`#humidityDay${i}`).text(`${forecast.main.humidity}%`);
               $(`#windDay${i}`).text(`${forecast.wind.speed} m/s`);
               $(`#descriptionDay${i}`).text(forecast.weather[0].description);
@@ -410,6 +427,7 @@ function requestWeatherReport() {
               $(`#iconDay${i}`).attr('src', '');
               $(`#lowTempDay${i}`).text('N/A');
               $(`#highTempDay${i}`).text('N/A');
+              $(`#feelsLikeDay${i}`).text('N/A');
               $(`#humidityDay${i}`).text('N/A');
               $(`#windDay${i}`).text('N/A');
               $(`#descriptionDay${i}`).text('N/A');
@@ -540,6 +558,64 @@ function fetchNewsArticles(countryCode) {
   });
 }
 
+// Create a marker cluster group for Wikipedia markers
+const wikipediaMarkers = L.markerClusterGroup();
+
+// Function to add Wikipedia markers to the cluster group
+function addWikipediaMarkers(articles) {
+  console.log('Adding Wikipedia markers:', articles); // Log the articles data
+  wikipediaMarkers.clearLayers(); // Clear existing Wikipedia markers
+  articles.forEach(function(article) {
+    const marker = L.marker([article.lat, article.lng], { icon: wikipediaIcon });
+
+    // Add mouseover and mouseout events for the marker
+    marker.on('mouseover', function() {
+      const popupContent = `
+        <div style="text-align: center;">
+          <b style="font-size: 1.2em; padding: 5px;">${article.title}</b><br>
+          ${article.thumbnail ? `<img src="${article.thumbnail}" alt="${article.title}" class="img-fluid mb-2 rounded"><br>` : ''}
+          <a href="${article.url}" target="_blank" class="btn btn-primary btn-sm mt-2" style="color: white;">Read more</a>
+        </div>`;
+      marker.bindPopup(popupContent).openPopup();
+    });
+
+    marker.on('mouseout', function() {
+      setTimeout(function() {
+        if (!$('.leaflet-popup:hover').length) {
+          marker.closePopup();
+        }
+      }, 100);
+    });
+
+    wikipediaMarkers.addLayer(marker);
+  });
+}
+
+// Function to fetch and display Wikipedia articles
+function fetchWikipediaArticles(lat, lng) {
+  $.ajax({
+    url: 'libs/php/getWikipediaArticles.php',
+    method: 'GET',
+    dataType: 'json',
+    data: {
+      lat: lat,
+      lng: lng
+    },
+    success: function(data) {
+      if (data.error) {
+        console.error(data.error);
+      } else {
+        const articles = data.articles;
+        addWikipediaMarkers(articles);
+        wikipediaMarkers.addTo(map);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error('Failed to fetch Wikipedia articles:', textStatus, errorThrown);
+    }
+  });
+}
+
 // ---------------------------------------------------------
 // EVENT HANDLERS
 // ---------------------------------------------------------
@@ -567,6 +643,9 @@ $(document).ready(function () {
   // Add the marker cluster group to the map
   markers.addTo(map);
 
+  // Add the Wikipedia markers cluster group to the map
+  wikipediaMarkers.addTo(map);
+
   // Add click event to the map to drop a pin
   map.on('click', function(e) {
     if (pinMarker) {
@@ -575,6 +654,7 @@ $(document).ready(function () {
     pinMarker = L.marker(e.latlng, { icon: pinIcon }).addTo(map);
     updatePinCoordinates(e.latlng.lat, e.latlng.lng);
     requestWeatherReport(); // Request the weather report when the pin is dropped
+    fetchWikipediaArticles(e.latlng.lat, e.latlng.lng); // Fetch Wikipedia articles when the pin is dropped
   });
 
   // Call the populateDropdown function to populate the country dropdown
@@ -598,6 +678,8 @@ $(document).ready(function () {
       getCountryBorder(countryCode);
       getCities(countryCode); // Get cities for the selected country
       fetchAndDisplayCountryDetails(countryCode, function() {
+        const countryName = $('#countryName').text();
+        fetchWikipediaArticles(countryName); // Fetch Wikipedia articles for the selected country
       }); // Fetch and display country details
     }
   });
