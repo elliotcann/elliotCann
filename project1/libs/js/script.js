@@ -561,6 +561,12 @@ function fetchNewsArticles(countryCode) {
 // Create a marker cluster group for Wikipedia markers
 const wikipediaMarkers = L.markerClusterGroup();
 
+// Function to open external URL in a central modal
+function openExternalUrl(url) {
+  $('#externalIframe').attr('src', url);
+  $('#externalModal').modal('show');
+}
+
 // Function to add Wikipedia markers to the cluster group
 function addWikipediaMarkers(articles) {
   console.log('Adding Wikipedia markers:', articles); // Log the articles data
@@ -570,13 +576,12 @@ function addWikipediaMarkers(articles) {
 
     // Add mouseover and mouseout events for the marker
     marker.on('mouseover', function() {
-      const popupContent = `
-        <div style="text-align: center;">
-          <b style="font-size: 1.2em; padding: 5px;">${article.title}</b><br>
-          ${article.thumbnail ? `<img src="${article.thumbnail}" alt="${article.title}" class="img-fluid mb-2 rounded"><br>` : ''}
-          <a href="${article.url}" target="_blank" class="btn btn-primary btn-sm mt-2" style="color: white;">Read more</a>
-        </div>`;
-      marker.bindPopup(popupContent).openPopup();
+      const popupContent = $('#popupMarkerTemplate').html();
+      const $popupContent = $(popupContent);
+      $popupContent.find('#popupTitle').text(article.title);
+      $popupContent.find('#popupThumbnail').attr('src', article.thumbnail).attr('alt', article.title);
+      $popupContent.find('#popupButton').attr('onclick', `openExternalUrl('${article.url}')`);
+      marker.bindPopup($popupContent.html()).openPopup();
     });
 
     marker.on('mouseout', function() {
@@ -585,6 +590,16 @@ function addWikipediaMarkers(articles) {
           marker.closePopup();
         }
       }, 100);
+    });
+
+    // Add click event for mobile users
+    marker.on('click', function() {
+      const popupContent = $('#popupMarkerTemplate').html();
+      const $popupContent = $(popupContent);
+      $popupContent.find('#popupTitle').text(article.title);
+      $popupContent.find('#popupThumbnail').attr('src', article.thumbnail).attr('alt', article.title);
+      $popupContent.find('#popupButton').attr('onclick', `openExternalUrl('${article.url}')`);
+      marker.bindPopup($popupContent.html()).openPopup();
     });
 
     wikipediaMarkers.addLayer(marker);
@@ -682,5 +697,12 @@ $(document).ready(function () {
         fetchWikipediaArticles(countryName); // Fetch Wikipedia articles for the selected country
       }); // Fetch and display country details
     }
+  });
+
+  // Event listener for news article links
+  $(document).on('click', '.news-article a', function(event) {
+    event.preventDefault();
+    const url = $(this).attr('href');
+    window.open(url, '_blank');
   });
 });
