@@ -352,9 +352,7 @@ const requestWeatherReport = () => {
           console.log('Weather forecast:', data);
           let placeName = data.city.name + ' (' + data.city.country + ')';
           if (!data.city.name) placeName = 'Sea Area';
-          const timezoneOffset = data.city.timezone;
-          const localTime = new Date(new Date().getTime() + timezoneOffset * 1000).toLocaleTimeString();
-          $('#placeName').text(`${placeName}  -  ${localTime}`);
+          $('#placeName').text(`${placeName}`);
           $('#placeCoords').text(`Latitude: ${centerLat.toFixed(2)}, Longitude: ${centerLng.toFixed(2)}`);
           $('#todayWeatherIcon').attr('src', `http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`);
           $('#todayTemp').text(`${data.list[0].main.temp.toFixed(1)} °C`);
@@ -372,7 +370,7 @@ const requestWeatherReport = () => {
               const formattedDate = `${day} ${dayOfMonth}${suffix}`;
               $(`#dateDay${i}`).text(formattedDate);
               $(`#iconDay${i}`).attr('src', `http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`);
-              $(`#tempDay${i}`).text(`${forecast.main.temp_min.toFixed(1)}°C - ${forecast.main.temp_max.toFixed(1)}°C`);
+              $(`#tempDay${i}`).text(`${forecast.main.temp.toFixed(1)}°C`);
               $(`#descriptionDay${i}`).text(forecast.weather[0].description);
             } else {
               $(`#dateDay${i}`).text('N/A');

@@ -46,14 +46,15 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>This application allows you to explore various countries and get information about them. You can:</p>
+                    <p>Explore the globe and find out interesting knowledge about any country.</p>
+                    <p>Here is how:</p>
                     <ul>
-                        <li>Select a country from the dropdown to view its details.</li>
-                        <li>Click on the map markers to get more information about specific locations.</li>
-                        <li>Use the buttons on the map to view weather forecasts, currency exchange rates, Wikipedia articles, and top news articles.</li>
+                        <li>Select a country from the dropdown.</li>
+                        <li>Navigate the buttons on the left for info, weather, currency conversion, wikipedia, and news.</li>
+                        <li>Zoom in and inspect markers on the map for location specific info.</li>
                     </ul>
                     <p>Enjoy exploring!</p>
-                    <p><em>Elliot :)</em></p>
+                    <p class="text-end"><em>Elliot :)</em></p>
                 </div>
             </div>
         </div>
@@ -134,8 +135,9 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <h5 id="placeName" class="text-center mb-3 fw-bold"></h5>
                     <div class="current-weather text-center mb-4 border shadow-sm rounded p-3">
-                        <h5 id="placeName" class="text-center mb-3 fw-bold"></h5>
+                        <div class="fw-bold">Today</div>
                         <img id="todayWeatherIcon" src="" alt="Today's Weather" class="weather-icon">
                         <div id="todayTemp" class="temp"></div>
                         <div id="todayDescription" class="description"></div>
