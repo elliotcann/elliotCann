@@ -13,14 +13,12 @@ if (isset($_GET['countryCode'])) {
 
     if (isset($restCountriesData[0])) {
         $country = $restCountriesData[0];
-
         $currencies = [];
         if (isset($country['currencies'])) {
             foreach ($country['currencies'] as $code => $currency) {
                 $currencies[] = $code . ' (' . ($currency['symbol'] ?? '') . ')';
             }
         }
-
         $countryDetails = [
             'countryName' => $country['name']['common'] ?? '',
             'flag' => $country['flags']['png'] ?? '',

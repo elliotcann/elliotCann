@@ -23,7 +23,6 @@ if (isset($_GET['country'])) {
         });
         echo json_encode(['geonames' => array_values($filteredCities)]);
     }
-
     curl_close($ch);
 } else {
     echo json_encode(['error' => 'Country code not provided']);

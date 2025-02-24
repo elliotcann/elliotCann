@@ -99,6 +99,12 @@ const autoSelectUserCountry = () => {
         if (countryCode) {
           console.log(`Country code received: ${countryCode}`);
           $('#countrySelect').val(countryCode).change();
+          fetchAndDisplayCountryDetails(countryCode).then(() => {
+            const countryName = $('#countryName').text();
+            fetchWikipediaArticles(countryName); // Fetch Wikipedia articles for the selected country
+          }).catch(error => {
+            console.error('Failed to fetch and display country details:', error);
+          });
         }
         hideLoadingIndicator();
       },
@@ -170,38 +176,51 @@ const getCountryBorder = iso2 => {
 // Create a marker cluster group for city markers
 const markers = L.markerClusterGroup();
 
+// Helper function to create custom icons
+const createCustomIcon = (iconUrl, shadowUrl, iconSize, shadowSize, iconAnchor, shadowAnchor, popupAnchor) => {
+  return L.icon({
+    iconUrl: iconUrl,
+    shadowUrl: shadowUrl,
+    iconSize: iconSize,
+    shadowSize: shadowSize,
+    iconAnchor: iconAnchor,
+    shadowAnchor: shadowAnchor,
+    popupAnchor: popupAnchor
+  });
+};
+
 // Custom icon for city markers
-const customIcon = L.icon({
-  iconUrl: 'libs/assets/img/bigcity.png',
-  shadowUrl: 'libs/assets/img/marker-shadow.png',
-  iconSize: [25, 30],
-  shadowSize: [41, 41],
-  iconAnchor: [12, 30],
-  shadowAnchor: [12, 41],
-  popupAnchor: [1, -24]
-});
+const customIcon = createCustomIcon(
+  'libs/assets/img/bigcity.png',
+  'libs/assets/img/marker-shadow.png',
+  [25, 30],
+  [41, 41],
+  [12, 30],
+  [12, 41],
+  [1, -24]
+);
 
 // Custom icon for pin marker
-const pinIcon = L.icon({
-  iconUrl: 'libs/assets/img/pin.png',
-  shadowUrl: 'libs/assets/img/marker-shadow.png',
-  iconSize: [35, 45],
-  shadowSize: [41, 41],
-  iconAnchor: [15, 40],
-  shadowAnchor: [12, 41],
-  popupAnchor: [0, -40]
-});
+const pinIcon = createCustomIcon(
+  'libs/assets/img/pin.png',
+  'libs/assets/img/marker-shadow.png',
+  [35, 45],
+  [41, 41],
+  [15, 40],
+  [12, 41],
+  [0, -40]
+);
 
 // Custom icon for Wikipedia markers
-const wikipediaIcon = L.icon({
-  iconUrl: 'libs/assets/img/wikipedia-icon.png',
-  shadowUrl: 'libs/assets/img/marker-shadow.png',
-  iconSize: [25, 30],
-  shadowSize: [41, 41],
-  iconAnchor: [12, 30],
-  shadowAnchor: [6, 43],
-  popupAnchor: [1, -24]
-});
+const wikipediaIcon = createCustomIcon(
+  'libs/assets/img/wikipedia-icon.png',
+  'libs/assets/img/marker-shadow.png',
+  [25, 30],
+  [41, 41],
+  [12, 30],
+  [6, 43],
+  [1, -24]
+);
 
 // Function to add city markers to the map
 const addCityMarkers = cities => {
@@ -255,47 +274,54 @@ const getCities = countryCode => {
 // ---------------------------------------------------------
 
 // Function to fetch and display country details
-const fetchAndDisplayCountryDetails = (countryCode, callback) => {
-  if (countryCode) {
-    $.ajax({
-      url: 'libs/php/getCountryDetails.php',
-      method: 'GET',
-      dataType: 'json',
-      data: { countryCode },
-      success: data => {
-        if (data.error) {
-          console.error(data.error);
-        } else {
-          console.log('Country details:', data);
-          $('#countryName').text(data.countryName);
-          $('#countryFlag').attr('src', data.flag);
-          $('#countryCode').text(data.countryCode);
-          $('#countryRegion').text(data.region);
-          $('#countryCapital').text(data.capitalCity);
-          $('#countryPopulation').text(data.population);
-          $('#countryArea').text(data.area);
-          $('#countryLanguages').text(data.nativeLanguages);
-          $('#countryCurrency').text(data.currency);
-          $('#countryCallingCode').text(data.callingCode);
-          $('#countryTimeZone').text(data.timeZone);
-          const currencySymbol = data.currencySymbol || '';
-          $('#currencyNumber').attr('placeholder', `Enter Amount in ${data.currency} ${currencySymbol}`);
-          if (callback) callback(data);
+const fetchAndDisplayCountryDetails = (countryCode) => {
+  return new Promise((resolve, reject) => {
+    if (countryCode) {
+      $.ajax({
+        url: 'libs/php/getCountryDetails.php',
+        method: 'GET',
+        dataType: 'json',
+        data: { countryCode },
+        success: data => {
+          if (data.error) {
+            console.error(data.error);
+            reject(data.error);
+          } else {
+            console.log('Country details:', data);
+            $('#countryName').text(data.countryName);
+            $('#countryFlag').attr('src', data.flag);
+            $('#countryCode').text(data.countryCode);
+            $('#countryRegion').text(data.region);
+            $('#countryCapital').text(data.capitalCity);
+            $('#countryPopulation').text(data.population);
+            $('#countryArea').text(data.area);
+            $('#countryLanguages').text(data.nativeLanguages);
+            $('#countryCurrency').text(data.currency);
+            $('#countryCallingCode').text(data.callingCode);
+            $('#countryTimeZone').text(data.timeZone);
+            const currencySymbol = data.currencySymbol || '';
+            $('#currencyNumber').attr('placeholder', `Enter Amount in ${data.currency} ${currencySymbol}`);
+            resolve(data);
+          }
+        },
+        error: (jqXHR, textStatus, errorThrown) => {
+          console.error('Failed to get country details:', textStatus, errorThrown);
+          reject(errorThrown);
         }
-      },
-      error: (jqXHR, textStatus, errorThrown) => {
-        console.error('Failed to get country details:', textStatus, errorThrown);
-      }
-    });
-  }
+      });
+    } else {
+      reject('Country code is not defined.');
+    }
+  });
 };
 
-
 // Function to update the modal with country details
-const updateInfoModal = countryCode => {
-  fetchAndDisplayCountryDetails(countryCode, data => {
+const updateInfoModal = (countryCode) => {
+  fetchAndDisplayCountryDetails(countryCode).then(data => {
     $('#countryDetails').text(JSON.stringify(data, null, 2));
     $('#infoModal').modal('show');
+  }).catch(error => {
+    console.error('Failed to update info modal:', error);
   });
 };
 
@@ -580,20 +606,22 @@ $(document).ready(function () {
 
   // Event listener for dropdown change
   $('#countrySelect').on('change', function () {
-    const countryCode = $(this).val();
-    if (countryCode) {
-      // Clear input fields
-      $('#currencyNumber').val('');
-      $('#currencyResult').text('Please enter an Amount');
-      $('#currencySelect').val(''); // Reset the "Convert to" dropdown
+  const countryCode = $(this).val();
+  if (countryCode) {
+    // Clear input fields
+    $('#currencyNumber').val('');
+    $('#currencyResult').text('Please enter an Amount');
+    $('#currencySelect').val(''); // Reset the "Convert to" dropdown
 
-      getCountryBorder(countryCode);
-      getCities(countryCode); // Get cities for the selected country
-      fetchAndDisplayCountryDetails(countryCode, function() {
-        const countryName = $('#countryName').text();
-        fetchWikipediaArticles(countryName); // Fetch Wikipedia articles for the selected country
-      });
-    }
+    getCountryBorder(countryCode);
+    getCities(countryCode); // Get cities for the selected country
+    fetchAndDisplayCountryDetails(countryCode).then(() => {
+      const countryName = $('#countryName').text();
+      fetchWikipediaArticles(countryName); // Fetch Wikipedia articles for the selected country
+    }).catch(error => {
+      console.error('Failed to fetch and display country details:', error);
+    });
+  }
   });
 
   // Event listener for news article links

@@ -1,5 +1,4 @@
 <?php
-
 // Define the path to the country borders GeoJSON file
 define('COUNTRY_BORDERS_FILE', '../geojson/countryBorders.geo.json');
 
@@ -37,7 +36,6 @@ function getCountriesAsJSON() {
     echo json_encode($countries);
     exit;
 }
-
 // Output the JSON response
 getCountriesAsJSON();
 ?>
