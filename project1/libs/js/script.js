@@ -668,7 +668,6 @@ $(document).ready(function () {
     pinMarker = L.marker(e.latlng, { icon: pinIcon }).addTo(map);
     updatePinCoordinates(e.latlng.lat, e.latlng.lng);
     requestWeatherReport(); // Request the weather report when the pin is dropped
-    fetchWikipediaArticles(e.latlng.lat, e.latlng.lng); // Fetch Wikipedia articles when the pin is dropped
   });
 
   // Call the populateDropdown function to populate the country dropdown
