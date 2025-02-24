@@ -649,10 +649,10 @@ $(document).ready(function () {
 
   // Add the buttons to the map
   infoBtn.addTo(map);
-  wikipediaBtn.addTo(map);
   weatherBtn.addTo(map);
   zoomControl.addTo(map); 
-  currencyBtn.addTo(map); 
+  currencyBtn.addTo(map);
+  wikipediaBtn.addTo(map); 
   newsBtn.addTo(map);
 
   // Add the marker cluster group to the map
