@@ -574,32 +574,22 @@ function addWikipediaMarkers(articles) {
   articles.forEach(function(article) {
     const marker = L.marker([article.lat, article.lng], { icon: wikipediaIcon });
 
-    // Add mouseover and mouseout events for the marker
-    marker.on('mouseover', function() {
+    // Function to create popup content
+    function createPopupContent() {
       const popupContent = $('#popupMarkerTemplate').html();
       const $popupContent = $(popupContent);
       $popupContent.find('#popupTitle').text(article.title);
       $popupContent.find('#popupThumbnail').attr('src', article.thumbnail).attr('alt', article.title);
       $popupContent.find('#popupButton').attr('onclick', `openExternalUrl('${article.url}')`);
-      marker.bindPopup($popupContent.html()).openPopup();
-    });
-
-    marker.on('mouseout', function() {
-      setTimeout(function() {
-        if (!$('.leaflet-popup:hover').length) {
-          marker.closePopup();
-        }
-      }, 100);
-    });
+      return $popupContent.html();
+    }
 
     // Add click event for mobile users
     marker.on('click', function() {
-      const popupContent = $('#popupMarkerTemplate').html();
-      const $popupContent = $(popupContent);
-      $popupContent.find('#popupTitle').text(article.title);
-      $popupContent.find('#popupThumbnail').attr('src', article.thumbnail).attr('alt', article.title);
-      $popupContent.find('#popupButton').attr('onclick', `openExternalUrl('${article.url}')`);
-      marker.bindPopup($popupContent.html()).openPopup();
+      if (marker.getPopup()) {
+        marker.unbindPopup();
+      }
+      marker.bindPopup(createPopupContent()).openPopup();
     });
 
     wikipediaMarkers.addLayer(marker);

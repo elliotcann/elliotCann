@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Gazeteer</title>
+    <!-- Viewport Meta Tag for Mobile Optimization -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- StyleSheet Libraries -->
     <link rel="stylesheet" href="libs/css/normalize.min.css">
     <link rel='stylesheet' href="libs/css/leaflet.css">
@@ -331,7 +333,9 @@
             <div class="text-center">
                 <b id="popupTitle" class="popup-title"></b>
             </div>
-            <img id="popupThumbnail" src="" alt="" class="img-fluid my-2 rounded popup-thumbnail"><br>
+            <div class="text-center">
+                <img id="popupThumbnail" src="" alt="" class="img-fluid my-2 rounded popup-thumbnail text-center">
+            </div>
             <div class="text-center">
                 <button id="popupButton" class="btn btn-primary btn-sm mt-2 popup-button" style="background-color: #3498db; border-color: #3498db;">Read more</button>
             </div>
