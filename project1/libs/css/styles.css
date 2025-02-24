@@ -1,95 +1,89 @@
-/* Page */
+/* Reset default margin and padding */
 html, body {
     margin: 0;
     padding: 0;
     text-decoration: none !important;
-  }
-  
-/* Map */
-#map {
-  width: 100%;
-  height: 100vh;
-  display: none; /* Hide the map initially */
 }
 
-/* Select */
+/* Map container - initially hidden */
+#map {
+    width: 100%;
+    height: 100vh;
+    display: none;
+}
+
+/* Select container - initially hidden */
 #selectContainer {
-  position: fixed;
-  top: 0;
-  z-index: 1000;
-  width: 100%;
-  padding: 11px 0;
-  display: none; /* Hide the select container initially */
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    padding: 11px 0;
+    display: none;
 }
 
 #countrySelect {
-  width: fit-content;
-  margin: 0 auto;
+    width: fit-content;
+    margin: 0 auto;
 }
 
-/* Loading indicator */
+/* Loading indicator - initially hidden */
 #loadingIndicator {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-  text-align: center;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    text-align: center;
 }
 
 /* Mobile-first styles */
 body {
     font-size: 16px;
-    /* Other styles */
 }
 
 /* Weather Modal */
 .weather-icon {
-  width: 50px;
-  height: 50px;
+    width: 50px;
+    height: 50px;
 }
 
 .temp {
-  font-size: 1.5em;
-  font-weight: bold;
+    font-size: 1.5em;
+    font-weight: bold;
 }
 
 .description {
-  font-size: 1em;
-  color: #555;
+    font-size: 1em;
+    color: #555;
 }
 
 /* Adjustments for larger screens */
 @media (min-width: 600px) {
     body {
         font-size: 18px;
-        /* Other styles */
     }
     .weather-icon {
-      width: 75px;
-      height: 75px;
+        width: 75px;
+        height: 75px;
     }
-  
     .temp {
-      font-size: 2em;
+        font-size: 2em;
     }
-  
     .description {
-      font-size: 1.2em;
+        font-size: 1.2em;
     }
 }
 
 @media (min-width: 768px) {
     body {
         font-size: 20px;
-        /* Other styles */
     }
 }
 
 @media (min-width: 1024px) {
     body {
         font-size: 22px;
-        /* Other styles */
     }
 }
