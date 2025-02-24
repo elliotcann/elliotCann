@@ -571,7 +571,12 @@ function openExternalUrl(url) {
 function addWikipediaMarkers(articles) {
   console.log('Adding Wikipedia markers:', articles); // Log the articles data
   wikipediaMarkers.clearLayers(); // Clear existing Wikipedia markers
-  articles.forEach(function(article) {
+
+  // Limit the number of markers to avoid clutter
+  const maxMarkers = 50;
+  const limitedArticles = articles.slice(0, maxMarkers);
+
+  limitedArticles.forEach(function(article) {
     const marker = L.marker([article.lat, article.lng], { icon: wikipediaIcon });
 
     // Function to create popup content
@@ -594,29 +599,33 @@ function addWikipediaMarkers(articles) {
 
     wikipediaMarkers.addLayer(marker);
   });
+
+  map.addLayer(wikipediaMarkers);
 }
 
 // Function to fetch and display Wikipedia articles
 function fetchWikipediaArticles(lat, lng) {
+  const zoomLevel = map.getZoom();
+  const radius = zoomLevel > 10 ? 5000 : 10000; // Adjust radius based on zoom level
+
   $.ajax({
     url: 'libs/php/getWikipediaArticles.php',
     method: 'GET',
     dataType: 'json',
     data: {
       lat: lat,
-      lng: lng
+      lng: lng,
+      radius: radius
     },
     success: function(data) {
       if (data.error) {
-        console.error(data.error);
-      } else {
-        const articles = data.articles;
-        addWikipediaMarkers(articles);
-        wikipediaMarkers.addTo(map);
+        console.error('Error fetching Wikipedia articles:', data.error);
+        return;
       }
+      addWikipediaMarkers(data.articles);
     },
-    error: function(jqXHR, textStatus, errorThrown) {
-      console.error('Failed to fetch Wikipedia articles:', textStatus, errorThrown);
+    error: function(xhr, status, error) {
+      console.error('AJAX error:', status, error);
     }
   });
 }
@@ -695,4 +704,12 @@ $(document).ready(function () {
     const url = $(this).attr('href');
     window.open(url, '_blank');
   });
+
+  // Event listener to fetch articles when the map is moved or zoomed
+  map.on('moveend', function() {
+    const center = map.getCenter();
+    fetchWikipediaArticles(center.lat, center.lng);
+  });
+
+  $('#welcomeModal').modal('show');
 });
