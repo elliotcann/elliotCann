@@ -9,7 +9,7 @@ if (!$lat || !$lng) {
     exit;
 }
 
-$apiUrl = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=coordinates|pageimages|pageterms&generator=geosearch&ggscoord={$lat}|{$lng}&ggsradius=10000&ggs&piprop=thumbnail&pithumbsize=200";
+$apiUrl = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=coordinates|pageimages|pageterms&generator=geosearch&ggscoord={$lat}|{$lng}&ggsradius=10000&piprop=thumbnail&pithumbsize=200";
 
 $response = file_get_contents($apiUrl);
 if ($response === FALSE) {

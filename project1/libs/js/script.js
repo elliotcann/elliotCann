@@ -29,7 +29,7 @@ const basemaps = {
 // BUTTONS
 // ---------------------------------------------------------
 
-const infoBtn = L.easyButton('<img src="libs/assets/img/info-lg.svg" class="img-responsive">', function (btn, map) {
+const infoBtn = L.easyButton('<img src="libs/assets/img/info-lg.svg" class="img-responsive border-0 shadow-none">', function (btn, map) {
   $('#infoModal').modal('show');
 });
 
@@ -397,9 +397,6 @@ function requestWeatherReport() {
           $('#placeCoords').text(`Latitude: ${centerLat.toFixed(2)}, Longitude: ${centerLng.toFixed(2)}`);
           $('#todayWeatherIcon').attr('src', `http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`);
           $('#todayTemp').text(`${data.list[0].main.temp.toFixed(1)} °C`);
-          $('#todayFeelsLike').text(`Feels Like: ${data.list[0].main.feels_like.toFixed(1)} °C`);
-          $('#todayHumidity').text(`Humidity: ${data.list[0].main.humidity}%`);
-          $('#todayWind').text(`Wind: ${data.list[0].wind.speed} m/s`);
           $('#todayDescription').text(data.list[0].weather[0].description);
 
           // Update the next 5 days forecast
@@ -416,20 +413,12 @@ function requestWeatherReport() {
               const formattedDate = `${day} ${dayOfMonth}${suffix}`;
               $(`#dateDay${i}`).text(formattedDate);
               $(`#iconDay${i}`).attr('src', `http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`);
-              $(`#lowTempDay${i}`).text(`${forecast.main.temp_min.toFixed(1)} °C`);
-              $(`#highTempDay${i}`).text(`${forecast.main.temp_max.toFixed(1)} °C`);
-              $(`#feelsLikeDay${i}`).text(`${forecast.main.feels_like.toFixed(1)} °C`);
-              $(`#humidityDay${i}`).text(`${forecast.main.humidity}%`);
-              $(`#windDay${i}`).text(`${forecast.wind.speed} m/s`);
+              $(`#tempDay${i}`).text(`${forecast.main.temp_min.toFixed(1)}°C - ${forecast.main.temp_max.toFixed(1)}°C`);
               $(`#descriptionDay${i}`).text(forecast.weather[0].description);
             } else {
               $(`#dateDay${i}`).text('N/A');
               $(`#iconDay${i}`).attr('src', '');
-              $(`#lowTempDay${i}`).text('N/A');
-              $(`#highTempDay${i}`).text('N/A');
-              $(`#feelsLikeDay${i}`).text('N/A');
-              $(`#humidityDay${i}`).text('N/A');
-              $(`#windDay${i}`).text('N/A');
+              $(`#tempDay${i}`).text('N/A');
               $(`#descriptionDay${i}`).text('N/A');
             }
           }
@@ -573,7 +562,7 @@ function addWikipediaMarkers(articles) {
   wikipediaMarkers.clearLayers(); // Clear existing Wikipedia markers
 
   // Limit the number of markers to avoid clutter
-  const maxMarkers = 50;
+  const maxMarkers = 10;
   const limitedArticles = articles.slice(0, maxMarkers);
 
   limitedArticles.forEach(function(article) {

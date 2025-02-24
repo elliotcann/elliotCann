@@ -44,11 +44,39 @@ body {
     /* Other styles */
 }
 
+/* Weather Modal */
+.weather-icon {
+  width: 50px;
+  height: 50px;
+}
+
+.temp {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.description {
+  font-size: 1em;
+  color: #555;
+}
+
 /* Adjustments for larger screens */
 @media (min-width: 600px) {
     body {
         font-size: 18px;
         /* Other styles */
+    }
+    .weather-icon {
+      width: 75px;
+      height: 75px;
+    }
+  
+    .temp {
+      font-size: 2em;
+    }
+  
+    .description {
+      font-size: 1.2em;
     }
 }
 
@@ -65,4 +93,3 @@ body {
         /* Other styles */
     }
 }
-

@@ -29,7 +29,7 @@
 
     <!-- Select Dropdown -->
     <span id="selectContainer">
-    <select id="countrySelect" class="form-select shadow-sm">
+    <select id="countrySelect" class="form-select border shadow-sm">
         <option id="countryValue" value="" disabled selected>Select Country</option>
     </select>
     </span>
@@ -42,17 +42,18 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-success bg-gradient text-white">
-                    <h5 class="modal-title" id="welcomeModalLabel">Welcome to Gazetteer</h5>
+                    <h5 class="modal-title" id="welcomeModalLabel">Welcome to Gazetteer!</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Welcome to Gazetteer! This application allows you to explore various countries and get information about them. You can:</p>
+                    <p>This application allows you to explore various countries and get information about them. You can:</p>
                     <ul>
                         <li>Select a country from the dropdown to view its details.</li>
                         <li>Click on the map markers to get more information about specific locations.</li>
                         <li>Use the buttons on the map to view weather forecasts, currency exchange rates, Wikipedia articles, and top news articles.</li>
                     </ul>
                     <p>Enjoy exploring!</p>
+                    <p><em>Elliot :)</em></p>
                 </div>
             </div>
         </div>
@@ -70,51 +71,51 @@
             <div class="text-center mb-3">
                 <img id="countryFlag" src="" alt="Country Flag" width="100px" class="img-fluid rounded">
             </div>
-            <table class="table">
+            <table class="table-striped table table-borderless">
                 <tbody>
                     <tr>
                         <td class="text-center"><img src="libs/assets/img/geo-alt.svg" alt="Geo Icon"></td>
-                        <td>Country Code</td>
+                        <td class="fw-bold">Country Code</td>
                         <td class="text-end" id="countryCode"></td>
                     </tr>
                     <tr>
                         <td class="text-center"><img src="libs/assets/img/region.svg" alt="Region"></td>
-                        <td>Region</td>
+                        <td class="fw-bold">Region</td>
                         <td class="text-end" id="countryRegion"></td>
                     </tr>
                     <tr>
                         <td class="text-center"><img src="libs/assets/img/capital-city.svg" alt="Capital City"></td>
-                        <td>Capital City</td>
+                        <td class="fw-bold">Capital City</td>
                         <td class="text-end" id="countryCapital"></td>
                     </tr>
                     <tr>
                         <td class="text-center"><img src="libs/assets/img/people.svg" alt="People"></td>
-                        <td>Population</td>
+                        <td class="fw-bold">Population</td>
                         <td class="text-end" id="countryPopulation"></td>
                     </tr>
                     <tr>
                         <td class="text-center"><img src="libs/assets/img/arrows-angle-expand.svg" alt="Area"></td>
-                        <td>Area</td>
+                        <td class="fw-bold">Area</td>
                         <td class="text-end" id="countryArea"></td>
                     </tr>
                     <tr>
                         <td class="text-center"><img src="libs/assets/img/translate.svg" alt="Languages"></td>
-                        <td>Native Languages</td>
+                        <td class="fw-bold">Native Languages</td>
                         <td class="text-end" id="countryLanguages"></td>
                     </tr>
                     <tr>
                         <td class="text-center"><img src="libs/assets/img/cash-coin.svg" alt="Currency"></td>
-                        <td>Currency</td>
+                        <td class="fw-bold">Currency</td>
                         <td class="text-end" id="countryCurrency"></td>
                     </tr>
                     <tr>
                         <td class="text-center"><img src="libs/assets/img/calling-code.svg" alt="Calling Code"></td>
-                        <td>Calling Code</td>
+                        <td class="fw-bold">Calling Code</td>
                         <td class="text-end" id="countryCallingCode"></td>
                     </tr>
                     <tr>
                         <td class="text-center"><img src="libs/assets/img/time-zone.svg" alt="Time Zone"></td>
-                        <td>Time Zone</td>
+                        <td class="fw-bold">Time Zone</td>
                         <td class="text-end" id="countryTimeZone"></td>
                     </tr>
                 </tbody>
@@ -126,93 +127,58 @@
 
     <!-- Weather Modal -->
     <div id="weatherModal" class="modal fade" data-bs-backdrop="true" tabindex="-1" data-mdb-backdrop="static">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content shadow">
-            <div class="modal-header bg-success bg-gradient text-white">
-                <h5 class="modal-title">Weather Forecast</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h5 id="placeName" class="text-center mb-3"></h5>
-                <div class="current-weather text-center mb-4">
-                    <img id="todayWeatherIcon" src="" alt="Today's Weather" class="weather-icon">
-                    <div id="todayTemp" class="temp"></div>
-                    <div id="todayFeelsLike" class="feels-like"></div>
-                    <div id="todayHumidity" class="humidity"></div>
-                    <div id="todayWind" class="wind"></div>
-                    <div id="todayDescription" class="description"></div>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow">
+                <div class="modal-header bg-success bg-gradient text-white">
+                    <h5 class="modal-title">Weather Forecast</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="forecast">
-                    <table class="table">
-                        <thead>
-                            <tr class="text-center">
-                                <th>Date</th>
-                                <th>Icon</th>
-                                <th>Low Temp</th>
-                                <th>High Temp</th>
-                                <th>Feels Like</th>
-                                <th>Humidity</th>
-                                <th>Wind</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="text-center align-middle">
-                                <td id="dateDay1"></td>
-                                <td><img id="iconDay1" src="" alt="Day 1 Weather" class="weather-icon"></td>
-                                <td id="lowTempDay1"></td>
-                                <td id="highTempDay1"></td>
-                                <td id="feelsLikeDay1"></td>
-                                <td id="humidityDay1"></td>
-                                <td id="windDay1"></td>
-                                <td id="descriptionDay1"></td>
-                            </tr>
-                            <tr class="text-center align-middle">
-                                <td id="dateDay2"></td>
-                                <td><img id="iconDay2" src="" alt="Day 2 Weather" class="weather-icon"></td>
-                                <td id="lowTempDay2"></td>
-                                <td id="highTempDay2"></td>
-                                <td id="feelsLikeDay2"></td>
-                                <td id="humidityDay2"></td>
-                                <td id="windDay2"></td>
-                                <td id="descriptionDay2"></td>
-                            </tr>
-                            <tr class="text-center align-middle">
-                                <td id="dateDay3"></td>
-                                <td><img id="iconDay3" src="" alt="Day 3 Weather" class="weather-icon"></td>
-                                <td id="lowTempDay3"></td>
-                                <td id="highTempDay3"></td>
-                                <td id="feelsLikeDay3"></td>
-                                <td id="humidityDay3"></td>
-                                <td id="windDay3"></td>
-                                <td id="descriptionDay3"></td>
-                            </tr>
-                            <tr class="text-center align-middle">
-                                <td id="dateDay4"></td>
-                                <td><img id="iconDay4" src="" alt="Day 4 Weather" class="weather-icon"></td>
-                                <td id="lowTempDay4"></td>
-                                <td id="highTempDay4"></td>
-                                <td id="feelsLikeDay4"></td>
-                                <td id="humidityDay4"></td>
-                                <td id="windDay4"></td>
-                                <td id="descriptionDay4"></td>
-                            </tr>
-                            <tr class="text-center align-middle">
-                                <td id="dateDay5"></td>
-                                <td><img id="iconDay5" src="" alt="Day 5 Weather" class="weather-icon"></td>
-                                <td id="lowTempDay5"></td>
-                                <td id="highTempDay5"></td>
-                                <td id="feelsLikeDay5"></td>
-                                <td id="humidityDay5"></td>
-                                <td id="windDay5"></td>
-                                <td id="descriptionDay5"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="modal-body">
+                    <div class="current-weather text-center mb-4 border shadow-sm rounded p-3">
+                        <h5 id="placeName" class="text-center mb-3 fw-bold"></h5>
+                        <img id="todayWeatherIcon" src="" alt="Today's Weather" class="weather-icon">
+                        <div id="todayTemp" class="temp"></div>
+                        <div id="todayDescription" class="description"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <div class="forecast-day text-center p-2 border shadow-sm rounded">
+                                <div id="dateDay1" class="fw-bold"></div>
+                                <img id="iconDay1" src="" alt="Day 1 Weather" class="weather-icon">
+                                <div id="tempDay1" class="temp"></div>
+                                <div id="descriptionDay1" class="description"></div>
+                            </div>
+                        </div>
+                        <div class="col mb-3">
+                            <div class="forecast-day text-center p-2 border shadow-sm rounded">
+                                <div id="dateDay2" class="fw-bold"></div>
+                                <img id="iconDay2" src="" alt="Day 2 Weather" class="weather-icon">
+                                <div id="tempDay2" class="temp"></div>
+                                <div id="descriptionDay2" class="description"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <div class="forecast-day text-center p-2 border shadow-sm rounded">
+                                <div id="dateDay3" class="fw-bold"></div>
+                                <img id="iconDay3" src="" alt="Day 3 Weather" class="weather-icon">
+                                <div id="tempDay3" class="temp"></div>
+                                <div id="descriptionDay3" class="description"></div>
+                            </div>
+                        </div>
+                        <div class="col mb-3">
+                            <div class="forecast-day text-center p-2 border shadow-sm rounded">
+                                <div id="dateDay4" class="fw-bold"></div>
+                                <img id="iconDay4" src="" alt="Day 4 Weather" class="weather-icon">
+                                <div id="tempDay4" class="temp"></div>
+                                <div id="descriptionDay4" class="description"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Currency Modal -->
@@ -225,11 +191,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="currencyNumber" class="form-label">Amount</label>
+                        <label for="currencyNumber" class="form-label fw-bold">Amount</label>
                         <input type="number" id="currencyNumber" class="form-control" placeholder="Enter Amount" min="0" step="0.01" inputmode="decimal">
                     </div>
                     <div class="mb-3">
-                        <label for="currencySelect" class="form-label">Convert to</label>
+                        <label for="currencySelect" class="form-label fw-bold">Convert to</label>
                         <select id="currencySelect" class="form-select">
                             <option value="" disabled selected>Select Currency</option>
                         </select>
@@ -268,64 +234,64 @@
                 <div class="modal-body">
                     <div id="newsContent">
                         <div class="news-article mb-4 p-3 border rounded shadow-sm">
-                            <h5 id="newsTitle1" class="mb-2" style="color: #2c3e50;"></h5>
-                            <img id="newsImage1" src="" alt="" class="img-fluid mb-2 rounded" style="width: 100%; height: auto;">
+                            <h5 id="newsTitle1" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage1" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
                             <p id="newsDescription1" class="mb-2"></p>
-                            <a id="newsLink1" href="" target="_blank" class="btn btn-primary" style="background-color: #3498db; border-color: #3498db;">Read more</a>
+                            <a id="newsLink1" href="" target="_blank" class="btn btn-primary">Read more</a>
                         </div>
                         <div class="news-article mb-4 p-3 border rounded shadow-sm">
-                            <h5 id="newsTitle2" class="mb-2" style="color: #2c3e50;"></h5>
-                            <img id="newsImage2" src="" alt="" class="img-fluid mb-2 rounded" style="width: 100%; height: auto;">
+                            <h5 id="newsTitle2" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage2" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
                             <p id="newsDescription2" class="mb-2"></p>
-                            <a id="newsLink2" href="" target="_blank" class="btn btn-primary" style="background-color: #3498db; border-color: #3498db;">Read more</a>
+                            <a id="newsLink2" href="" target="_blank" class="btn btn-primary">Read more</a>
                         </div>
                         <div class="news-article mb-4 p-3 border rounded shadow-sm">
-                            <h5 id="newsTitle3" class="mb-2" style="color: #2c3e50;"></h5>
-                            <img id="newsImage3" src="" alt="" class="img-fluid mb-2 rounded" style="width: 100%; height: auto;">
+                            <h5 id="newsTitle3" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage3" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
                             <p id="newsDescription3" class="mb-2"></p>
-                            <a id="newsLink3" href="" target="_blank" class="btn btn-primary" style="background-color: #3498db; border-color: #3498db;">Read more</a>
+                            <a id="newsLink3" href="" target="_blank" class="btn btn-primary">Read more</a>
                         </div>
                         <div class="news-article mb-4 p-3 border rounded shadow-sm">
-                            <h5 id="newsTitle4" class="mb-2" style="color: #2c3e50;"></h5>
-                            <img id="newsImage4" src="" alt="" class="img-fluid mb-2 rounded" style="width: 100%; height: auto;">
+                            <h5 id="newsTitle4" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage4" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
                             <p id="newsDescription4" class="mb-2"></p>
-                            <a id="newsLink4" href="" target="_blank" class="btn btn-primary" style="background-color: #3498db; border-color: #3498db;">Read more</a>
+                            <a id="newsLink4" href="" target="_blank" class="btn btn-primary">Read more</a>
                         </div>
                         <div class="news-article mb-4 p-3 border rounded shadow-sm">
-                            <h5 id="newsTitle5" class="mb-2" style="color: #2c3e50;"></h5>
-                            <img id="newsImage5" src="" alt="" class="img-fluid mb-2 rounded" style="width: 100%; height: auto;">
+                            <h5 id="newsTitle5" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage5" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
                             <p id="newsDescription5" class="mb-2"></p>
-                            <a id="newsLink5" href="" target="_blank" class="btn btn-primary" style="background-color: #3498db; border-color: #3498db;">Read more</a>
+                            <a id="newsLink5" href="" target="_blank" class="btn btn-primary">Read more</a>
                         </div>
                         <div class="news-article mb-4 p-3 border rounded shadow-sm">
-                            <h5 id="newsTitle6" class="mb-2" style="color: #2c3e50;"></h5>
-                            <img id="newsImage6" src="" alt="" class="img-fluid mb-2 rounded" style="width: 100%; height: auto;">
+                            <h5 id="newsTitle6" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage6" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
                             <p id="newsDescription6" class="mb-2"></p>
-                            <a id="newsLink6" href="" target="_blank" class="btn btn-primary" style="background-color: #3498db; border-color: #3498db;">Read more</a>
+                            <a id="newsLink6" href="" target="_blank" class="btn btn-primary">Read more</a>
                         </div>
                         <div class="news-article mb-4 p-3 border rounded shadow-sm">
-                            <h5 id="newsTitle7" class="mb-2" style="color: #2c3e50;"></h5>
-                            <img id="newsImage7" src="" alt="" class="img-fluid mb-2 rounded" style="width: 100%; height: auto;">
+                            <h5 id="newsTitle7" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage7" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
                             <p id="newsDescription7" class="mb-2"></p>
-                            <a id="newsLink7" href="" target="_blank" class="btn btn-primary" style="background-color: #3498db; border-color: #3498db;">Read more</a>
+                            <a id="newsLink7" href="" target="_blank" class="btn btn-primary">Read more</a>
                         </div>
                         <div class="news-article mb-4 p-3 border rounded shadow-sm">
-                            <h5 id="newsTitle8" class="mb-2" style="color: #2c3e50;"></h5>
-                            <img id="newsImage8" src="" alt="" class="img-fluid mb-2 rounded" style="width: 100%; height: auto;">
+                            <h5 id="newsTitle8" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage8" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
                             <p id="newsDescription8" class="mb-2"></p>
-                            <a id="newsLink8" href="" target="_blank" class="btn btn-primary" style="background-color: #3498db; border-color: #3498db;">Read more</a>
+                            <a id="newsLink8" href="" target="_blank" class="btn btn-primary">Read more</a>
                         </div>
                         <div class="news-article mb-4 p-3 border rounded shadow-sm">
-                            <h5 id="newsTitle9" class="mb-2" style="color: #2c3e50;"></h5>
-                            <img id="newsImage9" src="" alt="" class="img-fluid mb-2 rounded" style="width: 100%; height: auto;">
+                            <h5 id="newsTitle9" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage9" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
                             <p id="newsDescription9" class="mb-2"></p>
-                            <a id="newsLink9" href="" target="_blank" class="btn btn-primary" style="background-color: #3498db; border-color: #3498db;">Read more</a>
+                            <a id="newsLink9" href="" target="_blank" class="btn btn-primary">Read more</a>
                         </div>
                         <div class="news-article mb-4 p-3 border rounded shadow-sm">
-                            <h5 id="newsTitle10" class="mb-2" style="color: #2c3e50;"></h5>
-                            <img id="newsImage10" src="" alt="" class="img-fluid mb-2 rounded" style="width: 100%; height: auto;">
+                            <h5 id="newsTitle10" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage10" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
                             <p id="newsDescription10" class="mb-2"></p>
-                            <a id="newsLink10" href="" target="_blank" class="btn btn-primary" style="background-color: #3498db; border-color: #3498db;">Read more</a>
+                            <a id="newsLink10" href="" target="_blank" class="btn btn-primary">Read more</a>
                         </div>
                     </div>
                 </div>
@@ -358,7 +324,7 @@
                 <img id="popupThumbnail" src="" alt="" class="img-fluid my-2 rounded popup-thumbnail text-center">
             </div>
             <div class="text-center">
-                <button id="popupButton" class="btn btn-primary btn-sm mt-2 popup-button" style="background-color: #3498db; border-color: #3498db;">Read more</button>
+                <button id="popupButton" class="btn btn-primary btn-sm mt-2 popup-button">Read more</button>
             </div>
         </div>
     </div>
