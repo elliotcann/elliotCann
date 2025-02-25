@@ -36,7 +36,14 @@ const createButton = (icon, callback) => L.easyButton(`<img src="${icon}" class=
 // Create buttons with icons and event listeners
 const infoBtn = createButton('libs/assets/img/info-lg.svg', () => $('#infoModal').modal('show'));
 
-const weatherBtn = createButton('libs/assets/img/cloud-sun.svg', () => pinMarker ? $("#weatherModal").modal("show") : alert("Please place a pin on the map first."));
+const weatherBtn = createButton('libs/assets/img/cloud-sun.svg', () => {
+  const countryCode = $('#countrySelect').val();
+  if (countryCode) {
+    requestWeatherReport(countryCode);
+  } else {
+    alert("Please select a country first.");
+  }
+});
 
 const currencyBtn = createButton('libs/assets/img/currency-exchange.svg', () => $('#currencyModal').modal('show'));
 
@@ -212,17 +219,6 @@ const customIcon = createCustomIcon(
   [1, -24]
 );
 
-// Custom icon for pin marker
-const pinIcon = createCustomIcon(
-  'libs/assets/img/pin.png',
-  'libs/assets/img/marker-shadow.png',
-  [35, 45],
-  [41, 41],
-  [15, 40],
-  [12, 41],
-  [0, -40]
-);
-
 // Custom icon for Wikipedia markers
 const wikipediaIcon = createCustomIcon(
   'libs/assets/img/wikipedia-icon.png',
@@ -337,68 +333,92 @@ const updateInfoModal = (countryCode) => {
   });
 };
 
-// Function to update the coordinates based on the pin location
-const updatePinCoordinates = (lat, lng) => {
-  centerLat = lat;
-  centerLng = lng;
-  console.log(`Pin location updated: Latitude: ${centerLat}, Longitude: ${centerLng}`);
-};
-
 // ---------------------------------------------------------
 // WEATHER REPORT FUNCTIONS
 // ---------------------------------------------------------
 
-// Function to request weather reports using the pin coordinates
-const requestWeatherReport = () => {
-  if (centerLat !== undefined && centerLng !== undefined) {
-    console.log(`Requesting weather report for Latitude: ${centerLat}, Longitude: ${centerLng}`);
+// Function to request weather reports using the capital city coordinates
+const requestWeatherReport = (countryCode) => {
+  if (countryCode) {
+    console.log(`Requesting weather report for country code: ${countryCode}`);
+    // Fetch the country details including the capital city coordinates
     $.ajax({
-      url: 'libs/php/getWeatherForecast.php',
+      url: 'libs/php/getCountryDetails.php',
       method: 'GET',
       dataType: 'json',
-      data: { lat: centerLat, lng: centerLng },
-      success: data => {
-        if (data.error) {
-          console.error(data.error);
+      data: { countryCode: countryCode },
+      success: countryData => {
+        if (countryData.error) {
+          console.error(countryData.error);
+          $('#weatherModal').modal('show'); // Show modal even if there is an error
         } else {
-          console.log('Weather forecast:', data);
-          let placeName = data.city.name + ' (' + data.city.country + ')';
-          if (!data.city.name) placeName = 'Sea Area';
-          $('#placeName').text(`${placeName}`);
-          $('#placeCoords').text(`Latitude: ${centerLat.toFixed(2)}, Longitude: ${centerLng.toFixed(2)}`);
-          $('#todayWeatherIcon').attr('src', `http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`);
-          $('#todayTemp').text(`${data.list[0].main.temp.toFixed(1)} °C`);
-          $('#todayDescription').text(data.list[0].weather[0].description);
-          for (let i = 1; i <= 5; i++) {
-            const forecastIndex = i * 8 - 1;
-            if (data.list[forecastIndex]) {
-              const forecast = data.list[forecastIndex];
-              const date = new Date(forecast.dt * 1000);
-              const day = date.toLocaleDateString('en-US', { weekday: 'short' });
-              const dayOfMonth = date.getDate();
-              const suffix = (dayOfMonth % 10 === 1 && dayOfMonth !== 11) ? 'st' :
-                             (dayOfMonth % 10 === 2 && dayOfMonth !== 12) ? 'nd' :
-                             (dayOfMonth % 10 === 3 && dayOfMonth !== 13) ? 'rd' : 'th';
-              const formattedDate = `${day} ${dayOfMonth}${suffix}`;
-              $(`#dateDay${i}`).text(formattedDate);
-              $(`#iconDay${i}`).attr('src', `http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`);
-              $(`#tempDay${i}`).text(`${forecast.main.temp.toFixed(1)}°C`);
-              $(`#descriptionDay${i}`).text(forecast.weather[0].description);
-            } else {
-              $(`#dateDay${i}`).text('N/A');
-              $(`#iconDay${i}`).attr('src', '');
-              $(`#tempDay${i}`).text('N/A');
-              $(`#descriptionDay${i}`).text('N/A');
-            }
+          const capital = countryData.capitalCity;
+          const lat = countryData.lat;
+          const lng = countryData.lng;
+
+          if (!lat || !lng) {
+            console.error('Latitude and longitude are required');
+            $('#weatherModal').modal('show'); // Show modal even if there is an error
+            return;
           }
+
+          // Fetch weather data for the capital city
+          $.ajax({
+            url: 'libs/php/getWeatherForecast.php',
+            method: 'GET',
+            dataType: 'json',
+            data: { lat: lat, lng: lng },
+            success: data => {
+              if (data.error) {
+                console.error(data.error);
+              } else {
+                console.log('Weather forecast:', data);
+                let placeName = data.city.name + ' (' + data.city.country + ')';
+                if (!data.city.name) placeName = 'Sea Area';
+                $('#placeName').text(`${placeName}`);
+                $('#placeCoords').text(`Latitude: ${lat.toFixed(2)}, Longitude: ${lng.toFixed(2)}`);
+                $('#todayWeatherIcon').attr('src', `http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`);
+                $('#todayTemp').text(`${data.list[0].main.temp.toFixed(1)} °C`);
+                $('#todayDescription').text(data.list[0].weather[0].description);
+                for (let i = 1; i <= 5; i++) {
+                  const forecastIndex = i * 8 - 1;
+                  if (data.list[forecastIndex]) {
+                    const forecast = data.list[forecastIndex];
+                    const date = new Date(forecast.dt * 1000);
+                    const day = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    const dayOfMonth = date.getDate();
+                    const suffix = (dayOfMonth % 10 === 1 && dayOfMonth !== 11) ? 'st' :
+                                   (dayOfMonth % 10 === 2 && dayOfMonth !== 12) ? 'nd' :
+                                   (dayOfMonth % 10 === 3 && dayOfMonth !== 13) ? 'rd' : 'th';
+                    const formattedDate = `${day} ${dayOfMonth}${suffix}`;
+                    $(`#dateDay${i}`).text(formattedDate);
+                    $(`#iconDay${i}`).attr('src', `http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`);
+                    $(`#tempDay${i}`).text(`${forecast.main.temp.toFixed(1)}°C`);
+                    $(`#descriptionDay${i}`).text(forecast.weather[0].description);
+                  } else {
+                    $(`#dateDay${i}`).text('N/A');
+                    $(`#iconDay${i}`).attr('src', '');
+                    $(`#tempDay${i}`).text('N/A');
+                    $(`#descriptionDay${i}`).text('N/A');
+                  }
+                }
+              }
+              $('#weatherModal').modal('show'); // Show modal after data is fetched
+            },
+            error: (jqXHR, textStatus, errorThrown) => {
+              console.error('Failed to get weather report:', textStatus, errorThrown);
+              $('#weatherModal').modal('show'); // Show modal even if there is an error
+            }
+          });
         }
       },
       error: (jqXHR, textStatus, errorThrown) => {
-        console.error('Failed to get weather report:', textStatus, errorThrown);
+        console.error('Failed to get country details:', textStatus, errorThrown);
+        $('#weatherModal').modal('show'); // Show modal even if there is an error
       }
     });
   } else {
-    console.error('Pin coordinates are not defined.');
+    console.error('Country code is undefined');
   }
 };
 
@@ -596,16 +616,6 @@ $(document).ready(function () {
   // Add marker clusters to the map
   markers.addTo(map);
   wikipediaMarkers.addTo(map);
-
-  // Add click event to the map to drop a pin
-  map.on('click', function(e) {
-    if (pinMarker) {
-      map.removeLayer(pinMarker);
-    }
-    pinMarker = L.marker(e.latlng, { icon: pinIcon }).addTo(map);
-    updatePinCoordinates(e.latlng.lat, e.latlng.lng);
-    requestWeatherReport(); // Request the weather report when the pin is dropped
-  });
 
   // Populate dropdowns
   populateDropdown();

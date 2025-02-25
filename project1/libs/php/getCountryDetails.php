@@ -25,6 +25,8 @@ if (isset($_GET['countryCode'])) {
             'countryCode' => $countryCode,
             'region' => $country['region'] ?? '',
             'capitalCity' => $country['capital'][0] ?? '',
+            'lat' => $country['capitalInfo']['latlng'][0] ?? '',
+            'lng' => $country['capitalInfo']['latlng'][1] ?? '',
             'population' => $country['population'] ?? '',
             'area' => ($country['area'] ?? '') . ' km²',
             'nativeLanguages' => implode(', ', array_values($country['languages'] ?? [])),
