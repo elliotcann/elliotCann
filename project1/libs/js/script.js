@@ -4,6 +4,11 @@
 
 let map, currentBorderLayer, lat, lng, centerLat, centerLng, pinMarker;
 
+// Helper function to format numbers with commas
+const formatNumber = (num) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 // ---------------------------------------------------------
 // TILE LAYERS
 // ---------------------------------------------------------
@@ -30,18 +35,25 @@ const createButton = (icon, callback) => L.easyButton(`<img src="${icon}" class=
 
 // Create buttons with icons and event listeners
 const infoBtn = createButton('libs/assets/img/info-lg.svg', () => $('#infoModal').modal('show'));
+
 const weatherBtn = createButton('libs/assets/img/cloud-sun.svg', () => pinMarker ? $("#weatherModal").modal("show") : alert("Please place a pin on the map first."));
+
 const currencyBtn = createButton('libs/assets/img/currency-exchange.svg', () => $('#currencyModal').modal('show'));
+
 const zoomInBtn = createButton('libs/assets/img/plus.svg', (btn, map) => map.zoomIn());
+
 const zoomOutBtn = createButton('libs/assets/img/minus.svg', (btn, map) => map.zoomOut());
+
 const wikipediaBtn = createButton('libs/assets/img/wikipedia.svg', () => {
   const countryName = $('#countryName').text();
   countryName ? openWikipediaPage(countryName) : alert("Please select a country first.");
 });
+
 const newsBtn = createButton('libs/assets/img/newspaper.svg', () => {
   const countryCode = $('#countrySelect').val();
   countryCode ? fetchNewsArticles(countryCode) : alert("Please select a country first.");
 });
+
 const zoomControl = L.easyBar([zoomInBtn, zoomOutBtn], { position: 'topright' });
 
 // ---------------------------------------------------------
@@ -228,7 +240,7 @@ const addCityMarkers = cities => {
   cities.forEach(city => {
     const marker = L.marker([city.lat, city.lng], { icon: customIcon });
     marker.on('mouseover', () => {
-      const popupContent = `<div style="text-align: center;"><b>${city.name}</b><br>Population: ${city.population}</div>`;
+      const popupContent = `<div style="text-align: center;"><b>${city.name}</b><br>Population: ${formatNumber(city.population)}</div>`;
       marker.bindPopup(popupContent).openPopup();
     });
     marker.on('mouseout', () => {
@@ -293,8 +305,8 @@ const fetchAndDisplayCountryDetails = (countryCode) => {
             $('#countryCode').text(data.countryCode);
             $('#countryRegion').text(data.region);
             $('#countryCapital').text(data.capitalCity);
-            $('#countryPopulation').text(data.population);
-            $('#countryArea').text(data.area);
+            $('#countryPopulation').text(formatNumber(data.population));
+            $('#countryArea').text(formatNumber(data.area));
             $('#countryLanguages').text(data.nativeLanguages);
             $('#countryCurrency').text(data.currency);
             $('#countryCallingCode').text(data.callingCode);
