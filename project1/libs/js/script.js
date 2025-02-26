@@ -31,7 +31,7 @@ const basemaps = {
 // ---------------------------------------------------------
 
 // Create a button with an icon and a callback function
-const createButton = (icon, callback) => L.easyButton(`<img src="${icon}" class="img-responsive">`, callback);
+const createButton = (icon, callback) => L.easyButton(`<img src="${icon}">`, callback);
 
 // Create buttons with icons and event listeners
 const infoBtn = createButton('libs/assets/img/info-lg.svg', () => $('#infoModal').modal('show'));
