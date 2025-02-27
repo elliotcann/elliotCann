@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gazetteer</title>
+    <!-- Viewport Meta Tag for Mobile Optimization -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- StyleSheet Libraries -->
+    <link rel="stylesheet" href="libs/css/normalize.min.css">
+    <link rel="stylesheet" href="libs/css/leaflet.css">
+    <link rel="stylesheet" href="libs/css/toastify.min.css">
+    <link rel="stylesheet" href="libs/css/marker-cluster.default.css">
+    <link rel="stylesheet" href="libs/css/marker-cluster.css">
+    <link rel="stylesheet" href="libs/css/extra-markers.min.css">
+    <link rel="stylesheet" href="libs/css/bootstrap.min.css">
+    <link rel="stylesheet" href="libs/css/easy-buttons.css">
+    <!-- Custom StyleSheet -->
+    <link rel="stylesheet" href="libs/css/styles.css">
+
+</head>
+
+<body>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator">
+        <img src="libs/assets/img/loading.svg" alt="Loading...">
+    </div>
+
+    <!-- Select Dropdown -->
+    <span id="selectContainer">
+    <select id="countrySelect" class="form-select border shadow-sm">
+        <option id="countryValue" value="" disabled selected>Select Country</option>
+    </select>
+    </span>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+        <!-- Welcome Modal -->
+    <div id="welcomeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success bg-gradient text-white">
+                    <h5 class="modal-title" id="welcomeModalLabel">Welcome to Gazetteer!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Explore the globe and find out interesting knowledge about any country.</p>
+                    <p>Here is how:</p>
+                    <ul>
+                        <li>Select a country from the dropdown.</li>
+                        <li>Navigate the buttons on the left for info, weather, currency conversion, wikipedia, and news.</li>
+                        <li>Zoom in and inspect markers on the map for location specific info.</li>
+                    </ul>
+                    <p>Enjoy exploring!</p>
+                    <p class="text-end"><em>Elliot :)</em></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal fade" data-bs-backdrop="true" tabindex="-1" data-mdb-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+        <div class="modal-header bg-success bg-gradient text-white">
+            <h5 class="modal-title" id="countryName"></h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="text-center mb-3">
+                <img id="countryFlag" src="" alt="Country Flag" width="100px" class="img-fluid rounded">
+            </div>
+            <table class="table-striped table table-borderless">
+                <tbody>
+                    <tr>
+                        <td class="text-center"><img src="libs/assets/img/geo-alt.svg" alt="Geo Icon"></td>
+                        <td class="fw-bold">Country Code</td>
+                        <td class="text-end" id="countryCode"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><img src="libs/assets/img/region.svg" alt="Region"></td>
+                        <td class="fw-bold">Region</td>
+                        <td class="text-end" id="countryRegion"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><img src="libs/assets/img/capital-city.svg" alt="Capital City"></td>
+                        <td class="fw-bold">Capital City</td>
+                        <td class="text-end" id="countryCapital"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><img src="libs/assets/img/people.svg" alt="People"></td>
+                        <td class="fw-bold">Population</td>
+                        <td class="text-end" id="countryPopulation"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><img src="libs/assets/img/arrows-angle-expand.svg" alt="Area"></td>
+                        <td class="fw-bold">Area</td>
+                        <td class="text-end" id="countryArea"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><img src="libs/assets/img/translate.svg" alt="Languages"></td>
+                        <td class="fw-bold">Native Languages</td>
+                        <td class="text-end" id="countryLanguages"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><img src="libs/assets/img/cash-coin.svg" alt="Currency"></td>
+                        <td class="fw-bold">Currency</td>
+                        <td class="text-end" id="countryCurrency"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><img src="libs/assets/img/calling-code.svg" alt="Calling Code"></td>
+                        <td class="fw-bold">Calling Code</td>
+                        <td class="text-end" id="countryCallingCode"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><img src="libs/assets/img/time-zone.svg" alt="Time Zone"></td>
+                        <td class="fw-bold">Time Zone</td>
+                        <td class="text-end" id="countryTimeZone"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Weather Modal -->
+    <div id="weatherModal" class="modal fade" data-bs-backdrop="true" tabindex="-1" data-mdb-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow">
+                <div class="modal-header bg-success bg-gradient text-white">
+                    <h5 class="modal-title">Weather Forecast</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5 id="placeName" class="text-center mb-3 fw-bold"></h5>
+                    <div class="current-weather text-center mb-4 border shadow-sm rounded p-3">
+                        <div class="fw-bold">Today</div>
+                        <img id="todayWeatherIcon" src="" alt="Today's Weather" class="weather-icon">
+                        <div id="todayTemp" class="temp"></div>
+                        <div id="todayDescription" class="description"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <div class="forecast-day text-center p-2 border shadow-sm rounded">
+                                <div id="dateDay1" class="fw-bold"></div>
+                                <img id="iconDay1" src="" alt="Day 1 Weather" class="weather-icon">
+                                <div id="tempDay1" class="temp"></div>
+                                <div id="descriptionDay1" class="description"></div>
+                            </div>
+                        </div>
+                        <div class="col mb-3">
+                            <div class="forecast-day text-center p-2 border shadow-sm rounded">
+                                <div id="dateDay2" class="fw-bold"></div>
+                                <img id="iconDay2" src="" alt="Day 2 Weather" class="weather-icon">
+                                <div id="tempDay2" class="temp"></div>
+                                <div id="descriptionDay2" class="description"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <div class="forecast-day text-center p-2 border shadow-sm rounded">
+                                <div id="dateDay3" class="fw-bold"></div>
+                                <img id="iconDay3" src="" alt="Day 3 Weather" class="weather-icon">
+                                <div id="tempDay3" class="temp"></div>
+                                <div id="descriptionDay3" class="description"></div>
+                            </div>
+                        </div>
+                        <div class="col mb-3">
+                            <div class="forecast-day text-center p-2 border shadow-sm rounded">
+                                <div id="dateDay4" class="fw-bold"></div>
+                                <img id="iconDay4" src="" alt="Day 4 Weather" class="weather-icon">
+                                <div id="tempDay4" class="temp"></div>
+                                <div id="descriptionDay4" class="description"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Currency Modal -->
+    <div id="currencyModal" class="modal fade" data-bs-backdrop="true" tabindex="-1" data-mdb-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content shadow">
+                <div class="modal-header bg-success bg-gradient text-white">
+                    <h5 class="modal-title d-flex align-items-center">Currency Exchange</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="currencyNumber" class="form-label fw-bold">Amount</label>
+                        <input type="number" id="currencyNumber" class="form-control" placeholder="Enter Amount" min="0" step="0.01" inputmode="decimal">
+                    </div>
+                    <div class="mb-3">
+                        <label for="currencySelect" class="form-label fw-bold">Convert to</label>
+                        <select id="currencySelect" class="form-select">
+                            <option value="" disabled selected>Select Currency</option>
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <h5 id="currencyResult" class="mt-3">Please Enter an Amount</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wikipedia Modal -->
+    <div id="wikipediaModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="wikipediaModalLabel" aria-hidden="true" data-mdb-backdrop="static" data-bs-backdrop="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content shadow">
+                <div class="modal-header bg-success bg-gradient text-white">
+                    <h5 class="modal-title" id="wikipediaModalLabel">Wikipedia Page</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="wikipediaIframe" src="" width="100%" height="600px" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- News Modal -->
+    <div id="newsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newsModalLabel" aria-hidden="true" data-mdb-backdrop="static" data-bs-backdrop="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content shadow">
+                <div class="modal-header bg-success bg-gradient text-white">
+                    <h5 class="modal-title" id="newsModalLabel">Top News Articles</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="newsContent">
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle1" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage1" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
+                            <p id="newsDescription1" class="mb-2"></p>
+                            <a id="newsLink1" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle2" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage2" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
+                            <p id="newsDescription2" class="mb-2"></p>
+                            <a id="newsLink2" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle3" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage3" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
+                            <p id="newsDescription3" class="mb-2"></p>
+                            <a id="newsLink3" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle4" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage4" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
+                            <p id="newsDescription4" class="mb-2"></p>
+                            <a id="newsLink4" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle5" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage5" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
+                            <p id="newsDescription5" class="mb-2"></p>
+                            <a id="newsLink5" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle6" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage6" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
+                            <p id="newsDescription6" class="mb-2"></p>
+                            <a id="newsLink6" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle7" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage7" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
+                            <p id="newsDescription7" class="mb-2"></p>
+                            <a id="newsLink7" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle8" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage8" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
+                            <p id="newsDescription8" class="mb-2"></p>
+                            <a id="newsLink8" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle9" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage9" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
+                            <p id="newsDescription9" class="mb-2"></p>
+                            <a id="newsLink9" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                        <div class="news-article mb-4 p-3 border rounded shadow-sm">
+                            <h5 id="newsTitle10" class="mb-2 fw-bold"></h5>
+                            <img id="newsImage10" src="" alt="" class="img-fluid my-2 rounded" style="width: 100%; height: auto;">
+                            <p id="newsDescription10" class="mb-2"></p>
+                            <a id="newsLink10" href="" target="_blank" class="btn btn-primary">Read more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External URL Modal -->
+    <div id="externalModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="externalModalLabel" aria-hidden="true" data-mdb-backdrop="static" data-bs-backdrop="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content shadow">
+                <div class="modal-header bg-success bg-gradient text-white">
+                    <h5 class="modal-title" id="externalModalLabel">Wikipedia Page</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="externalIframe" src="" width="100%" height="600px" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Marker Template -->
+    <div id="popupMarkerTemplate" class="d-none">
+        <div class="text-center">
+            <div class="text-center">
+                <b id="popupTitle" class="popup-title"></b>
+            </div>
+            <div class="text-center">
+                <img id="popupThumbnail" src="" alt="" class="img-fluid my-2 rounded popup-thumbnail text-center">
+            </div>
+            <div class="text-center">
+                <button id="popupButton" class="btn btn-primary btn-sm mt-2 popup-button">Read more</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="libs/js/libraries/jquery.js"></script>
+    <script src="libs/js/libraries/leaflet.min.js"></script>
+    <script src="libs/js/libraries/toastify.mins.js"></script>
+    <script src="libs/js/libraries/markerCluster.min.js"></script>
+    <script src="libs/js/libraries/extraMarkers.min.js"></script>
+    <script src="libs/js/libraries/bootstrap.bundle.min.js"></script>
+    <script src="libs/js/libraries/easyButtons.min.js"></script>
+    <!-- Custom JS -->
+    <script src="libs/js/script.js"></script>
+
+</body>
+
+</html>
