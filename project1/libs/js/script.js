@@ -57,7 +57,10 @@ const overlays = {
 const createButton = (icon, callback) => L.easyButton(`<img src="${icon}">`, callback);
 
 // Create buttons with icons and event listeners
-const infoBtn = createButton('libs/assets/img/info-lg.svg', () => $('#infoModal').modal('show'));
+const infoBtn = createButton('libs/assets/img/info-lg.svg', () => {
+  const countryCode = $('#countrySelect').val();
+  countryCode ? updateInfoModal(countryCode) : alert("Please select a country first.");
+});
 
 const weatherBtn = createButton('libs/assets/img/cloud-sun.svg', () => {
   const countryCode = $('#countrySelect').val();
@@ -124,12 +127,9 @@ const autoSelectUserCountry = () => {
         if (countryCode) {
           console.log(`Country code received: ${countryCode}`);
           $('#countrySelect').val(countryCode).change();
-          fetchAndDisplayCountryDetails(countryCode).then(() => {
-            const countryName = $('#countryName').text();
-            fetchWikipediaArticles(countryName); // Fetch Wikipedia articles for the selected country
-          }).catch(error => {
-            console.error('Failed to fetch and display country details:', error);
-          });
+          fetchAndDisplayCountryDetails(countryCode);
+          const countryName = $('#countryName').text();
+          fetchWikipediaArticles(countryName);
         }
         hideLoadingIndicator();
       },
@@ -285,54 +285,48 @@ const getCities = countryCode => {
 // ---------------------------------------------------------
 
 // Function to fetch and display country details
-const fetchAndDisplayCountryDetails = (countryCode) => {
-  return new Promise((resolve, reject) => {
-    if (countryCode) {
-      $.ajax({
-        url: 'libs/php/getCountryDetails.php',
-        method: 'GET',
-        dataType: 'json',
-        data: { countryCode },
-        success: data => {
-          if (data.error) {
-            console.error(data.error);
-            reject(data.error);
-          } else {
-            console.log('Country details:', data);
-            $('#countryName').text(data.countryName);
-            $('#countryFlag').attr('src', data.flag);
-            $('#countryCode').text(data.countryCode);
-            $('#countryRegion').text(data.region);
-            $('#countryCapital').text(data.capitalCity);
-            $('#countryPopulation').text(formatNumber(data.population));
-            $('#countryArea').text(formatNumber(data.area));
-            $('#countryLanguages').text(data.nativeLanguages);
-            $('#countryCurrency').text(data.currency);
-            $('#countryCallingCode').text(data.callingCode);
-            $('#countryTimeZone').text(data.timeZone);
-            const currencySymbol = data.currencySymbol || '';
-            $('#currencyNumber').attr('placeholder', `Enter Amount in ${data.currency} ${currencySymbol}`);
-            resolve(data);
-          }
-        },
-        error: (jqXHR, textStatus, errorThrown) => {
-          console.error('Failed to get country details:', textStatus, errorThrown);
-          reject(errorThrown);
+const fetchAndDisplayCountryDetails = (countryCode, callback) => {
+    $.ajax({
+      url: 'libs/php/getCountryDetails.php',
+      method: 'GET',
+      dataType: 'json',
+      data: { countryCode },
+      success: data => {
+        if (data.error) {
+          console.error(data.error);
+        } else {
+          $('#countryName').text(data.countryName);
+          $('#countryFlag').attr('src', data.flag);
+          $('#countryCode').text(data.countryCode);
+          $('#countryRegion').text(data.region);
+          $('#countryCapital').text(data.capitalCity);
+          $('#countryPopulation').text(formatNumber(data.population));
+          $('#countryArea').text(formatNumber(data.area));
+          $('#countryLanguages').text(data.nativeLanguages);
+          $('#countryCurrency').text(data.currency);
+          $('#countryCallingCode').text(data.callingCode);
+          $('#countryTimeZone').text(data.timeZone);
+          const currencySymbol = data.currencySymbol || '';
+          $('#currencyNumber').attr('placeholder', `Enter Amount in ${data.currency} ${currencySymbol}`);
         }
-      });
-    } else {
-      reject('Country code is not defined.');
-    }
-  });
-};
+        if (typeof callback === 'function') callback();
+      },
+      error: (jqXHR, textStatus, errorThrown) => {
+        console.error('Failed to get country details:', textStatus, errorThrown);
+        if (typeof callback === 'function') callback();
+      }
+    });
+  };
 
 // Function to update the modal with country details
 const updateInfoModal = (countryCode) => {
-  fetchAndDisplayCountryDetails(countryCode).then(data => {
-    $('#countryDetails').text(JSON.stringify(data, null, 2));
-    $('#infoModal').modal('show');
-  }).catch(error => {
-    console.error('Failed to update info modal:', error);
+  $('#infoLoadingIndicator').show();
+  $('#infoContent').hide();
+  $('#infoModal').modal('show');
+  
+  fetchAndDisplayCountryDetails(countryCode, () => {
+    $('#infoLoadingIndicator').hide();
+    $('#infoContent').show();
   });
 };
 
@@ -344,6 +338,12 @@ const updateInfoModal = (countryCode) => {
 const requestWeatherReport = (countryCode) => {
   if (countryCode) {
     console.log(`Requesting weather report for country code: ${countryCode}`);
+    
+    // Show modal with loading indicator first
+    $('#weatherLoadingIndicator').show();
+    $('#weatherContent').hide();
+    $('#weatherModal').modal('show');
+    
     // Fetch the country details including the capital city coordinates
     $.ajax({
       url: 'libs/php/getCountryDetails.php',
@@ -353,7 +353,9 @@ const requestWeatherReport = (countryCode) => {
       success: countryData => {
         if (countryData.error) {
           console.error(countryData.error);
-          $('#weatherModal').modal('show'); // Show modal even if there is an error
+          // Show error message or fallback content
+          $('#weatherLoadingIndicator').hide();
+          $('#weatherContent').show();
         } else {
           const capital = countryData.capitalCity;
           const lat = countryData.lat;
@@ -361,7 +363,8 @@ const requestWeatherReport = (countryCode) => {
 
           if (!lat || !lng) {
             console.error('Latitude and longitude are required');
-            $('#weatherModal').modal('show'); // Show modal even if there is an error
+            $('#weatherLoadingIndicator').hide();
+            $('#weatherContent').show();
             return;
           }
 
@@ -391,8 +394,8 @@ const requestWeatherReport = (countryCode) => {
                     const day = date.toLocaleDateString('en-US', { weekday: 'short' });
                     const dayOfMonth = date.getDate();
                     const suffix = (dayOfMonth % 10 === 1 && dayOfMonth !== 11) ? 'st' :
-                                   (dayOfMonth % 10 === 2 && dayOfMonth !== 12) ? 'nd' :
-                                   (dayOfMonth % 10 === 3 && dayOfMonth !== 13) ? 'rd' : 'th';
+                                  (dayOfMonth % 10 === 2 && dayOfMonth !== 12) ? 'nd' :
+                                  (dayOfMonth % 10 === 3 && dayOfMonth !== 13) ? 'rd' : 'th';
                     const formattedDate = `${day} ${dayOfMonth}${suffix}`;
                     $(`#dateDay${i}`).text(formattedDate);
                     $(`#iconDay${i}`).attr('src', `http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`);
@@ -406,18 +409,23 @@ const requestWeatherReport = (countryCode) => {
                   }
                 }
               }
-              $('#weatherModal').modal('show'); // Show modal after data is fetched
+              
+              // Hide loading indicator and show content when everything is ready
+              $('#weatherLoadingIndicator').hide();
+              $('#weatherContent').show();
             },
             error: (jqXHR, textStatus, errorThrown) => {
               console.error('Failed to get weather report:', textStatus, errorThrown);
-              $('#weatherModal').modal('show'); // Show modal even if there is an error
+              $('#weatherLoadingIndicator').hide();
+              $('#weatherContent').show();
             }
           });
         }
       },
       error: (jqXHR, textStatus, errorThrown) => {
         console.error('Failed to get country details:', textStatus, errorThrown);
-        $('#weatherModal').modal('show'); // Show modal even if there is an error
+        $('#weatherLoadingIndicator').hide();
+        $('#weatherContent').show();
       }
     });
   } else {
@@ -634,12 +642,11 @@ $(document).ready(function () {
 
     getCountryBorder(countryCode);
     getCities(countryCode); // Get cities for the selected country
-    fetchAndDisplayCountryDetails(countryCode).then(() => {
-      const countryName = $('#countryName').text();
-      fetchWikipediaArticles(countryName); // Fetch Wikipedia articles for the selected country
-    }).catch(error => {
-      console.error('Failed to fetch and display country details:', error);
-    });
+
+    const countryName = $(this).find('option:selected').text().split(' (')[0];
+    $('#countryName').text(countryName);
+
+    fetchWikipediaArticles(countryName);
   }
   });
 

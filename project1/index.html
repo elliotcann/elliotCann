@@ -51,58 +51,66 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="text-center mb-3">
-                <img id="countryFlag" src="" alt="Country Flag" width="100px" class="img-fluid rounded">
+
+            <div id="infoLoadingIndicator" class="text-center py-5">
+                <div class="spinner-border text-success" role="status">
+                </div>
             </div>
-            <table class="table-striped table table-borderless">
-                <tbody>
-                    <tr>
-                        <td class="text-center"><img src="libs/assets/img/geo-alt.svg" alt="Geo Icon"></td>
-                        <td class="fw-bold text-nowrap">Country Code</td>
-                        <td class="text-end" id="countryCode"></td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><img src="libs/assets/img/region.svg" alt="Region"></td>
-                        <td class="fw-bold text-nowrap">Region</td>
-                        <td class="text-end" id="countryRegion"></td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><img src="libs/assets/img/capital-city.svg" alt="Capital City"></td>
-                        <td class="fw-bold text-nowrap">Capital City</td>
-                        <td class="text-end" id="countryCapital"></td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><img src="libs/assets/img/people.svg" alt="People"></td>
-                        <td class="fw-bold text-nowrap">Population</td>
-                        <td class="text-end" id="countryPopulation"></td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><img src="libs/assets/img/arrows-angle-expand.svg" alt="Area"></td>
-                        <td class="fw-bold text-nowrap">Area</td>
-                        <td class="text-end" id="countryArea"></td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><img src="libs/assets/img/translate.svg" alt="Languages"></td>
-                        <td class="fw-bold text-nowrap">Native Languages</td>
-                        <td class="text-end" id="countryLanguages"></td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><img src="libs/assets/img/cash-coin.svg" alt="Currency"></td>
-                        <td class="fw-bold text-nowrap">Currency</td>
-                        <td class="text-end" id="countryCurrency"></td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><img src="libs/assets/img/calling-code.svg" alt="Calling Code"></td>
-                        <td class="fw-bold text-nowrap">Calling Code</td>
-                        <td class="text-end" id="countryCallingCode"></td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><img src="libs/assets/img/time-zone.svg" alt="Time Zone"></td>
-                        <td class="fw-bold text-nowrap">Time Zone</td>
-                        <td class="text-end" id="countryTimeZone"></td>
-                    </tr>
-                </tbody>
-            </table>
+            
+            <div id="infoContent" style="display: none;">
+                <div class="text-center mb-3">
+                    <img id="countryFlag" src="" alt="Country Flag" width="100px" class="img-fluid rounded">
+                </div>
+                <table class="table-striped table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td class="text-center"><img src="libs/assets/img/geo-alt.svg" alt="Geo Icon"></td>
+                            <td class="fw-bold text-nowrap">Country Code</td>
+                            <td class="text-end" id="countryCode"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><img src="libs/assets/img/region.svg" alt="Region"></td>
+                            <td class="fw-bold text-nowrap">Region</td>
+                            <td class="text-end" id="countryRegion"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><img src="libs/assets/img/capital-city.svg" alt="Capital City"></td>
+                            <td class="fw-bold text-nowrap">Capital City</td>
+                            <td class="text-end" id="countryCapital"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><img src="libs/assets/img/people.svg" alt="People"></td>
+                            <td class="fw-bold text-nowrap">Population</td>
+                            <td class="text-end" id="countryPopulation"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><img src="libs/assets/img/arrows-angle-expand.svg" alt="Area"></td>
+                            <td class="fw-bold text-nowrap">Area</td>
+                            <td class="text-end" id="countryArea"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><img src="libs/assets/img/translate.svg" alt="Languages"></td>
+                            <td class="fw-bold text-nowrap">Native Languages</td>
+                            <td class="text-end" id="countryLanguages"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><img src="libs/assets/img/cash-coin.svg" alt="Currency"></td>
+                            <td class="fw-bold text-nowrap">Currency</td>
+                            <td class="text-end" id="countryCurrency"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><img src="libs/assets/img/calling-code.svg" alt="Calling Code"></td>
+                            <td class="fw-bold text-nowrap">Calling Code</td>
+                            <td class="text-end" id="countryCallingCode"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><img src="libs/assets/img/time-zone.svg" alt="Time Zone"></td>
+                            <td class="fw-bold text-nowrap">Time Zone</td>
+                            <td class="text-end" id="countryTimeZone"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         </div>
     </div>
@@ -117,46 +125,54 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h5 id="placeName" class="text-center mb-3 fw-bold"></h5>
-                    <div class="current-weather text-center mb-4 border shadow-sm rounded p-3">
-                        <div class="fw-bold">Today</div>
-                        <img id="todayWeatherIcon" src="" alt="Today's Weather" class="weather-icon">
-                        <div id="todayTemp" class="temp"></div>
-                        <div id="todayDescription" class="description"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <div class="forecast-day text-center p-2 border shadow-sm rounded">
-                                <div id="dateDay1" class="fw-bold"></div>
-                                <img id="iconDay1" src="" alt="Day 1 Weather" class="weather-icon">
-                                <div id="tempDay1" class="temp"></div>
-                                <div id="descriptionDay1" class="description"></div>
-                            </div>
-                        </div>
-                        <div class="col mb-3">
-                            <div class="forecast-day text-center p-2 border shadow-sm rounded">
-                                <div id="dateDay2" class="fw-bold"></div>
-                                <img id="iconDay2" src="" alt="Day 2 Weather" class="weather-icon">
-                                <div id="tempDay2" class="temp"></div>
-                                <div id="descriptionDay2" class="description"></div>
-                            </div>
+
+                    <div id="weatherLoadingIndicator" class="text-center py-5">
+                        <div class="spinner-border text-success" role="status">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <div class="forecast-day text-center p-2 border shadow-sm rounded">
-                                <div id="dateDay3" class="fw-bold"></div>
-                                <img id="iconDay3" src="" alt="Day 3 Weather" class="weather-icon">
-                                <div id="tempDay3" class="temp"></div>
-                                <div id="descriptionDay3" class="description"></div>
+
+                    <div id="weatherContent" style="display: none;">
+                        <h5 id="placeName" class="text-center mb-3 fw-bold"></h5>
+                        <div class="current-weather text-center mb-4 border shadow-sm rounded p-3">
+                            <div class="fw-bold">Today</div>
+                            <img id="todayWeatherIcon" src="" alt="Today's Weather" class="weather-icon">
+                            <div id="todayTemp" class="temp"></div>
+                            <div id="todayDescription" class="description"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <div class="forecast-day text-center p-2 border shadow-sm rounded">
+                                    <div id="dateDay1" class="fw-bold"></div>
+                                    <img id="iconDay1" src="" alt="Day 1 Weather" class="weather-icon">
+                                    <div id="tempDay1" class="temp"></div>
+                                    <div id="descriptionDay1" class="description"></div>
+                                </div>
+                            </div>
+                            <div class="col mb-3">
+                                <div class="forecast-day text-center p-2 border shadow-sm rounded">
+                                    <div id="dateDay2" class="fw-bold"></div>
+                                    <img id="iconDay2" src="" alt="Day 2 Weather" class="weather-icon">
+                                    <div id="tempDay2" class="temp"></div>
+                                    <div id="descriptionDay2" class="description"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col mb-3">
-                            <div class="forecast-day text-center p-2 border shadow-sm rounded">
-                                <div id="dateDay4" class="fw-bold"></div>
-                                <img id="iconDay4" src="" alt="Day 4 Weather" class="weather-icon">
-                                <div id="tempDay4" class="temp"></div>
-                                <div id="descriptionDay4" class="description"></div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <div class="forecast-day text-center p-2 border shadow-sm rounded">
+                                    <div id="dateDay3" class="fw-bold"></div>
+                                    <img id="iconDay3" src="" alt="Day 3 Weather" class="weather-icon">
+                                    <div id="tempDay3" class="temp"></div>
+                                    <div id="descriptionDay3" class="description"></div>
+                                </div>
+                            </div>
+                            <div class="col mb-3">
+                                <div class="forecast-day text-center p-2 border shadow-sm rounded">
+                                    <div id="dateDay4" class="fw-bold"></div>
+                                    <img id="iconDay4" src="" alt="Day 4 Weather" class="weather-icon">
+                                    <div id="tempDay4" class="temp"></div>
+                                    <div id="descriptionDay4" class="description"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
