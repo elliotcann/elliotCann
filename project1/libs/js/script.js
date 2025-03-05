@@ -358,6 +358,7 @@ const requestWeatherReport = (countryCode) => {
           $('#weatherContent').show();
         } else {
           const capital = countryData.capitalCity;
+          const countryName = countryData.countryName;
           const lat = countryData.lat;
           const lng = countryData.lng;
 
@@ -379,9 +380,8 @@ const requestWeatherReport = (countryCode) => {
                 console.error(data.error);
               } else {
                 console.log('Weather forecast:', data);
-                let placeName = data.city.name + ' (' + data.city.country + ')';
-                if (!data.city.name) placeName = 'Sea Area';
-                $('#placeName').text(`${placeName}`);
+                let placeName = data.city.name;
+                $('#placeName').text(`${placeName}, ${countryName}`);
                 $('#placeCoords').text(`Latitude: ${lat.toFixed(2)}, Longitude: ${lng.toFixed(2)}`);
                 $('#todayWeatherIcon').attr('src', `http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`);
                 $('#todayTemp').text(`${data.list[0].main.temp.toFixed(0)} °C`);
