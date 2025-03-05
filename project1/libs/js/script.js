@@ -10,6 +10,25 @@ const formatNumber = (num) => {
 };
 
 // ---------------------------------------------------------
+// LOADING INDICATOR FUNCTIONS
+// ---------------------------------------------------------
+
+const showLoadingIndicator = () => {
+  $('#loadingIndicator').show();
+  $('#map, #selectContainer').hide();
+};
+
+const hideLoadingIndicator = () => {
+  $('#loadingIndicator').hide();
+  $('#map, #selectContainer').show();
+  map.invalidateSize();
+};
+
+// Create marker cluster groups
+const markers = L.markerClusterGroup();
+const wikipediaMarkers = L.markerClusterGroup();
+
+// ---------------------------------------------------------
 // TILE LAYERS
 // ---------------------------------------------------------
 
@@ -24,6 +43,11 @@ const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/servi
 const basemaps = {
   "Streets": streets,
   "Satellite": satellite
+};
+
+const overlays = {
+  "Cities": markers,
+  "Wikipedia Points": wikipediaMarkers
 };
 
 // ---------------------------------------------------------
@@ -62,21 +86,6 @@ const newsBtn = createButton('libs/assets/img/newspaper.svg', () => {
 });
 
 const zoomControl = L.easyBar([zoomInBtn, zoomOutBtn], { position: 'topright' });
-
-// ---------------------------------------------------------
-// LOADING INDICATOR FUNCTIONS
-// ---------------------------------------------------------
-
-const showLoadingIndicator = () => {
-  $('#loadingIndicator').show();
-  $('#map, #selectContainer').hide();
-};
-
-const hideLoadingIndicator = () => {
-  $('#loadingIndicator').hide();
-  $('#map, #selectContainer').show();
-  map.invalidateSize();
-};
 
 // ---------------------------------------------------------
 // GEOLOCATION FUNCTIONS
@@ -189,9 +198,6 @@ const getCountryBorder = iso2 => {
 // ---------------------------------------------------------
 // MARKER FUNCTIONS
 // ---------------------------------------------------------
-
-// Create a marker cluster group for city markers
-const markers = L.markerClusterGroup();
 
 // Helper function to create custom icons
 const createCustomIcon = (iconUrl, shadowUrl, iconSize, shadowSize, iconAnchor, shadowAnchor, popupAnchor) => {
@@ -531,10 +537,6 @@ const fetchNewsArticles = countryCode => {
   });
 };
 
-
-// Create a marker cluster group for Wikipedia markers
-const wikipediaMarkers = L.markerClusterGroup();
-
 // Function to open external URL in a central modal
 const openExternalUrl = url => {
   $('#externalIframe').attr('src', url);
@@ -606,7 +608,7 @@ $(document).ready(function () {
   });
 
   // Move the tile layers control to the bottom right corner
-  L.control.layers(basemaps, null, { position: 'bottomright' }).addTo(map);
+  L.control.layers(basemaps, overlays, { position: 'bottomright' }).addTo(map);
 
   // Add buttons to the map
   [infoBtn, weatherBtn, zoomControl, currencyBtn, wikipediaBtn, newsBtn].forEach(btn => btn.addTo(map));
