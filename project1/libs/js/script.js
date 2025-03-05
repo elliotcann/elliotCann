@@ -71,7 +71,32 @@ const weatherBtn = createButton('libs/assets/img/cloud-sun.svg', () => {
   }
 });
 
-const currencyBtn = createButton('libs/assets/img/currency-exchange.svg', () => $('#currencyModal').modal('show'));
+// Update the currency button functionality
+const currencyBtn = createButton('libs/assets/img/currency-exchange.svg', () => {
+  const countryCode = $('#countrySelect').val();
+  
+  if (!countryCode) {
+    alert("Please select a country first.");
+    return;
+  }
+  
+  // Get the currently selected country's currency
+  const currentCurrency = $('#countryCurrency').text().split(' ')[0];
+  
+  // Reset form values
+  $('#currencyNumber').val(1);
+  
+  // Open the modal
+  $('#currencyModal').modal('show');
+  
+  // Set the dropdown to the current country's currency
+  if (currentCurrency) {
+    setTimeout(() => {
+      $('#currencySelect').val(currentCurrency);
+      calcResult(); // Calculate result immediately
+    }, 200);
+  }
+});
 
 const zoomInBtn = createButton('libs/assets/img/plus.svg', (btn, map) => map.zoomIn());
 
@@ -286,55 +311,80 @@ const getCities = countryCode => {
 
 // Function to fetch and display country details
 const fetchAndDisplayCountryDetails = (countryCode, callback) => {
-    $.ajax({
-      url: 'libs/php/getCountryDetails.php',
-      method: 'GET',
-      dataType: 'json',
-      data: { countryCode },
-      success: data => {
-        if (data.error) {
-          console.error(data.error);
-        } else {
-          $('#countryName').text(data.countryName);
-          $('#countryFlag').attr('src', data.flag);
-          $('#countryCode').text(data.countryCode);
-          $('#countryRegion').text(data.region);
-          $('#countryCapital').text(data.capitalCity);
-          $('#countryPopulation').text(formatNumber(data.population));
-          $('#countryArea').text(formatNumber(data.area));
-          $('#countryLanguages').text(data.nativeLanguages);
-          $('#countryCurrency').text(data.currency);
-          $('#countryCallingCode').text(data.callingCode);
-          $('#countryTimeZone').text(data.timeZone);
-          const currencySymbol = data.currencySymbol || '';
-          $('#currencyNumber').attr('placeholder', `Enter Amount in ${data.currency} ${currencySymbol}`);
-        }
-        if (typeof callback === 'function') callback();
-      },
-      error: (jqXHR, textStatus, errorThrown) => {
-        console.error('Failed to get country details:', textStatus, errorThrown);
-        if (typeof callback === 'function') callback();
+  $.ajax({
+    url: 'libs/php/getCountryDetails.php',
+    method: 'GET',
+    dataType: 'json',
+    data: { countryCode },
+    success: data => {
+      if (data.error) {
+        console.error(data.error);
+        // Show error message in the modal
+        $('#infoContent').html(`<div class="alert alert-danger">Error loading country data: ${data.error}</div>`);
+        $('#infoContent').show();
+      } else {
+        // Update all country details
+        $('#countryName').text(data.countryName);
+        $('#countryFlag').attr('src', data.flag).attr('alt', `${data.countryName} flag`);
+        $('#countryCode').text(data.countryCode);
+        $('#countryRegion').text(data.region);
+        $('#countryCapital').text(data.capitalCity);
+        $('#countryPopulation').text(formatNumber(data.population));
+        $('#countryArea').text(`${formatNumber(data.area)} km²`);
+        $('#countryLanguages').text(data.nativeLanguages);
+        $('#countryCurrency').text(data.currency);
+        $('#countryCallingCode').text(data.callingCode);
+        $('#countryTimeZone').text(data.timeZone);
+        
+        // Update document title with country name for better UX
+        document.title = `Gazetteer - ${data.countryName}`;
       }
-    });
-  };
+    },
+    error: (jqXHR, textStatus, errorThrown) => {
+      console.error('Failed to get country details:', textStatus, errorThrown);
+      // Show error message in the modal
+      $('#infoContent').html(`<div class="alert alert-danger">Failed to load country data. Please try again.</div>`);
+      $('#infoContent').show();
+    },
+    complete: () => {
+      // Always execute the callback, whether successful or not
+      if (typeof callback === 'function') callback();
+    }
+  });
+};
 
 // Function to update the modal with country details
 const updateInfoModal = (countryCode) => {
+  // Reset content and show loading indicator
   $('#infoLoadingIndicator').show();
   $('#infoContent').hide();
+  
+  // Open modal
   $('#infoModal').modal('show');
   
+  // Fetch and display country details with proper callback
   fetchAndDisplayCountryDetails(countryCode, () => {
     $('#infoLoadingIndicator').hide();
-    $('#infoContent').show();
+    $('#infoContent').fadeIn(300); // Smoother transition
   });
 };
+
+// Add event handlers for the modal
+$('#infoModal').on('shown.bs.modal', function () {
+  // Anything you want to happen when modal is fully shown
+  console.log('Info modal is fully visible');
+});
+
+$('#infoModal').on('hidden.bs.modal', function () {
+  // Clean up or reset any values when modal is closed
+  console.log('Info modal is hidden');
+});
 
 // ---------------------------------------------------------
 // WEATHER REPORT FUNCTIONS
 // ---------------------------------------------------------
 
-// Function to request weather reports using the capital city coordinates
+// Function to request weather reports using the country code
 const requestWeatherReport = (countryCode) => {
   if (countryCode) {
     console.log(`Requesting weather report for country code: ${countryCode}`);
@@ -344,86 +394,62 @@ const requestWeatherReport = (countryCode) => {
     $('#weatherContent').hide();
     $('#weatherModal').modal('show');
     
-    // Fetch the country details including the capital city coordinates
+    // Fetch weather data directly with country code
     $.ajax({
-      url: 'libs/php/getCountryDetails.php',
+      url: 'libs/php/getWeatherForecast.php',
       method: 'GET',
       dataType: 'json',
       data: { countryCode: countryCode },
-      success: countryData => {
-        if (countryData.error) {
-          console.error(countryData.error);
-          // Show error message or fallback content
+      success: data => {
+        if (data.error) {
+          console.error(data.error);
           $('#weatherLoadingIndicator').hide();
           $('#weatherContent').show();
         } else {
-          const capital = countryData.capitalCity;
-          const countryName = countryData.countryName;
-          const lat = countryData.lat;
-          const lng = countryData.lng;
-
-          if (!lat || !lng) {
-            console.error('Latitude and longitude are required');
-            $('#weatherLoadingIndicator').hide();
-            $('#weatherContent').show();
-            return;
-          }
-
-          // Fetch weather data for the capital city
-          $.ajax({
-            url: 'libs/php/getWeatherForecast.php',
-            method: 'GET',
-            dataType: 'json',
-            data: { lat: lat, lng: lng },
-            success: data => {
-              if (data.error) {
-                console.error(data.error);
-              } else {
-                console.log('Weather forecast:', data);
-                let placeName = data.city.name;
-                $('#placeName').text(`${placeName}, ${countryName}`);
-                $('#placeCoords').text(`Latitude: ${lat.toFixed(2)}, Longitude: ${lng.toFixed(2)}`);
-                $('#todayWeatherIcon').attr('src', `http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`);
-                $('#todayTemp').text(`${data.list[0].main.temp.toFixed(0)} °C`);
-                $('#todayDescription').text(data.list[0].weather[0].description);
-                for (let i = 1; i <= 5; i++) {
-                  const forecastIndex = i * 8 - 1;
-                  if (data.list[forecastIndex]) {
-                    const forecast = data.list[forecastIndex];
-                    const date = new Date(forecast.dt * 1000);
-                    const day = date.toLocaleDateString('en-US', { weekday: 'short' });
-                    const dayOfMonth = date.getDate();
-                    const suffix = (dayOfMonth % 10 === 1 && dayOfMonth !== 11) ? 'st' :
-                                  (dayOfMonth % 10 === 2 && dayOfMonth !== 12) ? 'nd' :
-                                  (dayOfMonth % 10 === 3 && dayOfMonth !== 13) ? 'rd' : 'th';
-                    const formattedDate = `${day} ${dayOfMonth}${suffix}`;
-                    $(`#dateDay${i}`).text(formattedDate);
-                    $(`#iconDay${i}`).attr('src', `http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`);
-                    $(`#tempDay${i}`).text(`${forecast.main.temp.toFixed(0)}°C`);
-                    $(`#descriptionDay${i}`).text(forecast.weather[0].description);
-                  } else {
-                    $(`#dateDay${i}`).text('N/A');
-                    $(`#iconDay${i}`).attr('src', '');
-                    $(`#tempDay${i}`).text('N/A');
-                    $(`#descriptionDay${i}`).text('N/A');
-                  }
-                }
-              }
-              
-              // Hide loading indicator and show content when everything is ready
-              $('#weatherLoadingIndicator').hide();
-              $('#weatherContent').show();
-            },
-            error: (jqXHR, textStatus, errorThrown) => {
-              console.error('Failed to get weather report:', textStatus, errorThrown);
-              $('#weatherLoadingIndicator').hide();
-              $('#weatherContent').show();
+          console.log('Weather forecast:', data);
+          // Display the weather data
+          const capitalCity = data.capitalCity || 'Unknown Capital';
+          const countryName = data.countryName;
+          const lat = data.lat;
+          const lng = data.lng;
+          
+          $('#placeName').text(`${capitalCity}, ${countryName}`);
+          $('#placeCoords').text(`Latitude: ${lat.toFixed(2)}, Longitude: ${lng.toFixed(2)}`);
+          $('#todayWeatherIcon').attr('src', `http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`);
+          $('#todayTemp').text(`${data.list[0].main.temp.toFixed(0)} °C`);
+          $('#todayDescription').text(data.list[0].weather[0].description);
+          
+          // Rest of the function remains the same
+          for (let i = 1; i <= 5; i++) {
+            const forecastIndex = i * 8 - 1;
+            if (data.list[forecastIndex]) {
+              const forecast = data.list[forecastIndex];
+              const date = new Date(forecast.dt * 1000);
+              const day = date.toLocaleDateString('en-US', { weekday: 'short' });
+              const dayOfMonth = date.getDate();
+              const suffix = (dayOfMonth % 10 === 1 && dayOfMonth !== 11) ? 'st' :
+                            (dayOfMonth % 10 === 2 && dayOfMonth !== 12) ? 'nd' :
+                            (dayOfMonth % 10 === 3 && dayOfMonth !== 13) ? 'rd' : 'th';
+              const formattedDate = `${day} ${dayOfMonth}${suffix}`;
+              $(`#dateDay${i}`).text(formattedDate);
+              $(`#iconDay${i}`).attr('src', `http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`);
+              $(`#tempDay${i}`).text(`${forecast.main.temp.toFixed(0)}°C`);
+              $(`#descriptionDay${i}`).text(forecast.weather[0].description);
+            } else {
+              $(`#dateDay${i}`).text('N/A');
+              $(`#iconDay${i}`).attr('src', '');
+              $(`#tempDay${i}`).text('N/A');
+              $(`#descriptionDay${i}`).text('N/A');
             }
-          });
+          }
         }
+        
+        // Hide loading indicator and show content when everything is ready
+        $('#weatherLoadingIndicator').hide();
+        $('#weatherContent').show();
       },
       error: (jqXHR, textStatus, errorThrown) => {
-        console.error('Failed to get country details:', textStatus, errorThrown);
+        console.error('Failed to get weather report:', textStatus, errorThrown);
         $('#weatherLoadingIndicator').hide();
         $('#weatherContent').show();
       }
@@ -437,21 +463,37 @@ const requestWeatherReport = (countryCode) => {
 // CURRENCY CONVERSION FUNCTIONS
 // ---------------------------------------------------------
 
-// Function to populate the currency dropdown
+// Function to populate the currency dropdown with rates
 const populateCurrencyDropdown = () => {
   $.ajax({
     url: 'libs/php/getCurrencyData.php',
     method: 'GET',
     dataType: 'json',
-    data: { action: 'getCurrencies' },
-    success: currencies => {
+    data: { action: 'getAllRates' },
+    success: currencyData => {
       const $dropdown = $('#currencySelect');
       $dropdown.empty();
-      $dropdown.append('<option value="" disabled selected>Select Currency</option>');
-      $.each(currencies, (code, name) => {
-        $dropdown.append(`<option value="${code}">${name} (${code})</option>`);
+      
+      // Convert currencies object to array for sorting
+      const currencyArray = [];
+      $.each(currencyData.currencies, (code, name) => {
+        // Store both name and rate
+        currencyArray.push({ 
+          code, 
+          name, 
+          rate: currencyData.rates[code] || 1
+        });
       });
-      console.log('Currency dropdown populated:', currencies);
+      
+      // Sort currencies alphabetically by name
+      currencyArray.sort((a, b) => a.name.localeCompare(b.name));
+      
+      // Add all currencies alphabetically with data-rate attribute
+      currencyArray.forEach(currency => {
+        $dropdown.append(`<option value="${currency.code}" data-rate="${currency.rate}">${currency.name} (${currency.code})</option>`);
+      });
+      
+      console.log('Currency dropdown populated with rates');
     },
     error: (jqXHR, textStatus, errorThrown) => {
       console.error('Failed to populate currency dropdown:', textStatus, errorThrown);
@@ -459,37 +501,34 @@ const populateCurrencyDropdown = () => {
   });
 };
 
-
-// Function to convert currency
-const convertCurrency = () => {
-  const amount = parseFloat($('#currencyNumber').val());
-  const fromCurrency = $('#countryCurrency').text().split(' ')[0];
-  const toCurrency = $('#currencySelect').val();
-  if (!amount || !fromCurrency || !toCurrency) {
-    console.error('Invalid input values for currency conversion');
-    return;
+// Simplified currency conversion function using data attributes
+const calcResult = () => {
+  const amount = parseFloat($('#currencyNumber').val()) || 0;
+  const rate = parseFloat($('#currencySelect option:selected').attr('data-rate')) || 0;
+  
+  if (amount > 0 && rate > 0) {
+    // Format with 2 decimal places
+    const result = (amount * rate).toFixed(2);
+    $('#currencyResult').val(result);
+  } else {
+    $('#currencyResult').val('');
   }
-  $.ajax({
-    url: 'libs/php/getCurrencyData.php',
-    method: 'GET',
-    dataType: 'json',
-    data: { action: 'getExchangeRate', from: fromCurrency, to: toCurrency },
-    success: data => {
-      if (data.error) {
-        console.error(data.error);
-      } else {
-        const convertedAmount = (amount * data.rate).toFixed(2);
-        $('#currencyResult').text(`${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`);
-      }
-    },
-    error: (jqXHR, textStatus, errorThrown) => {
-      console.error('Failed to convert currency:', textStatus, errorThrown);
-    }
-  });
 };
 
-// Event listener for currency conversion
-$('#currencyNumber, #currencySelect').on('input change', convertCurrency);
+// Event listeners for currency conversion
+$('#currencyNumber').on('input', calcResult);
+$('#currencySelect').on('change', calcResult);
+
+// Reset to 1 when modal is closed
+$('#currencyModal').on('hidden.bs.modal', function () {
+  $('#currencyNumber').val(1);
+  $('#currencyResult').val('');
+});
+
+// Calculate when modal is fully shown
+$('#currencyModal').on('shown.bs.modal', function () {
+  setTimeout(calcResult, 100);
+});
 
 // ---------------------------------------------------------
 // WIKIPEDIA AND NEWS FUNCTIONS
@@ -634,12 +673,7 @@ $(document).ready(function () {
   // Event listener for dropdown change
   $('#countrySelect').on('change', function () {
   const countryCode = $(this).val();
-  if (countryCode) {
-    // Clear input fields
-    $('#currencyNumber').val('');
-    $('#currencyResult').text('Please enter an Amount');
-    $('#currencySelect').val(''); // Reset the "Convert to" dropdown
-
+  if (countryCode) {;
     getCountryBorder(countryCode);
     getCities(countryCode); // Get cities for the selected country
 
@@ -647,6 +681,9 @@ $(document).ready(function () {
     $('#countryName').text(countryName);
 
     fetchWikipediaArticles(countryName);
+    
+    // Fetch country details which will update the currency
+    fetchAndDisplayCountryDetails(countryCode);
   }
   });
 
@@ -662,7 +699,19 @@ $(document).ready(function () {
     const center = map.getCenter();
     fetchWikipediaArticles(center.lat, center.lng);
   });
+  
+  $('#currencyModal').on('hidden.bs.modal', function () {
+    $('#currencyNumber').val(1);
+    $('#currencyResult').val('');  // Clear the result field
+  });
 
-  // Show welcome modal
-  $('#welcomeModal').modal('show');
+  // Event listener for currency modal shown
+  $('#currencyModal').on('shown.bs.modal', function () {
+    // Ensure the currency conversion runs when modal is fully open
+    setTimeout(calcResult, 100);
+  });
+
+  // Update event listeners for currency conversion
+  $('#currencyNumber').on('input', calcResult);
+  $('#currencySelect').on('change', calcResult);
 });

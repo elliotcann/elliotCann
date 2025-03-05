@@ -30,6 +30,26 @@ if (isset($_GET['action'])) {
                 echo json_encode(['error' => 'Invalid currency codes']);
             }
         }
+    } elseif ($action === 'getAllRates') {
+        // Get both currencies and rates in one request
+        $currencies_url = "https://openexchangerates.org/api/currencies.json";
+        $rates_url = "https://openexchangerates.org/api/latest.json?app_id=$apiKey";
+        
+        $currencies_response = file_get_contents($currencies_url);
+        $rates_response = file_get_contents($rates_url);
+        
+        if ($currencies_response === FALSE || $rates_response === FALSE) {
+            echo json_encode(['error' => 'Failed to retrieve currency data']);
+        } else {
+            $currencies = json_decode($currencies_response, true);
+            $rates_data = json_decode($rates_response, true);
+            
+            echo json_encode([
+                'currencies' => $currencies,
+                'rates' => $rates_data['rates'],
+                'base' => $rates_data['base']
+            ]);
+        }
     } else {
         echo json_encode(['error' => 'Invalid action or missing parameters']);
     }
