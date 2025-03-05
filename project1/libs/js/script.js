@@ -68,13 +68,11 @@ const zoomControl = L.easyBar([zoomInBtn, zoomOutBtn], { position: 'topright' })
 // ---------------------------------------------------------
 
 const showLoadingIndicator = () => {
-  console.log('Showing loading indicator...');
   $('#loadingIndicator').show();
   $('#map, #selectContainer').hide();
 };
 
 const hideLoadingIndicator = () => {
-  console.log('Hiding loading indicator...');
   $('#loadingIndicator').hide();
   $('#map, #selectContainer').show();
   map.invalidateSize();
