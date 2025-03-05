@@ -80,16 +80,12 @@ const currencyBtn = createButton('libs/assets/img/currency-exchange.svg', () => 
     return;
   }
   
-  // Get the currently selected country's currency
   const currentCurrency = $('#countryCurrency').text().split(' ')[0];
   
-  // Reset form values
   $('#currencyNumber').val(1);
   
-  // Open the modal
   $('#currencyModal').modal('show');
   
-  // Set the dropdown to the current country's currency
   if (currentCurrency) {
     setTimeout(() => {
       $('#currencySelect').val(currentCurrency);
@@ -319,9 +315,6 @@ const fetchAndDisplayCountryDetails = (countryCode, callback) => {
     success: data => {
       if (data.error) {
         console.error(data.error);
-        // Show error message in the modal
-        $('#infoContent').html(`<div class="alert alert-danger">Error loading country data: ${data.error}</div>`);
-        $('#infoContent').show();
       } else {
         // Update all country details
         $('#countryName').text(data.countryName);
@@ -335,16 +328,10 @@ const fetchAndDisplayCountryDetails = (countryCode, callback) => {
         $('#countryCurrency').text(data.currency);
         $('#countryCallingCode').text(data.callingCode);
         $('#countryTimeZone').text(data.timeZone);
-        
-        // Update document title with country name for better UX
-        document.title = `Gazetteer - ${data.countryName}`;
       }
     },
     error: (jqXHR, textStatus, errorThrown) => {
       console.error('Failed to get country details:', textStatus, errorThrown);
-      // Show error message in the modal
-      $('#infoContent').html(`<div class="alert alert-danger">Failed to load country data. Please try again.</div>`);
-      $('#infoContent').show();
     },
     complete: () => {
       // Always execute the callback, whether successful or not
@@ -355,30 +342,15 @@ const fetchAndDisplayCountryDetails = (countryCode, callback) => {
 
 // Function to update the modal with country details
 const updateInfoModal = (countryCode) => {
-  // Reset content and show loading indicator
   $('#infoLoadingIndicator').show();
   $('#infoContent').hide();
-  
-  // Open modal
   $('#infoModal').modal('show');
   
-  // Fetch and display country details with proper callback
   fetchAndDisplayCountryDetails(countryCode, () => {
     $('#infoLoadingIndicator').hide();
     $('#infoContent').fadeIn(300); // Smoother transition
   });
 };
-
-// Add event handlers for the modal
-$('#infoModal').on('shown.bs.modal', function () {
-  // Anything you want to happen when modal is fully shown
-  console.log('Info modal is fully visible');
-});
-
-$('#infoModal').on('hidden.bs.modal', function () {
-  // Clean up or reset any values when modal is closed
-  console.log('Info modal is hidden');
-});
 
 // ---------------------------------------------------------
 // WEATHER REPORT FUNCTIONS
@@ -534,7 +506,7 @@ $('#currencyModal').on('shown.bs.modal', function () {
 // WIKIPEDIA AND NEWS FUNCTIONS
 // ---------------------------------------------------------
 
-// Function to open Wikipedia page in a modal
+// Function to open Wikipedia page in a new browser window/tab
 const openWikipediaPage = countryName => {
   $.ajax({
     url: 'libs/php/getWikipediaUrl.php',
@@ -545,8 +517,7 @@ const openWikipediaPage = countryName => {
       if (data.error) {
         console.error(data.error);
       } else {
-        $('#wikipediaIframe').attr('src', data.url);
-        $('#wikipediaModal').modal('show');
+        window.open(data.url, '_blank');
       }
     },
     error: (jqXHR, textStatus, errorThrown) => {
@@ -583,10 +554,9 @@ const fetchNewsArticles = countryCode => {
   });
 };
 
-// Function to open external URL in a central modal
+// Function to open external URL in a new browser window/tab
 const openExternalUrl = url => {
-  $('#externalIframe').attr('src', url);
-  $('#externalModal').modal('show');
+  window.open(url, '_blank');
 };
 
 // Function to add Wikipedia markers to the cluster group
@@ -602,7 +572,7 @@ const addWikipediaMarkers = articles => {
       const $popupContent = $(popupContent);
       $popupContent.find('#popupTitle').text(article.title);
       $popupContent.find('#popupThumbnail').attr('src', article.thumbnail).attr('alt', article.title);
-      $popupContent.find('#popupButton').attr('onclick', `openExternalUrl('${article.url}')`);
+      $popupContent.find('#popupThumbnail').attr('onclick', `openExternalUrl('${article.url}')`);
       return $popupContent.html();
     };
     marker.on('click', () => {
