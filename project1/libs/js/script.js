@@ -24,10 +24,6 @@ const hideLoadingIndicator = () => {
   map.invalidateSize();
 };
 
-// Create marker cluster groups
-const markers = L.markerClusterGroup();
-const wikipediaMarkers = L.markerClusterGroup();
-
 // ---------------------------------------------------------
 // TILE LAYERS
 // ---------------------------------------------------------
@@ -39,6 +35,9 @@ const streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/service
 const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
   attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
 });
+
+const markers = L.markerClusterGroup();
+const wikipediaMarkers = L.markerClusterGroup();
 
 const basemaps = {
   "Streets": streets,
@@ -382,7 +381,7 @@ const requestWeatherReport = (countryCode) => {
                 $('#placeName').text(`${placeName}`);
                 $('#placeCoords').text(`Latitude: ${lat.toFixed(2)}, Longitude: ${lng.toFixed(2)}`);
                 $('#todayWeatherIcon').attr('src', `http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`);
-                $('#todayTemp').text(`${data.list[0].main.temp.toFixed(1)} °C`);
+                $('#todayTemp').text(`${data.list[0].main.temp.toFixed(0)} °C`);
                 $('#todayDescription').text(data.list[0].weather[0].description);
                 for (let i = 1; i <= 5; i++) {
                   const forecastIndex = i * 8 - 1;
@@ -397,7 +396,7 @@ const requestWeatherReport = (countryCode) => {
                     const formattedDate = `${day} ${dayOfMonth}${suffix}`;
                     $(`#dateDay${i}`).text(formattedDate);
                     $(`#iconDay${i}`).attr('src', `http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`);
-                    $(`#tempDay${i}`).text(`${forecast.main.temp.toFixed(1)}°C`);
+                    $(`#tempDay${i}`).text(`${forecast.main.temp.toFixed(0)}°C`);
                     $(`#descriptionDay${i}`).text(forecast.weather[0].description);
                   } else {
                     $(`#dateDay${i}`).text('N/A');
