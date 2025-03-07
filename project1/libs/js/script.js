@@ -369,128 +369,149 @@ const requestWeatherReport = (countryCode) => {
     // Get the capital city from the DOM
     const capitalCity = $('#countryCapital').text();
     
-    if (!capitalCity) {
-      $('#weatherLoadingIndicator').hide();
-      $('#weatherContent').html(`
-        <div class="alert alert-warning">
-          <strong>Error:</strong> Capital city information not available.
-        </div>
-      `).show();
-      return;
+    if (!capitalCity || capitalCity.trim() === '') {
+      console.log('Capital city not found in DOM, fetching country details first');
+      
+      // Fetch country details first to ensure we have the capital city
+      $.ajax({
+        url: 'libs/php/getCountryDetails.php',
+        method: 'GET',
+        dataType: 'json',
+        data: { countryCode },
+        success: data => {
+          if (data.error) {
+            console.error(data.error);
+            showWeatherError('Could not retrieve capital city information.');
+            return;
+          }
+          
+          if (data.capitalCity && data.capitalCity.trim() !== '') {
+            // Now we have the capital city, proceed with weather request
+            fetchWeatherData(data.capitalCity, data.countryName);
+          } else {
+            showWeatherError('Capital city information not available for this country.');
+          }
+        },
+        error: (jqXHR, textStatus, errorThrown) => {
+          console.error('Failed to get country details:', textStatus, errorThrown);
+          showWeatherError('Failed to retrieve country information.');
+        }
+      });
+    } else {
+      // We already have the capital city, proceed with weather request
+      const countryName = $('#countryName').text();
+      fetchWeatherData(capitalCity, countryName);
     }
-    
-    console.log(`Using capital city: ${capitalCity} for weather data`);
-    
-    // Fetch weather data using capital city name
-    $.ajax({
-      url: 'libs/php/getWeatherForecast.php',
-      method: 'GET',
-      dataType: 'json',
-      data: { city: capitalCity },
-      success: data => {
-        if (data.error) {
-          console.error('Weather API error:', data.error);
-          $('#weatherLoadingIndicator').hide();
-          $('#weatherContent').html(`
-            <div class="alert alert-warning">
-              <strong>Error:</strong> ${data.error}
-            </div>
-          `).show();
-          return;
-        }
-        
-        console.log('Weather forecast:', data);
-        
-        try {
-          // Display the weather data from weatherapi.com
-          const location = data.location || {};
-          const current = data.current || {};
-          const forecast = data.forecast?.forecastday || [];
-          
-          // Set location name
-          $('#placeName').text(`${data.capitalCity || 'Unknown'}, ${data.countryName || 'Unknown'}`);
-          
-          // Check if location data exists before accessing properties
-          if (location && location.lat !== undefined && location.lon !== undefined) {
-            $('#placeCoords').text(`Latitude: ${Number(location.lat).toFixed(2)}, Longitude: ${Number(location.lon).toFixed(2)}`);
-          } else {
-            $('#placeCoords').text('Coordinates unavailable');
-          }
-          
-          // Today's weather - check if data exists
-          if (current && current.condition) {
-            $('#todayWeatherIcon').attr('src', current.condition.icon ? `https:${current.condition.icon}` : '');
-            $('#todayTemp').text(current.temp_c !== undefined ? `${Number(current.temp_c).toFixed(0)}°C` : 'N/A');
-            $('#todayDescription').text(current.condition.text || 'No data available');
-          } else {
-            $('#todayWeatherIcon').attr('src', '');
-            $('#todayTemp').text('N/A');
-            $('#todayDescription').text('Weather data unavailable');
-          }
-          
-          // Forecast for next 3 days
-          for (let i = 0; i < 3; i++) {
-            if (forecast[i]) {
-              const dayForecast = forecast[i];
-              const date = new Date(dayForecast.date);
-              const day = date.toLocaleDateString('en-US', { weekday: 'short' });
-              const dayOfMonth = date.getDate();
-              const suffix = (dayOfMonth % 10 === 1 && dayOfMonth !== 11) ? 'st' :
-                            (dayOfMonth % 10 === 2 && dayOfMonth !== 12) ? 'nd' :
-                            (dayOfMonth % 10 === 3 && dayOfMonth !== 13) ? 'rd' : 'th';
-              const formattedDate = `${day} ${dayOfMonth}${suffix}`;
-              
-              $(`#dateDay${i+1}`).text(formattedDate);
-              
-              // Check if day condition exists
-              if (dayForecast.day && dayForecast.day.condition) {
-                $(`#iconDay${i+1}`).attr('src', dayForecast.day.condition.icon ? 
-                    `https:${dayForecast.day.condition.icon}` : '');
-                $(`#tempDay${i+1}`).text(dayForecast.day.avgtemp_c !== undefined ? 
-                    `${Number(dayForecast.day.avgtemp_c).toFixed(0)}°C` : 'N/A');
-                $(`#descriptionDay${i+1}`).text(dayForecast.day.condition.text || 'No data');
-              } else {
-                $(`#iconDay${i+1}`).attr('src', '');
-                $(`#tempDay${i+1}`).text('N/A');
-                $(`#descriptionDay${i+1}`).text('No data available');
-              }
-            } else {
-              // No forecast data for this day
-              $(`#dateDay${i+1}`).text(`Day ${i+1}`);
-              $(`#iconDay${i+1}`).attr('src', '');
-              $(`#tempDay${i+1}`).text('N/A');
-              $(`#descriptionDay${i+1}`).text('No forecast available');
-            }
-          }
-          
-          // Hide loading indicator and show content
-          $('#weatherLoadingIndicator').hide();
-          $('#weatherContent').show();
-        } catch (error) {
-          console.error('Error processing weather data:', error);
-          $('#weatherLoadingIndicator').hide();
-          $('#weatherContent').html(`
-            <div class="alert alert-danger">
-              <strong>Error:</strong> Failed to process weather data: ${error.message}
-            </div>
-          `).show();
-        }
-      },
-      error: (jqXHR, textStatus, errorThrown) => {
-        console.error('Failed to get weather report:', textStatus, errorThrown);
-        console.error('Response:', jqXHR.responseText);
-        $('#weatherLoadingIndicator').hide();
-        $('#weatherContent').html(`
-          <div class="alert alert-danger">
-            <strong>Error:</strong> Could not load weather data. Please try again later.<br>
-            <small class="text-muted">${textStatus}: ${errorThrown || 'Unknown error'}</small>
-          </div>
-        `).show();
-      }
-    });
   } else {
     console.error('Country code is undefined');
+    showWeatherError('Country code is missing.');
   }
+};
+
+// Helper function to show weather error message
+const showWeatherError = (message) => {
+  $('#weatherLoadingIndicator').hide();
+  $('#weatherContent').html(`
+    <div class="alert alert-warning">
+      <strong>Error:</strong> ${message}
+    </div>
+  `).show();
+};
+
+// Function to fetch weather data using capital city
+const fetchWeatherData = (city, countryName) => {
+  console.log(`Fetching weather for: ${city}, ${countryName}`);
+  
+  $.ajax({
+    url: 'libs/php/getWeatherForecast.php',
+    method: 'GET',
+    dataType: 'json',
+    data: { city: city },
+    success: data => {
+      if (data.error) {
+        console.error('Weather API error:', data.error);
+        showWeatherError(data.error);
+        return;
+      }
+      
+      console.log('Weather forecast:', data);
+      
+      try {
+        // Display the weather data from weatherapi.com
+        const location = data.location || {};
+        const current = data.current || {};
+        const forecast = data.forecast?.forecastday || [];
+        
+        // Set location name
+        $('#placeName').text(`${city || 'Unknown'}, ${countryName || 'Unknown'}`);
+        
+        // Check if location data exists before accessing properties
+        if (location && location.lat !== undefined && location.lon !== undefined) {
+          $('#placeCoords').text(`Latitude: ${Number(location.lat).toFixed(2)}, Longitude: ${Number(location.lon).toFixed(2)}`);
+        } else {
+          $('#placeCoords').text('Coordinates unavailable');
+        }
+        
+        // Today's weather - check if data exists
+        if (current && current.condition) {
+          $('#todayWeatherIcon').attr('src', current.condition.icon ? `https:${current.condition.icon}` : '');
+          $('#todayTemp').text(current.temp_c !== undefined ? `${Number(current.temp_c).toFixed(0)}°C` : 'N/A');
+          $('#todayDescription').text(current.condition.text || 'No data available');
+        } else {
+          $('#todayWeatherIcon').attr('src', '');
+          $('#todayTemp').text('N/A');
+          $('#todayDescription').text('Weather data unavailable');
+        }
+        
+        // Forecast for next 3 days
+        for (let i = 0; i < 3; i++) {
+          if (forecast[i]) {
+            const dayForecast = forecast[i];
+            const date = new Date(dayForecast.date);
+            const day = date.toLocaleDateString('en-US', { weekday: 'short' });
+            const dayOfMonth = date.getDate();
+            const suffix = (dayOfMonth % 10 === 1 && dayOfMonth !== 11) ? 'st' :
+                          (dayOfMonth % 10 === 2 && dayOfMonth !== 12) ? 'nd' :
+                          (dayOfMonth % 10 === 3 && dayOfMonth !== 13) ? 'rd' : 'th';
+            const formattedDate = `${day} ${dayOfMonth}${suffix}`;
+            
+            $(`#dateDay${i+1}`).text(formattedDate);
+            
+            // Check if day condition exists
+            if (dayForecast.day && dayForecast.day.condition) {
+              $(`#iconDay${i+1}`).attr('src', dayForecast.day.condition.icon ? 
+                  `https:${dayForecast.day.condition.icon}` : '');
+              $(`#tempDay${i+1}`).text(dayForecast.day.avgtemp_c !== undefined ? 
+                  `${Number(dayForecast.day.avgtemp_c).toFixed(0)}°C` : 'N/A');
+              $(`#descriptionDay${i+1}`).text(dayForecast.day.condition.text || 'No data');
+            } else {
+              $(`#iconDay${i+1}`).attr('src', '');
+              $(`#tempDay${i+1}`).text('N/A');
+              $(`#descriptionDay${i+1}`).text('No data available');
+            }
+          } else {
+            // No forecast data for this day
+            $(`#dateDay${i+1}`).text(`Day ${i+1}`);
+            $(`#iconDay${i+1}`).attr('src', '');
+            $(`#tempDay${i+1}`).text('N/A');
+            $(`#descriptionDay${i+1}`).text('No forecast available');
+          }
+        }
+        
+        // Hide loading indicator and show content
+        $('#weatherLoadingIndicator').hide();
+        $('#weatherContent').show();
+      } catch (error) {
+        console.error('Error processing weather data:', error);
+        showWeatherError(`Failed to process weather data: ${error.message}`);
+      }
+    },
+    error: (jqXHR, textStatus, errorThrown) => {
+      console.error('Failed to get weather report:', textStatus, errorThrown);
+      console.error('Response:', jqXHR.responseText);
+      showWeatherError(`Could not load weather data. Please try again later.`);
+    }
+  });
 };
 
 // ---------------------------------------------------------
