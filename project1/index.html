@@ -132,40 +132,63 @@
                     </div>
 
                     <div id="weatherContent" style="display: none;">
-                        <h5 id="placeName" class="text-center mb-3 fw-bold"></h5>
+                        <h5 id="placeName" class="text-center mb-2 fw-bold"></h5>
                         <p id="placeCoords" class="text-center small text-muted mb-3"></p>
                         
                         <!-- Today's weather -->
-                        <div class="current-weather text-center mb-4 border shadow-sm rounded p-3">
-                            <div class="fw-bold">Today</div>
-                            <img id="todayWeatherIcon" src="" alt="Today's Weather" class="weather-icon">
-                            <div id="todayTemp" class="temp"></div>
-                            <div id="todayDescription" class="description"></div>
+                        <div class="current-weather border shadow-sm rounded p-3 mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="fw-bold fs-5">Current Weather</div>
+                                <div id="todayDate" class="text-muted"></div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-6 text-center">
+                                    <img id="todayWeatherIcon" src="" alt="Today's Weather" class="weather-icon" style="width: 80px; height: 80px;">
+                                    <div id="todayDescription" class="description mt-1"></div>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <div id="todayTemp" class="temp fs-1 fw-bold"></div>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <span id="todayTempMin" class="text-muted small"></span>
+                                        <span id="todayTempMax" class="text-muted small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
                         </div>
                         
-                        <!-- 2-day forecast -->
-                        <div class="row">
-                            <div class="col-6 mb-3">
+                        <!-- 3-day forecast -->
+                        <div class="row g-2">
+                            <div class="col-4">
                                 <div class="forecast-day text-center p-2 border shadow-sm rounded h-100">
                                     <div id="dateDay1" class="fw-bold"></div>
-                                    <img id="iconDay1" src="" alt="Day 1 Weather" class="weather-icon">
-                                    <div id="tempDay1" class="temp"></div>
-                                    <div id="descriptionDay1" class="description small"></div>
+                                    <img id="iconDay1" src="" alt="Day 1 Weather" class="weather-icon my-2" style="width: 50px; height: 50px;">
+                                    <div id="tempDay1" class="temp fw-bold"></div>
+                                    <div id="descriptionDay1" class="description small text-muted"></div>
                                 </div>
                             </div>
-                            <div class="col-6 mb-3">
+                            <div class="col-4">
                                 <div class="forecast-day text-center p-2 border shadow-sm rounded h-100">
                                     <div id="dateDay2" class="fw-bold"></div>
-                                    <img id="iconDay2" src="" alt="Day 2 Weather" class="weather-icon">
-                                    <div id="tempDay2" class="temp"></div>
-                                    <div id="descriptionDay2" class="description small"></div>
+                                    <img id="iconDay2" src="" alt="Day 2 Weather" class="weather-icon my-2" style="width: 50px; height: 50px;">
+                                    <div id="tempDay2" class="temp fw-bold"></div>
+                                    <div id="descriptionDay2" class="description small text-muted"></div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="forecast-day text-center p-2 border shadow-sm rounded h-100">
+                                    <div id="dateDay3" class="fw-bold"></div>
+                                    <img id="iconDay3" src="" alt="Day 3 Weather" class="weather-icon my-2" style="width: 50px; height: 50px;">
+                                    <div id="tempDay3" class="temp fw-bold"></div>
+                                    <div id="descriptionDay3" class="description small text-muted"></div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="text-center small text-muted">
+                        <div class="text-center small text-muted mt-3">
                             <p>Powered by <a href="https://www.weatherapi.com/" target="_blank">WeatherAPI.com</a></p>
                         </div>
+                        
                     </div>
                 </div>
             </div>

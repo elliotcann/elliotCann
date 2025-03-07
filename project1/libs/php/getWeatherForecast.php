@@ -8,7 +8,7 @@ if (isset($_GET['city'])) {
     
     try {
         // WeatherAPI.com accepts city names as the query parameter
-        $weatherUrl = "https://api.weatherapi.com/v1/forecast.json?key=$apiKey&q=" . urlencode($city) . "&days=2&aqi=no&alerts=no";
+        $weatherUrl = "https://api.weatherapi.com/v1/forecast.json?key=$apiKey&q=" . urlencode($city) . "&days=3&aqi=no&alerts=no";
         
         // Use cURL for the weather API
         $ch = curl_init($weatherUrl);
