@@ -38,6 +38,7 @@ const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/servi
 
 const markers = L.markerClusterGroup();
 const wikipediaMarkers = L.markerClusterGroup();
+const issLayer = L.layerGroup();
 
 const basemaps = {
   "Streets": streets,
@@ -46,7 +47,8 @@ const basemaps = {
 
 const overlays = {
   "Cities": markers,
-  "Wikipedia Points": wikipediaMarkers
+  "Wikipedia Points": wikipediaMarkers,
+  "ISS Location": issLayer
 };
 
 // ---------------------------------------------------------
@@ -687,6 +689,55 @@ const fetchWikipediaArticles = (lat, lng) => {
 };
 
 // ---------------------------------------------------------
+// ISS TRACKING FUNCTIONS
+// ---------------------------------------------------------
+
+// Create ISS marker with custom icon
+const issIcon = createCustomIcon(
+  'libs/assets/img/ISS.png',
+  null,
+  [32, 32],
+  null,
+  [16, 16],
+  null,
+  [0, -16]
+);
+
+// Create ISS marker and add to the layer
+let issMarker = L.marker([0, 0], {
+  icon: issIcon,
+  title: "International Space Station"
+});
+let issTrackingInterval = null;
+
+// Function to update ISS position
+const updateISSPosition = () => {
+  $.ajax({
+    url: 'libs/php/getISSPosition.php',
+    method: 'GET',
+    dataType: 'json',
+    success: data => {
+      if (data.error) {
+        console.error('Error fetching ISS position:', data.error);
+        return;
+      }
+      
+      const latitude = parseFloat(data.iss_position.latitude);
+      const longitude = parseFloat(data.iss_position.longitude);
+      
+      // Update the marker's position
+      issMarker.setLatLng([latitude, longitude]);
+      
+      // Add tooltip with coordinates
+      issMarker.bindTooltip(`ISS Location<br>Lat: ${latitude.toFixed(2)}, Lng: ${longitude.toFixed(2)}`);
+    },
+    error: (jqXHR, textStatus, errorThrown) => {
+      console.error('Failed to get ISS position:', textStatus, errorThrown);
+    }
+  });
+};
+
+// ---------------------------------------------------------
 // EVENT HANDLERS
 // ---------------------------------------------------------
 
@@ -744,6 +795,38 @@ $(document).ready(function () {
   map.on('moveend', function() {
     const center = map.getCenter();
     fetchWikipediaArticles(center.lat, center.lng);
+  });
+
+  // Set up ISS layer event handlers
+  map.on('overlayadd', function(e) {
+    if (e.name === 'ISS Location') {
+      // Add the marker to the layer
+      issMarker.addTo(issLayer);
+      
+      // Update position immediately
+      updateISSPosition();
+      
+      // Start interval updates
+      issTrackingInterval = setInterval(updateISSPosition, 5000); // Update every 5 seconds
+      
+      // Center map on ISS
+      const position = issMarker.getLatLng();
+      if (position.lat !== 0 || position.lng !== 0) {
+        map.setView(position, 4);
+      }
+    }
+  });
+
+  map.on('overlayremove', function(e) {
+    if (e.name === 'ISS Location') {
+      // Clear the update interval
+      if (issTrackingInterval) {
+        clearInterval(issTrackingInterval);
+        issTrackingInterval = null;
+      }
+      
+      // The marker is automatically removed when the layer is removed
+    }
   });
   
   $('#currencyModal').on('hidden.bs.modal', function () {
