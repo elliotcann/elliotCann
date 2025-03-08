@@ -650,13 +650,15 @@ const fetchNewsArticles = countryCode => {
         console.error(data.error);
       } else {
         const articles = data.results;
-        for (let i = 0; i < articles.length; i++) {
-          if (i >= 10) break;
-          $(`#newsTitle${i + 1}`).text(articles[i].title);
+
+        // Display only 5 articles
+        for (let i = 0; i < Math.min(articles.length, 5); i++) {
+          // Create link for article title
+          $(`#newsTitle${i + 1}`).html(`<a href="${articles[i].link}" target="_blank" class="text-decoration-none text-dark">${articles[i].title}</a>`);
           $(`#newsImage${i + 1}`).attr('src', articles[i].image_url).attr('alt', articles[i].title);
           $(`#newsDescription${i + 1}`).text(articles[i].description);
-          $(`#newsLink${i + 1}`).attr('href', articles[i].link);
         }
+        
         $('#newsModal').modal('show');
       }
     },
