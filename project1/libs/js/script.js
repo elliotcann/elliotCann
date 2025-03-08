@@ -448,7 +448,7 @@ const fetchWeatherData = (city, countryName) => {
         // Today's weather - check if data exists
         if (current && current.condition) {
           $('#todayWeatherIcon').attr('src', current.condition.icon ? `https:${current.condition.icon}` : '');
-          $('#todayTemp').text(current.temp_c !== undefined ? `${Number(current.temp_c).toFixed(0)} °C` : 'N/A');
+          $('#todayTemp').text(current.temp_c !== undefined ? `${Number(current.temp_c).toFixed(0)}°C` : 'N/A');
           $('#todayDescription').text(current.condition.text || 'No data available');
         } else {
           $('#todayWeatherIcon').attr('src', '');

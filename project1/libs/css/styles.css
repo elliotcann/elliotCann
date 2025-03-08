@@ -45,8 +45,6 @@ html, body {
     height: 50px;
 }
 
-
-.description {
-    font-size: 1em;
-    color: #555;
-}
+.svg-icon {
+    filter: brightness(0) invert(1);
+  }
