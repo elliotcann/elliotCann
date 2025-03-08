@@ -261,15 +261,49 @@ const addCityMarkers = cities => {
   console.log('Adding city markers:', cities);
   cities.forEach(city => {
     const marker = L.marker([city.lat, city.lng], { icon: customIcon });
-    marker.on('mouseover', () => {
-      const popupContent = `<div style="text-align: center;"><b>${city.name}</b><br>Population: ${formatNumber(city.population)}</div>`;
-      marker.bindPopup(popupContent).openPopup();
+    
+    // Create popup content using the template
+    const createPopupContent = () => {
+      const popupContent = $('#popupMarkerTemplate').html();
+      const $popupContent = $(popupContent);
+      $popupContent.find('#popupTitle').text(city.name);
+      $popupContent.find('#popupDescription').text(`Population: ${formatNumber(city.population)}`);
+      $popupContent.find('#popupThumbnail').hide();
+      return $popupContent.html();
+    };
+    
+    // Bind the popup to the marker with specific options
+    marker.bindPopup(createPopupContent(), {
+      closeButton: true,
+      closeOnEscapeKey: true
     });
-    marker.on('mouseout', () => {
-      setTimeout(() => {
-        if (!$('.leaflet-popup:hover').length) marker.closePopup();
-      }, 100);
+    
+    // For desktop: Show on hover
+    marker.on('mouseover', function() {
+      this.openPopup();
     });
+
+    // Close popup when mouse leaves marker (except on click)
+    marker.on('mouseout', function() {
+      if (!marker._clicked) {
+        setTimeout(() => {
+          this.closePopup();
+        }, 300);
+      }
+    });
+    
+    // For all devices: Toggle on click
+    marker.on('click', function() {
+      this.openPopup();
+      // Set a flag to track if this popup was opened by click
+      marker._clicked = !marker._clicked;
+    });
+    
+    // Close popup when clicking elsewhere on map
+    map.on('click', function() {
+      marker._clicked = false;
+    });
+    
     markers.addLayer(marker);
   });
 };
@@ -638,13 +672,17 @@ const openExternalUrl = url => {
 };
 
 // Function to add Wikipedia markers to the cluster group
+// Function to add Wikipedia markers to the cluster group
 const addWikipediaMarkers = articles => {
   console.log('Adding Wikipedia markers:', articles);
   wikipediaMarkers.clearLayers();
   const maxMarkers = 10;
   const limitedArticles = articles.slice(0, maxMarkers);
+  
   limitedArticles.forEach(article => {
     const marker = L.marker([article.lat, article.lng], { icon: wikipediaIcon });
+    
+    // Create popup content using the template
     const createPopupContent = () => {
       const popupContent = $('#popupMarkerTemplate').html();
       const $popupContent = $(popupContent);
@@ -653,12 +691,37 @@ const addWikipediaMarkers = articles => {
       $popupContent.find('#popupThumbnail').attr('onclick', `openExternalUrl('${article.url}')`);
       return $popupContent.html();
     };
-    marker.on('click', () => {
-      if (marker.getPopup()) marker.unbindPopup();
-      marker.bindPopup(createPopupContent()).openPopup();
+    
+    // Bind the popup to the marker with specific options
+    marker.bindPopup(createPopupContent(), {
+      closeButton: true,
+      closeOnEscapeKey: true
     });
+    
+    // For desktop: Show on hover
+    marker.on('mouseover', function() {
+      this.openPopup();
+    });
+    
+    // Close popup when mouse leaves marker (except on click)
+    marker.on('mouseout', function() {
+      if (!marker._clicked) {
+        setTimeout(() => {
+          this.closePopup();
+        }, 300);
+      }
+    });
+    
+    // For all devices: Toggle on click
+    marker.on('click', function() {
+      this.openPopup();
+      // Set a flag to track if this popup was opened by click
+      marker._clicked = !marker._clicked;
+    });
+    
     wikipediaMarkers.addLayer(marker);
   });
+  
   map.addLayer(wikipediaMarkers);
 };
 
@@ -728,8 +791,42 @@ const updateISSPosition = () => {
       // Update the marker's position
       issMarker.setLatLng([latitude, longitude]);
       
-      // Add tooltip with coordinates
-      issMarker.bindTooltip(`ISS Location<br>Lat: ${latitude.toFixed(2)}, Lng: ${longitude.toFixed(2)}`);
+      // Create popup content using the template
+      const popupContent = $('#popupMarkerTemplate').html();
+      const $popupContent = $(popupContent);
+      $popupContent.find('#popupTitle').text(`ISS Location`);
+      $popupContent.find('#popupDescription').text(`Lat: ${latitude.toFixed(2)}, Lng: ${longitude.toFixed(2)}`);
+      
+      // Bind the popup with specific options
+      issMarker.bindPopup($popupContent.html(), {
+        closeButton: true,
+        closeOnEscapeKey: true
+      });
+
+      // Reset previous event listeners
+      issMarker.off('mouseover mouseout click');
+      
+      // For desktop: Show popup on hover
+      issMarker.on('mouseover', function() {
+        this.openPopup();
+      });
+      
+      // Close popup when mouse leaves marker (except on click)
+      issMarker.on('mouseout', function() {
+        if (!issMarker._clicked) {
+          setTimeout(() => {
+            this.closePopup();
+          }, 300);
+        }
+      });
+
+      // For all devices: Toggle popup on click
+      issMarker.on('click', function() {
+        this.openPopup();
+        // Set a flag to track if this popup was opened by click
+        issMarker._clicked = !issMarker._clicked;
+      });
+      
     },
     error: (jqXHR, textStatus, errorThrown) => {
       console.error('Failed to get ISS position:', textStatus, errorThrown);
