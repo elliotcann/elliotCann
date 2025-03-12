@@ -118,20 +118,16 @@ const zoomControl = L.easyBar([zoomInBtn, zoomOutBtn], { position: 'topright' })
 
 // Function to get the user's location
 const getUserLocation = () => {
-  console.log('Attempting to get user location...');
   showLoadingIndicator();
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
       lat = position.coords.latitude;
       lng = position.coords.longitude;
-      console.log(`Latitude: ${lat}, Longitude: ${lng}`);
       autoSelectUserCountry();
     }, error => {
-      console.error('Geolocation error:', error);
       hideLoadingIndicator();
     });
   } else {
-    console.error('Geolocation is not supported by this browser.');
     hideLoadingIndicator();
   }
 };
@@ -139,7 +135,6 @@ const getUserLocation = () => {
 // Function to auto-select the user's country based on their location
 const autoSelectUserCountry = () => {
   if (lat !== undefined && lng !== undefined) {
-    console.log(`Requesting country code for Latitude: ${lat}, Longitude: ${lng}`);
     $.ajax({
       url: 'libs/php/getCountryFromCoords.php',
       method: 'GET',
@@ -148,7 +143,6 @@ const autoSelectUserCountry = () => {
       success: data => {
         const countryCode = data.countryCode;
         if (countryCode) {
-          console.log(`Country code received: ${countryCode}`);
           $('#countrySelect').val(countryCode).change();
           fetchAndDisplayCountryDetails(countryCode);
           const countryName = $('#countryName').text();
@@ -157,12 +151,10 @@ const autoSelectUserCountry = () => {
         hideLoadingIndicator();
       },
       error: (jqXHR, textStatus, errorThrown) => {
-        console.error('Failed to get country code:', textStatus, errorThrown);
         hideLoadingIndicator();
       }
     });
   } else {
-    console.error('Latitude and longitude are not defined.');
     hideLoadingIndicator();
   }
 };
@@ -185,8 +177,7 @@ const populateDropdown = () => {
       });
     },
     error: (jqXHR, textStatus, errorThrown) => {
-      console.error('Failed to populate dropdown:', textStatus, errorThrown);
-      console.error('Response text:', jqXHR.responseText);
+      // Silent error handling
     }
   });
 };
@@ -211,8 +202,7 @@ const getCountryBorder = iso2 => {
       map.fitBounds(currentBorderLayer.getBounds());
     },
     error: (jqXHR, textStatus, errorThrown) => {
-      console.error('Failed to get country border:', textStatus, errorThrown);
-      console.error('Response text:', jqXHR.responseText);
+      // Silent error handling
     }
   });
 };
@@ -258,7 +248,6 @@ const wikipediaIcon = createCustomIcon(
 
 // Function to add city markers to the map
 const addCityMarkers = cities => {
-  console.log('Adding city markers:', cities);
   cities.forEach(city => {
     const marker = L.marker([city.lat, city.lng], { icon: customIcon });
     
@@ -278,7 +267,7 @@ const addCityMarkers = cities => {
       closeOnEscapeKey: true
     });
     
-    // For desktop: Show on hover
+    // Show popup on hover (desktop)
     marker.on('mouseover', function() {
       this.openPopup();
     });
@@ -292,7 +281,7 @@ const addCityMarkers = cities => {
       }
     });
     
-    // For all devices: Toggle on click
+    // Toggle popup on click (all devices)
     marker.on('click', function() {
       this.openPopup();
       // Set a flag to track if this popup was opened by click
@@ -316,7 +305,6 @@ const getCities = countryCode => {
     type: 'GET',
     data: { country: countryCode },
     success: response => {
-      console.log('API response:', response);
       const data = JSON.parse(response);
       if (data.geonames) {
         const cities = data.geonames.map(city => ({
@@ -327,12 +315,10 @@ const getCities = countryCode => {
         }));
         addCityMarkers(cities);
         markers.addTo(map);
-      } else {
-        console.error('No cities found for the selected country');
       }
     },
     error: (jqXHR, textStatus, errorThrown) => {
-      console.error('Failed to get cities:', textStatus, errorThrown);
+      // Silent error handling
     }
   });
 };
@@ -349,9 +335,7 @@ const fetchAndDisplayCountryDetails = (countryCode, callback) => {
     dataType: 'json',
     data: { countryCode },
     success: data => {
-      if (data.error) {
-        console.error(data.error);
-      } else {
+      if (!data.error) {
         // Update all country details
         $('#countryName').text(data.countryName);
         $('#countryFlag').attr('src', data.flag).attr('alt', `${data.countryName} flag`);
@@ -367,7 +351,7 @@ const fetchAndDisplayCountryDetails = (countryCode, callback) => {
       }
     },
     error: (jqXHR, textStatus, errorThrown) => {
-      console.error('Failed to get country details:', textStatus, errorThrown);
+      // Silent error handling
     },
     complete: () => {
       // Always execute the callback, whether successful or not
@@ -384,7 +368,7 @@ const updateInfoModal = (countryCode) => {
   
   fetchAndDisplayCountryDetails(countryCode, () => {
     $('#infoLoadingIndicator').hide();
-    $('#infoContent').fadeIn(600);; // Smoother transition
+    $('#infoContent').fadeIn(600); // Smoother transition
   });
 };
 
@@ -395,8 +379,6 @@ const updateInfoModal = (countryCode) => {
 // Function to request weather reports using the capital city
 const requestWeatherReport = (countryCode) => {
   if (countryCode) {
-    console.log(`Requesting weather report for country code: ${countryCode}`);
-    
     // Show modal with loading indicator first
     $('#weatherLoadingIndicator').show();
     $('#weatherContent').hide();
@@ -406,8 +388,6 @@ const requestWeatherReport = (countryCode) => {
     const capitalCity = $('#countryCapital').text();
     
     if (!capitalCity || capitalCity.trim() === '') {
-      console.log('Capital city not found in DOM, fetching country details first');
-      
       // Fetch country details first to ensure we have the capital city
       $.ajax({
         url: 'libs/php/getCountryDetails.php',
@@ -416,7 +396,6 @@ const requestWeatherReport = (countryCode) => {
         data: { countryCode },
         success: data => {
           if (data.error) {
-            console.error(data.error);
             showWeatherError('Could not retrieve capital city information.');
             return;
           }
@@ -429,7 +408,6 @@ const requestWeatherReport = (countryCode) => {
           }
         },
         error: (jqXHR, textStatus, errorThrown) => {
-          console.error('Failed to get country details:', textStatus, errorThrown);
           showWeatherError('Failed to retrieve country information.');
         }
       });
@@ -439,7 +417,6 @@ const requestWeatherReport = (countryCode) => {
       fetchWeatherData(capitalCity, countryName);
     }
   } else {
-    console.error('Country code is undefined');
     showWeatherError('Country code is missing.');
   }
 };
@@ -456,8 +433,6 @@ const showWeatherError = (message) => {
 
 // Function to fetch weather data using capital city
 const fetchWeatherData = (city, countryName) => {
-  console.log(`Fetching weather for: ${city}, ${countryName}`);
-  
   $.ajax({
     url: 'libs/php/getWeatherForecast.php',
     method: 'GET',
@@ -465,12 +440,9 @@ const fetchWeatherData = (city, countryName) => {
     data: { city: city },
     success: data => {
       if (data.error) {
-        console.error('Weather API error:', data.error);
         showWeatherError(data.error);
         return;
       }
-      
-      console.log('Weather forecast:', data);
       
       try {
         // Display the weather data from weatherapi.com
@@ -531,13 +503,10 @@ const fetchWeatherData = (city, countryName) => {
         $('#weatherLoadingIndicator').hide();
         $('#weatherContent').fadeIn(600);
       } catch (error) {
-        console.error('Error processing weather data:', error);
         showWeatherError(`Failed to process weather data: ${error.message}`);
       }
     },
     error: (jqXHR, textStatus, errorThrown) => {
-      console.error('Failed to get weather report:', textStatus, errorThrown);
-      console.error('Response:', jqXHR.responseText);
       showWeatherError(`Could not load weather data. Please try again later.`);
     }
   });
@@ -576,16 +545,14 @@ const populateCurrencyDropdown = () => {
       currencyArray.forEach(currency => {
         $dropdown.append(`<option value="${currency.code}" data-rate="${currency.rate}">${currency.name} (${currency.code})</option>`);
       });
-      
-      console.log('Currency dropdown populated with rates');
     },
     error: (jqXHR, textStatus, errorThrown) => {
-      console.error('Failed to populate currency dropdown:', textStatus, errorThrown);
+      // Silent error handling
     }
   });
 };
 
-// Simplified currency conversion function using data attributes
+// Currency conversion function using data attributes
 const calcResult = () => {
   const amount = parseFloat($('#currencyNumber').val()) || 0;
   const rate = parseFloat($('#currencySelect option:selected').attr('data-rate')) || 0;
@@ -599,27 +566,9 @@ const calcResult = () => {
   }
 };
 
-// Event listeners for currency conversion
-$('#currencyNumber').on('input', calcResult);
-$('#currencySelect').on('change', calcResult);
-
-// Reset to 1 when modal is closed
-$('#currencyModal').on('hidden.bs.modal', function () {
-  $('#currencyNumber').val(1);
-  $('#currencyResult').val('');
-});
-
-// Calculate when modal is fully shown
-$('#currencyModal').on('shown.bs.modal', function () {
-  setTimeout(calcResult, 100);
-});
-
 // ---------------------------------------------------------
 // WIKIPEDIA AND NEWS FUNCTIONS
 // ---------------------------------------------------------
-
-// Function to open Wikipedia page in a new browser window/tab
-// Replace the existing openWikipediaPage function with this:
 
 // Function to fetch and display Wikipedia information
 const openWikipediaPage = countryName => {
@@ -637,7 +586,6 @@ const openWikipediaPage = countryName => {
     data: { countryName },
     success: data => {
       if (data.error) {
-        console.error(data.error);
         $('#wikiContent').html(`<div class="alert alert-warning">Failed to load Wikipedia content: ${data.error}</div>`);
       } else {
         // Set the title and link
@@ -660,7 +608,6 @@ const openWikipediaPage = countryName => {
       $('#wikiContent').fadeIn(600);
     },
     error: (jqXHR, textStatus, errorThrown) => {
-      console.error('Failed to fetch Wikipedia content:', textStatus, errorThrown);
       // Show error message
       $('#wikiContent').html(`<div class="alert alert-warning">Failed to load Wikipedia content. Please try again later.</div>`);
       
@@ -687,7 +634,6 @@ const fetchNewsArticles = countryCode => {
     data: { countryCode },
     success: data => {
       if (data.error) {
-        console.error(data.error);
         // Show error message in news content
         $('#newsContent').html(`<div class="alert alert-warning">Failed to load news: ${data.error}</div>`);
       } else {
@@ -707,7 +653,6 @@ const fetchNewsArticles = countryCode => {
       $('#newsContent').fadeIn(600);
     },
     error: (jqXHR, textStatus, errorThrown) => {
-      console.error('Failed to fetch news articles:', textStatus, errorThrown);
       // Show error message
       $('#newsContent').html(`<div class="alert alert-warning">Failed to load news articles. Please try again later.</div>`);
       
@@ -723,10 +668,8 @@ const openExternalUrl = url => {
   window.open(url, '_blank');
 };
 
-
 // Function to add Wikipedia markers to the cluster group
 const addWikipediaMarkers = articles => {
-  console.log('Adding Wikipedia markers:', articles);
   wikipediaMarkers.clearLayers();
   const maxMarkers = 10;
   const limitedArticles = articles.slice(0, maxMarkers);
@@ -791,14 +734,12 @@ const fetchWikipediaArticles = (lat, lng) => {
       radius: radius
     },
     success: function(data) {
-      if (data.error) {
-        console.error('Error fetching Wikipedia articles:', data.error);
-        return;
+      if (!data.error) {
+        addWikipediaMarkers(data.articles);
       }
-      addWikipediaMarkers(data.articles);
     },
     error: function(xhr, status, error) {
-      console.error('AJAX error:', status, error);
+      // Silent error handling
     }
   });
 };
@@ -833,7 +774,6 @@ const updateISSPosition = () => {
     dataType: 'json',
     success: data => {
       if (data.error) {
-        console.error('Error fetching ISS position:', data.error);
         return;
       }
       
@@ -878,10 +818,9 @@ const updateISSPosition = () => {
         // Set a flag to track if this popup was opened by click
         issMarker._clicked = !issMarker._clicked;
       });
-      
     },
     error: (jqXHR, textStatus, errorThrown) => {
-      console.error('Failed to get ISS position:', textStatus, errorThrown);
+      // Silent error handling
     }
   });
 };
@@ -891,8 +830,6 @@ const updateISSPosition = () => {
 // ---------------------------------------------------------
 
 $(document).ready(function () {
-  console.log('Document is ready.');
-
   // Initialize the map
   map = L.map("map", {
     layers: [streets],
@@ -916,8 +853,8 @@ $(document).ready(function () {
   // Get the user's location and auto-select the user's country based on their location
   getUserLocation();
 
-  // Event listener for dropdown change
-  $('#countrySelect').on('change', function () {
+ // Event listener for dropdown change
+ $('#countrySelect').on('change', function () {
   const countryCode = $(this).val();
   if (countryCode) {;
     getCountryBorder(countryCode);
