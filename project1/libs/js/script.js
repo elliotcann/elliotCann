@@ -696,7 +696,7 @@ const fetchNewsArticles = countryCode => {
         // Display only 5 articles
         for (let i = 0; i < Math.min(articles.length, 5); i++) {
           // Create link for article title
-          $(`#newsTitle${i + 1}`).html(`<a href="${articles[i].link}" target="_blank" class="text-decoration-none text-dark">${articles[i].title}</a>`);
+          $(`#newsTitle${i + 1}`).html(`<a href="${articles[i].link}" target="_blank">${articles[i].title}</a>`);
           $(`#newsImage${i + 1}`).attr('src', articles[i].image_url).attr('alt', articles[i].title);
           $(`#newsDescription${i + 1}`).text(articles[i].description);
         }
@@ -737,9 +737,10 @@ const addWikipediaMarkers = articles => {
     const createPopupContent = () => {
       const popupContent = $('#popupMarkerTemplate').html();
       const $popupContent = $(popupContent);
-      $popupContent.find('#popupTitle').text(article.title);
+      $popupContent.find('#popupTitle').html(`<a href="#" onclick="openExternalUrl('${article.url}'); return false;">${article.title}</a>`);
       $popupContent.find('#popupThumbnail').attr('src', article.thumbnail).attr('alt', article.title);
-      $popupContent.find('#popupThumbnail').attr('onclick', `openExternalUrl('${article.url}')`);
+      // Remove the onclick from the thumbnail
+      $popupContent.find('#popupThumbnail').removeAttr('onclick');
       return $popupContent.html();
     };
 
