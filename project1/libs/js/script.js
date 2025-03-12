@@ -640,6 +640,13 @@ const openWikipediaPage = countryName => {
 
 // Function to fetch and display news articles
 const fetchNewsArticles = countryCode => {
+  // Show loading indicator and hide content
+  $('#newsLoadingIndicator').show();
+  $('#newsContent').hide();
+  
+  // Show the modal immediately with the loading indicator
+  $('#newsModal').modal('show');
+  
   $.ajax({
     url: 'libs/php/getNews.php',
     method: 'GET',
@@ -648,6 +655,8 @@ const fetchNewsArticles = countryCode => {
     success: data => {
       if (data.error) {
         console.error(data.error);
+        // Show error message in news content
+        $('#newsContent').html(`<div class="alert alert-warning">Failed to load news: ${data.error}</div>`);
       } else {
         const articles = data.results;
 
@@ -658,12 +667,20 @@ const fetchNewsArticles = countryCode => {
           $(`#newsImage${i + 1}`).attr('src', articles[i].image_url).attr('alt', articles[i].title);
           $(`#newsDescription${i + 1}`).text(articles[i].description);
         }
-        
-        $('#newsModal').modal('show');
       }
+      
+      // Hide loading indicator and show content
+      $('#newsLoadingIndicator').hide();
+      $('#newsContent').show();
     },
     error: (jqXHR, textStatus, errorThrown) => {
       console.error('Failed to fetch news articles:', textStatus, errorThrown);
+      // Show error message
+      $('#newsContent').html(`<div class="alert alert-warning">Failed to load news articles. Please try again later.</div>`);
+      
+      // Hide loading indicator and show content with error message
+      $('#newsLoadingIndicator').hide();
+      $('#newsContent').show();
     }
   });
 };
@@ -673,14 +690,13 @@ const openExternalUrl = url => {
   window.open(url, '_blank');
 };
 
-// Function to add Wikipedia markers to the cluster group
+
 // Function to add Wikipedia markers to the cluster group
 const addWikipediaMarkers = articles => {
   console.log('Adding Wikipedia markers:', articles);
   wikipediaMarkers.clearLayers();
   const maxMarkers = 10;
   const limitedArticles = articles.slice(0, maxMarkers);
-  
   limitedArticles.forEach(article => {
     const marker = L.marker([article.lat, article.lng], { icon: wikipediaIcon });
     
@@ -693,7 +709,7 @@ const addWikipediaMarkers = articles => {
       $popupContent.find('#popupThumbnail').attr('onclick', `openExternalUrl('${article.url}')`);
       return $popupContent.html();
     };
-    
+
     // Bind the popup to the marker with specific options
     marker.bindPopup(createPopupContent(), {
       closeButton: true,
@@ -796,7 +812,7 @@ const updateISSPosition = () => {
       // Create popup content using the template
       const popupContent = $('#popupMarkerTemplate').html();
       const $popupContent = $(popupContent);
-      $popupContent.find('#popupTitle').text(`ISS Location`);
+      $popupContent.find('#popupTitle').text(`International Space Station`);
       $popupContent.find('#popupDescription').text(`Lat: ${latitude.toFixed(2)}, Lng: ${longitude.toFixed(2)}`);
       
       // Bind the popup with specific options

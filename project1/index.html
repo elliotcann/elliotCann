@@ -258,7 +258,12 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="newsContent">
+                    <div id="newsLoadingIndicator" class="text-center py-5">
+                        <div class="spinner-border text-success" role="status">
+                        </div>
+                    </div>
+                    
+                    <div id="newsContent" style="display: none;">
                         <!-- News article 1 -->
                         <div class="news-article mb-3 p-2 border rounded shadow-sm">
                             <div class="row align-items-center g-2">
