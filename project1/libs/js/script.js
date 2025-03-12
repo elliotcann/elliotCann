@@ -384,7 +384,7 @@ const updateInfoModal = (countryCode) => {
   
   fetchAndDisplayCountryDetails(countryCode, () => {
     $('#infoLoadingIndicator').hide();
-    $('#infoContent').fadeIn(300); // Smoother transition
+    $('#infoContent').fadeIn(600);; // Smoother transition
   });
 };
 
@@ -529,7 +529,7 @@ const fetchWeatherData = (city, countryName) => {
         
         // Hide loading indicator and show content
         $('#weatherLoadingIndicator').hide();
-        $('#weatherContent').show();
+        $('#weatherContent').fadeIn(600);
       } catch (error) {
         console.error('Error processing weather data:', error);
         showWeatherError(`Failed to process weather data: ${error.message}`);
@@ -657,7 +657,7 @@ const openWikipediaPage = countryName => {
       
       // Hide loading indicator and show content
       $('#wikiLoadingIndicator').hide();
-      $('#wikiContent').show();
+      $('#wikiContent').fadeIn(600);
     },
     error: (jqXHR, textStatus, errorThrown) => {
       console.error('Failed to fetch Wikipedia content:', textStatus, errorThrown);
@@ -666,7 +666,7 @@ const openWikipediaPage = countryName => {
       
       // Hide loading indicator and show content with error message
       $('#wikiLoadingIndicator').hide();
-      $('#wikiContent').show();
+      $('#wikiContent').fadeIn(600);
     }
   });
 };
@@ -704,7 +704,7 @@ const fetchNewsArticles = countryCode => {
       
       // Hide loading indicator and show content
       $('#newsLoadingIndicator').hide();
-      $('#newsContent').show();
+      $('#newsContent').fadeIn(600);
     },
     error: (jqXHR, textStatus, errorThrown) => {
       console.error('Failed to fetch news articles:', textStatus, errorThrown);
@@ -713,7 +713,7 @@ const fetchNewsArticles = countryCode => {
       
       // Hide loading indicator and show content with error message
       $('#newsLoadingIndicator').hide();
-      $('#newsContent').show();
+      $('#newsContent').fadeIn(600);
     }
   });
 };

@@ -56,13 +56,3 @@ display: -webkit-box;
 overflow: hidden;
 text-overflow: ellipsis;
 }
-
-/* Styling for Wikipedia facts */
-.facts-list {
-  list-style-type: none;
-  padding-left: 10px;
-}
-
-.facts-list li {
-  margin-bottom: 10px;
-}
