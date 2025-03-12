@@ -232,7 +232,7 @@
         </div>
     </div>
 
-    <!-- Replace the existing Wikipedia modal with this: -->
+    <!-- Wikipedia Modal -->
     <div id="wikipediaModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="wikipediaModalLabel" aria-hidden="true" data-mdb-backdrop="static" data-bs-backdrop="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content shadow">
@@ -243,31 +243,24 @@
                 </div>
                 <div class="modal-body">
                     <div id="wikiLoadingIndicator" class="text-center py-5">
-                        <div class="spinner-border text-success" role="status">
-                        </div>
+                        <div class="spinner-border text-success" role="status"></div>
                     </div>
                     
                     <div id="wikiContent" style="display: none;">
                         <div class="text-center mb-3">
-                            <img id="wikiImage" src="" alt="Wikipedia Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
-                            <h4 id="wikiTitle" class="mb-1"></h4>
+                            <img id="wikiImage" src="" alt="Country Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
+                            <h4 class="mb-1">
+                                <a id="wikiTitle" href="#" target="_blank" class="text-decoration-none"></a>
+                            </h4>
                         </div>
                         
                         <div id="wikiSummary" class="mb-3"></div>
-                        
-                        <div id="wikiSections" class="mb-3"></div>
-                        
-                        <div class="text-center mt-3">
-                            <a id="wikiFullArticleLink" href="#" target="_blank" class="btn btn-outline-success btn-sm">
-                                Read Full Article
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+        
     <!-- News Modal -->
     <div id="newsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newsModalLabel" aria-hidden="true" data-mdb-backdrop="static" data-bs-backdrop="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

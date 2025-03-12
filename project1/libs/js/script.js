@@ -640,8 +640,8 @@ const openWikipediaPage = countryName => {
         console.error(data.error);
         $('#wikiContent').html(`<div class="alert alert-warning">Failed to load Wikipedia content: ${data.error}</div>`);
       } else {
-        // Set the title and image
-        $('#wikiTitle').text(data.title);
+        // Set the title and link
+        $('#wikiTitle').text(data.title).attr('href', data.url);
         
         // Set the image if available
         if (data.thumbnail) {
@@ -650,30 +650,9 @@ const openWikipediaPage = countryName => {
           $('#wikiImage').hide();
         }
         
-        // Set the summary text
-        $('#wikiSummary').html(`<p>${data.extract}</p>`);
-        
-        // Set the full article link
-        $('#wikiFullArticleLink').attr('href', data.fullurl);
-        
-        // Add sections if available
-        if (data.sections && data.sections.length > 0) {
-          let sectionsHtml = '<h5 class="mt-4 mb-3">Main Sections</h5><ul class="list-group">';
-          data.sections.forEach(section => {
-            sectionsHtml += `
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                ${section.title}
-                <a href="${data.fullurl}#${section.title.replace(/ /g, '_')}" target="_blank" class="btn btn-sm btn-outline-secondary">
-                  Read
-                </a>
-              </li>
-            `;
-          });
-          sectionsHtml += '</ul>';
-          $('#wikiSections').html(sectionsHtml);
-        } else {
-          $('#wikiSections').empty();
-        }
+        // Set a shorter summary text (first paragraph only)
+        const shortExtract = data.extract.split('\n')[0];
+        $('#wikiSummary').html(`<p>${shortExtract}</p>`);
       }
       
       // Hide loading indicator and show content

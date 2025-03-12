@@ -30,8 +30,11 @@ if (empty($searchData['query']['search'])) {
 $pageTitle = $searchData['query']['search'][0]['title'];
 $pageTitle = str_replace(' ', '_', $pageTitle);
 
-// Now get the full content we need
-$contentUrl = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages|info&exintro=1&explaintext=1&inprop=url&pithumbsize=500&titles={$pageTitle}&format=json";
+// Add this near the top of the file, after getting the page title
+$pageUrl = "https://en.wikipedia.org/wiki/{$pageTitle}";
+
+// Get the full content
+$contentUrl = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&exintro=1&explaintext=1&pithumbsize=500&titles={$pageTitle}&format=json";
 $contentResponse = file_get_contents($contentUrl);
 
 if ($contentResponse === FALSE) {
@@ -44,22 +47,25 @@ $pages = $contentData['query']['pages'];
 $pageId = array_key_first($pages);
 $page = $pages[$pageId];
 
-// Get sections (table of contents)
+// Get specific sections for facts
 $sectionsUrl = "https://en.wikipedia.org/w/api.php?action=parse&page={$pageTitle}&prop=sections&format=json";
 $sectionsResponse = file_get_contents($sectionsUrl);
 $sectionsData = json_decode($sectionsResponse, true);
 
-$sections = [];
+// Find relevant section indices for geography, culture, history
+$geographyIndex = null;
+$cultureIndex = null;
+$historyIndex = null;
+
 if (isset($sectionsData['parse']['sections'])) {
-    // Get only the main sections (up to 5)
-    $count = 0;
     foreach ($sectionsData['parse']['sections'] as $section) {
-        if ($section['toclevel'] == 1 && $count < 5) {
-            $sections[] = [
-                'title' => $section['line'],
-                'index' => $section['index']
-            ];
-            $count++;
+        $title = strtolower($section['line']);
+        if (strpos($title, 'geography') !== false) {
+            $geographyIndex = $section['index'];
+        } else if (strpos($title, 'culture') !== false || strpos($title, 'arts') !== false) {
+            $cultureIndex = $section['index'];
+        } else if (strpos($title, 'history') !== false) {
+            $historyIndex = $section['index'];
         }
     }
 }
@@ -68,9 +74,8 @@ if (isset($sectionsData['parse']['sections'])) {
 $result = [
     'title' => $page['title'],
     'extract' => $page['extract'],
-    'thumbnail' => $page['thumbnail']['source'] ?? '',
-    'fullurl' => $page['fullurl'] ?? "https://en.wikipedia.org/wiki/{$pageTitle}",
-    'sections' => $sections
+    'url' => $pageUrl,
+    'thumbnail' => $page['thumbnail']['source'] ?? ''
 ];
 
 echo json_encode($result);
