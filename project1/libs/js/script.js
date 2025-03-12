@@ -619,21 +619,75 @@ $('#currencyModal').on('shown.bs.modal', function () {
 // ---------------------------------------------------------
 
 // Function to open Wikipedia page in a new browser window/tab
+// Replace the existing openWikipediaPage function with this:
+
+// Function to fetch and display Wikipedia information
 const openWikipediaPage = countryName => {
+  // Show loading indicator and hide content
+  $('#wikiLoadingIndicator').show();
+  $('#wikiContent').hide();
+  
+  // Show the modal immediately with the loading indicator
+  $('#wikipediaModal').modal('show');
+  
   $.ajax({
-    url: 'libs/php/getWikipediaUrl.php',
+    url: 'libs/php/getWikipediaContent.php',
     method: 'GET',
     dataType: 'json',
     data: { countryName },
     success: data => {
       if (data.error) {
         console.error(data.error);
+        $('#wikiContent').html(`<div class="alert alert-warning">Failed to load Wikipedia content: ${data.error}</div>`);
       } else {
-        window.open(data.url, '_blank');
+        // Set the title and image
+        $('#wikiTitle').text(data.title);
+        
+        // Set the image if available
+        if (data.thumbnail) {
+          $('#wikiImage').attr('src', data.thumbnail).show();
+        } else {
+          $('#wikiImage').hide();
+        }
+        
+        // Set the summary text
+        $('#wikiSummary').html(`<p>${data.extract}</p>`);
+        
+        // Set the full article link
+        $('#wikiFullArticleLink').attr('href', data.fullurl);
+        
+        // Add sections if available
+        if (data.sections && data.sections.length > 0) {
+          let sectionsHtml = '<h5 class="mt-4 mb-3">Main Sections</h5><ul class="list-group">';
+          data.sections.forEach(section => {
+            sectionsHtml += `
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                ${section.title}
+                <a href="${data.fullurl}#${section.title.replace(/ /g, '_')}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                  Read
+                </a>
+              </li>
+            `;
+          });
+          sectionsHtml += '</ul>';
+          $('#wikiSections').html(sectionsHtml);
+        } else {
+          $('#wikiSections').empty();
+        }
       }
+      
+      // Hide loading indicator and show content
+      $('#wikiLoadingIndicator').hide();
+      $('#wikiContent').show();
     },
     error: (jqXHR, textStatus, errorThrown) => {
-      console.error('Failed to get Wikipedia URL:', textStatus, errorThrown);
+      console.error('Failed to fetch Wikipedia content:', textStatus, errorThrown);
+      // Show error message
+      $('#wikiContent').html(`<div class="alert alert-warning">Failed to load Wikipedia content. Please try again later.</div>`);
+      
+      // Hide loading indicator and show content with error message
+      $('#wikiLoadingIndicator').hide();
+      $('#wikiContent').show();
     }
   });
 };

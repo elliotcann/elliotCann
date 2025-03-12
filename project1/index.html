@@ -232,17 +232,37 @@
         </div>
     </div>
 
-    <!-- Wikipedia Modal -->
+    <!-- Replace the existing Wikipedia modal with this: -->
     <div id="wikipediaModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="wikipediaModalLabel" aria-hidden="true" data-mdb-backdrop="static" data-bs-backdrop="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content shadow">
                 <div class="modal-header bg-success bg-gradient text-white">
                     <img src="libs/assets/img/wikipedia.svg" alt="Wikipedia" class="svg-icon me-2" style="width: 30px; height: 30px;">
-                    <h5 class="modal-title" id="wikipediaModalLabel">Wikipedia Page</h5>
+                    <h5 class="modal-title" id="wikipediaModalLabel">Wikipedia</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <iframe id="wikipediaIframe" src="" width="100%" height="600px" frameborder="0"></iframe>
+                    <div id="wikiLoadingIndicator" class="text-center py-5">
+                        <div class="spinner-border text-success" role="status">
+                        </div>
+                    </div>
+                    
+                    <div id="wikiContent" style="display: none;">
+                        <div class="text-center mb-3">
+                            <img id="wikiImage" src="" alt="Wikipedia Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
+                            <h4 id="wikiTitle" class="mb-1"></h4>
+                        </div>
+                        
+                        <div id="wikiSummary" class="mb-3"></div>
+                        
+                        <div id="wikiSections" class="mb-3"></div>
+                        
+                        <div class="text-center mt-3">
+                            <a id="wikiFullArticleLink" href="#" target="_blank" class="btn btn-outline-success btn-sm">
+                                Read Full Article
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
