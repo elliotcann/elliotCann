@@ -47,7 +47,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
         <div class="modal-header bg-success bg-gradient text-white">
-            <img src="libs/assets/img/info-lg.svg" alt="Info" class="svg-icon me-2" style="width: 30px; height: 30px;">
+            <img src="libs/assets/img/info-lg.svg" alt="Info" class="svg-icon me-2 icon-md">
             <h5 class="modal-title d-flex align-items-center" id="countryName"></h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
@@ -60,7 +60,7 @@
             
             <div id="infoContent" style="display: none;">
                 <div class="text-center mb-3">
-                    <img id="countryFlag" src="" alt="Country Flag" width="100px" class="img-fluid rounded">
+                    <img id="countryFlag" src="" alt="Country Flag" class="img-fluid rounded w-100px">
                 </div>
                 <table class="table-striped table table-borderless">
                     <tbody>
@@ -122,7 +122,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content shadow">
                 <div class="modal-header bg-success bg-gradient text-white">
-                    <img src="libs/assets/img/cloud-sun.svg" alt="Weather" class="svg-icon me-2" style="width: 30px; height: 30px;">
+                    <img src="libs/assets/img/cloud-sun.svg" alt="Weather" class="svg-icon me-2 icon-md">
                     <h5 class="modal-title">Weather Forecast</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -144,7 +144,7 @@
                                 <div id="todayDate" class="text-muted ms-2"></div>
                             </div>
                             <div class="text-center">
-                                <img id="todayWeatherIcon" src="" alt="Today's Weather" class="weather-icon" style="width: 80px; height: 80px;">
+                                <img id="todayWeatherIcon" src="" alt="Today's Weather" class="weather-icon icon-lg">
                                 <div id="todayDescription" class="description mt-1 fs-5"></div>
                                 <div id="todayTemp" class="temp fs-1 fw-bold mt-2"></div>
                                 <div class="d-flex justify-content-center gap-2">
@@ -159,7 +159,7 @@
                             <div class="col-4">
                                 <div class="forecast-day text-center p-2 border shadow-sm rounded h-100">
                                     <div id="dateDay1" class="fw-bold"></div>
-                                    <img id="iconDay1" src="" alt="Day 1 Weather" class="weather-icon my-2" style="width: 50px; height: 50px;">
+                                    <img id="iconDay1" src="" alt="Day 1 Weather" class="weather-icon my-2">
                                     <div id="tempDay1" class="temp fw-bold"></div>
                                     <div id="descriptionDay1" class="description small text-muted"></div>
                                 </div>
@@ -167,7 +167,7 @@
                             <div class="col-4">
                                 <div class="forecast-day text-center p-2 border shadow-sm rounded h-100">
                                     <div id="dateDay2" class="fw-bold"></div>
-                                    <img id="iconDay2" src="" alt="Day 2 Weather" class="weather-icon my-2" style="width: 50px; height: 50px;">
+                                    <img id="iconDay2" src="" alt="Day 2 Weather" class="weather-icon my-2">
                                     <div id="tempDay2" class="temp fw-bold"></div>
                                     <div id="descriptionDay2" class="description small text-muted"></div>
                                 </div>
@@ -175,7 +175,7 @@
                             <div class="col-4">
                                 <div class="forecast-day text-center p-2 border shadow-sm rounded h-100">
                                     <div id="dateDay3" class="fw-bold"></div>
-                                    <img id="iconDay3" src="" alt="Day 3 Weather" class="weather-icon my-2" style="width: 50px; height: 50px;">
+                                    <img id="iconDay3" src="" alt="Day 3 Weather" class="weather-icon my-2">
                                     <div id="tempDay3" class="temp fw-bold"></div>
                                     <div id="descriptionDay3" class="description small text-muted"></div>
                                 </div>
@@ -197,7 +197,7 @@
         <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content shadow">
                 <div class="modal-header bg-success bg-gradient text-white">
-                    <img src="libs/assets/img/cash-coin.svg" alt="Currency" class="svg-icon me-2" style="width: 30px; height: 30px;">
+                    <img src="libs/assets/img/cash-coin.svg" alt="Currency" class="svg-icon me-2 icon-md">
                     <h5 class="modal-title d-flex align-items-center">Currency Calculator</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -233,7 +233,7 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content shadow">
                 <div class="modal-header bg-success bg-gradient text-white">
-                    <img src="libs/assets/img/wikipedia.svg" alt="Wikipedia" class="svg-icon me-2" style="width: 30px; height: 30px;">
+                    <img src="libs/assets/img/wikipedia.svg" alt="Wikipedia" class="svg-icon me-2 icon-md">
                     <h5 class="modal-title" id="wikipediaModalLabel">Wikipedia</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -242,9 +242,9 @@
                         <div class="spinner-border text-success" role="status"></div>
                     </div>
                     
-                    <div id="wikiContent" style="display: none;">
+                    <div id="wikiContent" class="d-none">
                         <div class="text-center mb-3">
-                            <img id="wikiImage" src="" alt="Country Image" class="img-fluid rounded mb-2 shadow-sm" style="max-height: 200px;">
+                            <img id="wikiImage" src="" alt="Country Image" class="img-fluid rounded mb-2 shadow-sm wiki-image">
                             <h4 class="mb-1">
                                 <a id="wikiTitle" href="#" target="_blank" class="fw-bold"></a>
                             </h4>
@@ -262,7 +262,7 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content shadow">
                 <div class="modal-header bg-success bg-gradient text-white">
-                    <img src="libs/assets/img/newspaper.svg" alt="News" class="svg-icon me-2" style="width: 30px; height: 30px;">
+                    <img src="libs/assets/img/newspaper.svg" alt="News" class="svg-icon me-2 icon-md">
                     <h5 class="modal-title" id="newsModalLabel">Top News Articles</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -272,13 +272,12 @@
                         </div>
                     </div>
                     
-                    <div id="newsContent" style="display: none;">
+                    <div id="newsContent" class="d-none">
                         <!-- News article 1 -->
                         <div class="news-article card mb-3 border shadow-sm">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <img id="newsImage1" src="" alt="" class="img-fluid rounded-start h-100" 
-                                        style="object-fit: cover; max-height: 120px; width: 100%;">
+                                    <img id="newsImage1" src="" alt="" class="img-fluid rounded-start h-100 news-image">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body py-2 px-3">
@@ -293,8 +292,7 @@
                         <div class="news-article card mb-3 border shadow-sm">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <img id="newsImage2" src="" alt="" class="img-fluid rounded-start h-100" 
-                                        style="object-fit: cover; max-height: 120px; width: 100%;">
+                                    <img id="newsImage2" src="" alt="" class="img-fluid rounded-start h-100 news-image">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body py-2 px-3">
@@ -309,8 +307,7 @@
                         <div class="news-article card mb-3 border shadow-sm">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <img id="newsImage3" src="" alt="" class="img-fluid rounded-start h-100" 
-                                        style="object-fit: cover; max-height: 120px; width: 100%;">
+                                    <img id="newsImage3" src="" alt="" class="img-fluid rounded-start h-100 news-image">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body py-2 px-3">
@@ -325,8 +322,7 @@
                         <div class="news-article card mb-3 border shadow-sm">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <img id="newsImage4" src="" alt="" class="img-fluid rounded-start h-100" 
-                                        style="object-fit: cover; max-height: 120px; width: 100%;">
+                                    <img id="newsImage4" src="" alt="" class="img-fluid rounded-start h-100 news-image">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body py-2 px-3">
@@ -341,8 +337,7 @@
                         <div class="news-article card mb-3 border shadow-sm">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <img id="newsImage5" src="" alt="" class="img-fluid rounded-start h-100" 
-                                        style="object-fit: cover; max-height: 120px; width: 100%;">
+                                    <img id="newsImage5" src="" alt="" class="img-fluid rounded-start h-100 news-image">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body py-2 px-3">
@@ -366,7 +361,7 @@
             <b id="popupTitle" class="fs-6 fw-bold d-block lh-1 text-center"></b>
             <p id="popupDescription" class="mb-0 lh-sm text-center"></p>
             <div class="d-flex justify-content-center">
-                <img id="popupThumbnail" src="" alt="" class="img-fluid rounded mt-0" style="max-height: 40px;">
+                <img id="popupThumbnail" src="" alt="" class="img-fluid rounded mt-0 popup-thumbnail">
             </div>
         </div>
     </div>

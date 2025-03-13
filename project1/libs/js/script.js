@@ -605,7 +605,7 @@ const openWikipediaPage = countryName => {
       
       // Hide loading indicator and show content
       $('#wikiLoadingIndicator').hide();
-      $('#wikiContent').fadeIn(600);
+      $('#wikiContent').removeClass('d-none').fadeIn(600);
     },
     error: (jqXHR, textStatus, errorThrown) => {
       // Show error message
@@ -613,7 +613,7 @@ const openWikipediaPage = countryName => {
       
       // Hide loading indicator and show content with error message
       $('#wikiLoadingIndicator').hide();
-      $('#wikiContent').fadeIn(600);
+      $('#wikiContent').removeClass('d-none').fadeIn(600);
     }
   });
 };
@@ -650,7 +650,7 @@ const fetchNewsArticles = countryCode => {
       
       // Hide loading indicator and show content
       $('#newsLoadingIndicator').hide();
-      $('#newsContent').fadeIn(600);
+      $('#newsContent').removeClass('d-none').fadeIn(600);
     },
     error: (jqXHR, textStatus, errorThrown) => {
       // Show error message
@@ -658,7 +658,7 @@ const fetchNewsArticles = countryCode => {
       
       // Hide loading indicator and show content with error message
       $('#newsLoadingIndicator').hide();
-      $('#newsContent').fadeIn(600);
+      $('#newsContent').removeClass('d-none').fadeIn(600);
     }
   });
 };
