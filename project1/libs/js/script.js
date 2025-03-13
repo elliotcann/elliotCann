@@ -680,7 +680,7 @@ const addWikipediaMarkers = articles => {
     const createPopupContent = () => {
       const popupContent = $('#popupMarkerTemplate').html();
       const $popupContent = $(popupContent);
-      $popupContent.find('#popupTitle').html(`<a href="#" onclick="openExternalUrl('${article.url}'); return false;">${article.title}</a>`);
+      $popupContent.find('#popupTitle').html(`<a href="#" onclick="openExternalUrl('${article.url}'); return false;" class="link-primary">${article.title}</a>`);
       $popupContent.find('#popupThumbnail').attr('src', article.thumbnail).attr('alt', article.title);
       // Remove the onclick from the thumbnail
       $popupContent.find('#popupThumbnail').removeAttr('onclick');
