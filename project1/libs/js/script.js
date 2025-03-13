@@ -343,7 +343,7 @@ const fetchAndDisplayCountryDetails = (countryCode, callback) => {
         $('#countryRegion').text(data.region);
         $('#countryCapital').text(data.capitalCity);
         $('#countryPopulation').text(formatNumber(data.population));
-        $('#countryArea').text(`${formatNumber(data.area)} km²`);
+        $('#countryArea').text(formatNumber(data.area));
         $('#countryLanguages').text(data.nativeLanguages);
         $('#countryCurrency').text(data.currency);
         $('#countryCallingCode').text(data.callingCode);
@@ -644,7 +644,7 @@ const fetchNewsArticles = countryCode => {
           // Create link for article title
           $(`#newsTitle${i + 1}`).html(`<a href="${articles[i].link}" target="_blank">${articles[i].title}</a>`);
           $(`#newsImage${i + 1}`).attr('src', articles[i].image_url).attr('alt', articles[i].title);
-          $(`#newsDescription${i + 1}`).text(articles[i].description);
+          $(`#newsProvider${i + 1}`).text(articles[i].source_id || 'Unknown source');
         }
       }
       
