@@ -787,7 +787,7 @@ let issMarker = L.marker([0, 0], {
 let issTrackingInterval = null;
 
 // Function to update ISS position
-const updateISSPosition = () => {
+const updateISSPosition = (callback) => {
   $.ajax({
     url: 'libs/php/getISSPosition.php',
     method: 'GET',
@@ -838,6 +838,11 @@ const updateISSPosition = () => {
         // Set a flag to track if this popup was opened by click
         issMarker._clicked = !issMarker._clicked;
       });
+      
+      // Execute callback if provided
+      if (typeof callback === 'function') {
+        callback(latitude, longitude);
+      }
     },
     error: (jqXHR, textStatus, errorThrown) => {
       // Silent error handling
@@ -909,17 +914,14 @@ $(document).ready(function () {
       // Add the marker to the layer
       issMarker.addTo(issLayer);
       
-      // Update position immediately
-      updateISSPosition();
+      // Update position immediately and center map after position is retrieved
+      updateISSPosition((lat, lng) => {
+        // Center map on ISS position after it's been updated
+        map.setView([lat, lng], 4);
+      });
       
       // Start interval updates
-      issTrackingInterval = setInterval(updateISSPosition, 5000); // Update every 5 seconds
-      
-      // Center map on ISS
-      const position = issMarker.getLatLng();
-      if (position.lat !== 0 || position.lng !== 0) {
-        map.setView(position, 4);
-      }
+      issTrackingInterval = setInterval(() => updateISSPosition(), 5000); // Update every 5 seconds
     }
   });
 
