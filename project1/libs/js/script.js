@@ -941,7 +941,10 @@ $(document).ready(function () {
         issTrackingInterval = null;
       }
       
-      // The marker is automatically removed when the layer is removed
+      // Return to selected country if one exists
+      if (currentBorderLayer) {
+        map.fitBounds(currentBorderLayer.getBounds());
+      }
     }
   });
   
