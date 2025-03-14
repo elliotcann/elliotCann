@@ -87,3 +87,19 @@ html, body {
 .d-none {
     display: none;
 }
+
+@media (max-width: 767.98px) {
+    .news-image {
+      border-top-left-radius: 0.25rem !important;
+      border-top-right-radius: 0.25rem !important;
+      border-bottom-left-radius: 0 !important;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .news-image {
+      border-top-left-radius: 0.25rem !important;
+      border-bottom-left-radius: 0.25rem !important;
+      border-top-right-radius: 0 !important;
+    }
+  }
