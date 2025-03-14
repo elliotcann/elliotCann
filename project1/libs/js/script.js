@@ -255,7 +255,12 @@ const addCityMarkers = cities => {
     const createPopupContent = () => {
       const popupContent = $('#popupMarkerTemplate').html();
       const $popupContent = $(popupContent);
-      $popupContent.find('#popupTitle').text(city.name);
+      
+      // Create Wikipedia link for the city name
+      const wikiCityName = encodeURIComponent(city.name.replace(/ /g, '_'));
+      const wikiUrl = `https://en.wikipedia.org/wiki/${wikiCityName}`;
+      
+      $popupContent.find('#popupTitle').html(`<a href="${wikiUrl}" target="_blank" class="link-primary">${city.name}</a>`);
       $popupContent.find('#popupDescription').text(`Population: ${formatNumber(city.population)}`);
       $popupContent.find('#popupThumbnail').hide();
       return $popupContent.html();
@@ -806,7 +811,10 @@ const updateISSPosition = (callback) => {
       // Create popup content using the template
       const popupContent = $('#popupMarkerTemplate').html();
       const $popupContent = $(popupContent);
-      $popupContent.find('#popupTitle').text(`International Space Station`);
+
+      // Create Wikipedia link for the ISS
+      const issWikiUrl = "https://en.wikipedia.org/wiki/International_Space_Station";
+      $popupContent.find('#popupTitle').html(`<a href="${issWikiUrl}" target="_blank" class="link-primary">International Space Station</a>`);
       $popupContent.find('#popupDescription').text(`Lat: ${latitude.toFixed(2)}, Lng: ${longitude.toFixed(2)}`);
       
       // Bind the popup with specific options
