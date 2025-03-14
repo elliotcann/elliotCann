@@ -150,8 +150,8 @@
                                         <img id="todayWeatherIcon" src="" alt="Today's Weather" class="img-fluid">
                                     </div>
                                     <div class="col text-center">
-                                        <p class="fw-bold fs-4 mb-0"><span id="todayMaxTemp"></span><sup>o</sup><span class="tempMetric">c</span></p>
-                                        <p class="fs-5 mb-0 text-secondary"><span id="todayMinTemp"></span><sup>o</sup><span class="tempMetric">c</span></p>
+                                        <p class="fw-bold fs-4 mb-0"><span id="todayMaxTemp"></span>&deg;<span class="tempMetric">C</span></p>
+                                        <p class="fs-5 mb-0 text-secondary"><span id="todayMinTemp"></span>&deg;<span class="tempMetric">C</span></p>
                                     </div>
                                 </div>
                             </div>
@@ -170,8 +170,8 @@
                                             <img id="iconDay1" src="" alt="Day 1 Weather" class="img-fluid">
                                         </div>
                                         <div class="text-center">
-                                            <p class="fw-bold fs-4 mb-0"><span id="maxTempDay1"></span><sup>o</sup>c</p>
-                                            <p class="fs-5 mb-0 text-secondary"><span id="minTempDay1"></span><sup>o</sup>c</p>
+                                            <p class="fw-bold fs-4 mb-0"><span id="maxTempDay1"></span>&deg;<span class="tempMetric">C</span></p>
+                                            <p class="fs-5 mb-0 text-secondary"><span id="minTempDay1"></span>&deg;<span class="tempMetric">C</span></p>
                                         </div>
                                     </div>
                                 </div>
@@ -188,8 +188,8 @@
                                             <img id="iconDay2" src="" alt="Day 2 Weather" class="img-fluid">
                                         </div>
                                         <div class="text-center">
-                                            <p class="fw-bold fs-4 mb-0"><span id="maxTempDay2"></span><sup>o</sup>c</p>
-                                            <p class="fs-5 mb-0 text-secondary"><span id="minTempDay2"></span><sup>o</sup>c</p>
+                                            <p class="fw-bold fs-4 mb-0"><span id="maxTempDay2"></span>&deg;<span class="tempMetric">C</span></p>
+                                            <p class="fs-5 mb-0 text-secondary"><span id="minTempDay2"></span>&deg;<span class="tempMetric">C</span></p>
                                         </div>
                                     </div>
                                 </div>
@@ -199,7 +199,7 @@
 
                 </div>
                 <div class="modal-footer text-center">
-                    <p class="fs-6 fw-light m-0">Last updated <span id="lastUpdated"></span>. Powered by <a href="https://www.weatherapi.com/" target="_blank" title="Free Weather API">WeatherAPI.com</a></p>
+                    <p class="fs-6 fw-light m-0">Last updated <span id="lastUpdated"></span>. Powered by <a href="https://www.weatherapi.com/" target="_blank" title="Free Weather API" class="link-pimary">WeatherAPI.com</a></p>
                 </div>
             </div>
         </div>
@@ -217,14 +217,14 @@
                 <div class="modal-body">
                     <form id="currencyForm">
                         <div class="form-floating mb-3">
-                            <input type="number" id="currencyNumber" class="form-control" 
+                            <input type="number" id="currencyNumber" class="form-control shadow-sm" 
                                    placeholder="Amount" value="1" min="0" step="0.01" 
                                    inputmode="decimal" required>
                             <label for="currencyNumber">From USD</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <select id="currencySelect" class="form-select" required>
+                            <select id="currencySelect" class="form-select shadow-sm" required>
                                 <option value="USD" selected>US Dollar (USD)</option>
                                 <option value="" disabled></option>
                             </select>
@@ -232,7 +232,7 @@
                         </div>
 
                         <div class="form-floating">
-                            <input id="currencyResult" type="text" class="form-control" disabled>
+                            <input id="currencyResult" type="text" class="form-control shadow-sm" disabled>
                             <label for="currencyResult">Result</label>
                         </div>
                     </form>
