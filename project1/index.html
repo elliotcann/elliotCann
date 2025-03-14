@@ -118,12 +118,12 @@
     </div>
 
     <!-- Weather Modal -->
-    <div id="weatherModal" class="modal fade" data-bs-backdrop="true" tabindex="-1" data-mdb-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
+    <div id="weatherModal" class="modal fade" tabindex="-1" data-bs-backdrop="true" aria-labelledby="weatherModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content shadow">
                 <div class="modal-header bg-success bg-gradient text-white">
                     <img src="libs/assets/img/cloud-sun.svg" alt="Weather" class="svg-icon me-2 icon-md">
-                    <h5 class="modal-title">Weather Forecast</h5>
+                    <h5 class="modal-title" id="weatherModalLabel">Weather Forecast</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -135,58 +135,70 @@
 
                     <div id="weatherContent" style="display: none;">
                         <h5 id="placeName" class="text-center mb-2 fw-bold"></h5>
-                        <p id="placeCoords" class="text-center small text-muted mb-3"></p>
                         
                         <!-- Today's weather -->
-                        <div class="current-weather border shadow-sm rounded p-3 mb-4">
-                            <div class="d-flex justify-content-center align-items-center mb-2">
-                                <div class="fw-bold fs-5 text-center">Current Weather</div>
-                                <div id="todayDate" class="text-muted ms-2"></div>
+                        <div class="card border shadow-sm mb-3">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0 fw-bold">Today</h5>
                             </div>
-                            <div class="text-center">
-                                <img id="todayWeatherIcon" src="" alt="Today's Weather" class="weather-icon icon-lg">
-                                <div id="todayDescription" class="description mt-1 fs-5"></div>
-                                <div id="todayTemp" class="temp fs-1 fw-bold mt-2"></div>
-                                <div class="d-flex justify-content-center gap-2">
-                                    <span id="todayTempMin" class="text-muted small"></span>
-                                    <span id="todayTempMax" class="text-muted small"></span>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col text-center">
+                                        <p id="todayDescription" class="fw-bold fs-6"></p>
+                                    </div>
+                                    <div class="col text-center">
+                                        <img id="todayWeatherIcon" src="" alt="Today's Weather" class="img-fluid">
+                                    </div>
+                                    <div class="col text-center">
+                                        <p class="fw-bold fs-4 mb-0"><span id="todayMaxTemp"></span><sup>o</sup><span class="tempMetric">c</span></p>
+                                        <p class="fs-5 mt-0 text-secondary"><span id="todayMinTemp"></span><sup>o</sup><span class="tempMetric">c</span></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- 3-day forecast -->
-                        <div class="row g-2">
-                            <div class="col-4">
-                                <div class="forecast-day text-center p-2 border shadow-sm rounded h-100">
-                                    <div id="dateDay1" class="fw-bold"></div>
-                                    <img id="iconDay1" src="" alt="Day 1 Weather" class="weather-icon my-2">
-                                    <div id="tempDay1" class="temp fw-bold"></div>
-                                    <div id="descriptionDay1" class="description small text-muted"></div>
+                        <!-- 2-day forecast -->
+                        <div class="row">
+                            <!-- Day 1 forecast -->
+                            <div class="col-6 pe-1">
+                                <div class="card border shadow-sm mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 id="dateDay1" class="card-title mb-0 fw-bold text-center"></h6>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <div class="text-center">
+                                            <img id="iconDay1" src="" alt="Day 1 Weather" class="img-fluid">
+                                        </div>
+                                        <div class="text-center">
+                                            <p class="fw-bold fs-4 mb-0"><span id="maxTempDay1"></span><sup>o</sup>c</p>
+                                            <p class="fs-5 mt-0 text-secondary"><span id="minTempDay1"></span><sup>o</sup>c</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <div class="forecast-day text-center p-2 border shadow-sm rounded h-100">
-                                    <div id="dateDay2" class="fw-bold"></div>
-                                    <img id="iconDay2" src="" alt="Day 2 Weather" class="weather-icon my-2">
-                                    <div id="tempDay2" class="temp fw-bold"></div>
-                                    <div id="descriptionDay2" class="description small text-muted"></div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="forecast-day text-center p-2 border shadow-sm rounded h-100">
-                                    <div id="dateDay3" class="fw-bold"></div>
-                                    <img id="iconDay3" src="" alt="Day 3 Weather" class="weather-icon my-2">
-                                    <div id="tempDay3" class="temp fw-bold"></div>
-                                    <div id="descriptionDay3" class="description small text-muted"></div>
+                            
+                            <!-- Day 2 forecast -->
+                            <div class="col-6 ps-1">
+                                <div class="card border shadow-sm mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 id="dateDay2" class="card-title mb-0 fw-bold text-center"></h6>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <div class="text-center">
+                                            <img id="iconDay2" src="" alt="Day 2 Weather" class="img-fluid">
+                                        </div>
+                                        <div class="text-center">
+                                            <p class="fw-bold fs-4 mb-0"><span id="maxTempDay2"></span><sup>o</sup>c</p>
+                                            <p class="fs-5 mt-0 text-secondary"><span id="minTempDay2"></span><sup>o</sup>c</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="text-center small text-muted mt-3">
-                            <p>Powered by <a href="https://www.weatherapi.com/" target="_blank">WeatherAPI.com</a></p>
-                        </div>
-
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <p class="fs-6 fw-light">Last updated <span id="lastUpdated"></span>. Powered by <a href="https://www.weatherapi.com/" target="_blank" title="Free Weather API">WeatherAPI.com</a></p>
                 </div>
             </div>
         </div>

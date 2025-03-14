@@ -453,19 +453,35 @@ const fetchWeatherData = (city, countryName) => {
         // Set location name
         $('#placeName').text(`${city || 'Unknown'}, ${countryName || 'Unknown'}`);
         
+        // Format last updated time
+        const lastUpdated = new Date(current.last_updated || Date.now()).toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        $('#lastUpdated').text(lastUpdated);
+        
         // Today's weather - check if data exists
         if (current && current.condition) {
           $('#todayWeatherIcon').attr('src', current.condition.icon ? `https:${current.condition.icon}` : '');
-          $('#todayTemp').text(current.temp_c !== undefined ? `${Number(current.temp_c).toFixed(0)}°C` : 'N/A');
           $('#todayDescription').text(current.condition.text || 'No data available');
+          
+          // Get max and min from the first item in forecast
+          if (forecast[0] && forecast[0].day) {
+            $('#todayMaxTemp').text(Math.round(forecast[0].day.maxtemp_c || 0));
+            $('#todayMinTemp').text(Math.round(forecast[0].day.mintemp_c || 0));
+          } else {
+            $('#todayMaxTemp').text('N/A');
+            $('#todayMinTemp').text('N/A');
+          }
         } else {
           $('#todayWeatherIcon').attr('src', '');
-          $('#todayTemp').text('N/A');
           $('#todayDescription').text('Weather data unavailable');
+          $('#todayMaxTemp').text('N/A');
+          $('#todayMinTemp').text('N/A');
         }
         
-        // Forecast for next 3 days
-        for (let i = 0; i < 3; i++) {
+        // Forecast for next 2 days
+        for (let i = 1; i <= 2; i++) {
           if (forecast[i]) {
             const dayForecast = forecast[i];
             const date = new Date(dayForecast.date);
@@ -476,26 +492,30 @@ const fetchWeatherData = (city, countryName) => {
                           (dayOfMonth % 10 === 3 && dayOfMonth !== 13) ? 'rd' : 'th';
             const formattedDate = `${day} ${dayOfMonth}${suffix}`;
             
-            $(`#dateDay${i+1}`).text(formattedDate);
+            // Use day1 and day2 instead of day1, day2, day3
+            const dayIndex = i;
+            
+            $(`#dateDay${dayIndex}`).text(formattedDate);
             
             // Check if day condition exists
             if (dayForecast.day && dayForecast.day.condition) {
-              $(`#iconDay${i+1}`).attr('src', dayForecast.day.condition.icon ? 
+              $(`#iconDay${dayIndex}`).attr('src', dayForecast.day.condition.icon ? 
                   `https:${dayForecast.day.condition.icon}` : '');
-              $(`#tempDay${i+1}`).text(dayForecast.day.avgtemp_c !== undefined ? 
-                  `${Number(dayForecast.day.avgtemp_c).toFixed(0)}°C` : 'N/A');
-              $(`#descriptionDay${i+1}`).text(dayForecast.day.condition.text || 'No data');
+              
+              // Set max and min temperatures
+              $(`#maxTempDay${dayIndex}`).text(Math.round(dayForecast.day.maxtemp_c || 0));
+              $(`#minTempDay${dayIndex}`).text(Math.round(dayForecast.day.mintemp_c || 0));
             } else {
-              $(`#iconDay${i+1}`).attr('src', '');
-              $(`#tempDay${i+1}`).text('N/A');
-              $(`#descriptionDay${i+1}`).text('No data available');
+              $(`#iconDay${dayIndex}`).attr('src', '');
+              $(`#maxTempDay${dayIndex}`).text('N/A');
+              $(`#minTempDay${dayIndex}`).text('N/A');
             }
           } else {
             // No forecast data for this day
-            $(`#dateDay${i+1}`).text(`Day ${i+1}`);
-            $(`#iconDay${i+1}`).attr('src', '');
-            $(`#tempDay${i+1}`).text('N/A');
-            $(`#descriptionDay${i+1}`).text('No forecast available');
+            $(`#dateDay${dayIndex}`).text(`Day ${dayIndex}`);
+            $(`#iconDay${dayIndex}`).attr('src', '');
+            $(`#maxTempDay${dayIndex}`).text('N/A');
+            $(`#minTempDay${dayIndex}`).text('N/A');
           }
         }
         
