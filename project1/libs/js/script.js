@@ -663,7 +663,7 @@ const fetchNewsArticles = countryCode => {
         for (let i = 0; i < Math.min(articles.length, 5); i++) {
           // Create link for article title
           $(`#newsTitle${i + 1}`).html(`<a href="${articles[i].link}" target="_blank">${articles[i].title}</a>`);
-          $(`#newsImage${i + 1}`).attr('src', articles[i].image_url).attr('alt', articles[i].title);
+          $(`#newsImage${i + 1}`).attr('src', articles[i].image_url).attr('alt', 'Image not available');
           $(`#newsProvider${i + 1}`).text(articles[i].source_id || 'Unknown source');
         }
       }
