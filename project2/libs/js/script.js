@@ -9,11 +9,17 @@ $(document).ready(function () {
   /* Global variables */
   /*----------------------------------------*/
 
-  // Clear HTML
-  const clearTable = () => {
-    $("#personnelTableBody").html(""); 
-    $("#departmentsTableBody").html("");
-    $("#locationsTableBody").html("");
+  // Clear Table  
+  const clearTable = (tableType) => {
+    if (tableType === "personnel") {
+      $("#personnelTableBody").html(""); 
+    }
+    if (tableType === "departments") {
+      $("#departmentTableBody").html("");
+    }
+    if (tableType === "locations") {
+      $("#locationsTableBody").html("");
+    }
   };
 
   // User input
@@ -53,7 +59,7 @@ $(document).ready(function () {
 
         if (result.status.code == 200) {
           
-          clearTable();
+          clearTable("personnel");
           
           $.each(result.data, function () {
             
@@ -99,7 +105,7 @@ $(document).ready(function () {
 
         if (result.status.code == 200) {
           
-          clearTable();
+          clearTable("departments");
           
           $.each(result.data, function () {
 
@@ -151,7 +157,7 @@ $(document).ready(function () {
           
           if (result.status.code == 200) {
 
-            clearTable();
+            clearTable("personnel");
             
             $.each(result.data, function () {
               
@@ -206,7 +212,7 @@ $(document).ready(function () {
           
           if (result.status.code == 200) {
 
-            clearTable();
+            clearTable("departments");
             
             $.each(result.data, function () {
 
@@ -256,7 +262,7 @@ $(document).ready(function () {
           
           if (result.status.code == 200) {
 
-            clearTable();
+            clearTable("locations");
             
             $.each(result.data, function () {
 
