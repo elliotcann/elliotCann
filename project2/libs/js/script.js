@@ -5,7 +5,7 @@ $(document).ready(function () {
   getAllPersonnel();
   getAllDepartments();
   getAllLocations();
-  
+
   // Clear search input
   $("#searchInp").val("");
 
@@ -200,8 +200,9 @@ $(document).ready(function () {
 
             clearTable("personnel");
             
-            if(result.data.found && result.data.found.length > 0) {
-              $.each(result.data. found, function () {
+            if(result.data && result.data.length > 0) {
+
+              $.each(result.data, function () {
                 
                 $("#personnelTableBody").append(
                   
@@ -249,37 +250,40 @@ $(document).ready(function () {
         type: "POST",
         dataType: "json",
         data: {
-          search: searchInput
+          txt: searchInput
         },
         success: function (result) {
           
           if (result.status.code == 200) {
 
             clearTable("departments");
-            
-            $.each(result.data, function () {
 
-              $("#departmentTableBody").append(
+            if(result.data && result.data.length > 0) {
 
+              $.each(result.data, function () {
+
+                $("#departmentTableBody").append(
+
+                  $("<tr>").append(
+                    
+                    $("<td>", { text: this.name, class: "align-middle text-nowrap" }),
+
+                    $("<td>", { text: this.locationName, class: tdClass }),
+
+                    $("<td>", { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Departments")).append(createButton(this.id, "delete", "Departments"))
+                  )
+                );
+              });
+
+            } else {
+
+              $("#departmentTableBody").html(
                 $("<tr>").append(
-                  
-                  $("<td>", { text: this.name, class: "align-middle text-nowrap" }),
-
-                  $("<td>", { text: this.location, class: tdClass }),
-
-                  $("<td>", { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Departments")).append(createButton(this.id, "delete", "Departments"))
+                  $("<td>", { colspan: 6, text: "No data found", class: "text-center" })
                 )
               );
-            });
 
-          } else {
-
-            $("#departmentTableBody").html(
-              $("<tr>").append(
-                $("<td>", { colspan: 3, text: "No data found" })
-              )
-            );
-
+            }
           }
         },
 
@@ -299,38 +303,39 @@ $(document).ready(function () {
         type: "POST",
         dataType: "json",
         data: {
-          search: searchInput
+          txt: searchInput
         },
         success: function (result) {
           
           if (result.status.code == 200) {
 
             clearTable("locations");
+
+            if(result.data && result.data.length > 0) {
             
-            $.each(result.data, function () {
+              $.each(result.data, function () {
 
-              $("#locationTableBody").append(
+                $("#locationTableBody").append(
 
+                  $("<tr>").append(
+                    
+                    $("<td>", { text: this.name, class: "align-middle text-nowrap" }),
+
+                    $("<td>", { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Locations")).append(createButton(this.id, "delete", "Locations"))
+                  )
+                );
+              });
+
+            } else {
+
+              $("#locationTableBody").html(
                 $("<tr>").append(
-                  
-                  $("<td>", { text: this.name, class: "align-middle text-nowrap" }),
-
-                  $("<td>", { text: this.address, class: tdClass }),
-
-                  $("<td>", { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Locations")).append(createButton(this.id, "delete", "Locations"))
+                  $("<td>", { colspan: 6, text: "No data found", class: "text-center" })
                 )
               );
-            });
 
-          } else {
-
-            $("#locationTableBody").html(
-              $("<tr>").append(
-                $("<td>", { colspan: 3, text: "No data found" })
-              )
-            );
-
-          }
+            };
+          };
         },
 
         error: function (jqXHR, textStatus, errorThrown) {
@@ -339,10 +344,8 @@ $(document).ready(function () {
           console.log(errorThrown);
         }
 
-      })
-
-    }
-    
+      });
+    };
   });
 
 
