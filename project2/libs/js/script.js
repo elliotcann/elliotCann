@@ -5,6 +5,9 @@ $(document).ready(function () {
   getAllPersonnel();
   getAllDepartments();
   getAllLocations();
+  
+  // Clear search input
+  $("#searchInp").val("");
 
   /*----------------------------------------*/
   /* Global variables */
@@ -22,9 +25,6 @@ $(document).ready(function () {
       $("#locationTableBody").html("");
     }
   };
-
-  // User input
-  const searchInput = $("#searchInp").val();
 
   // <td> classes
   const tdClass = "align-middle text-nowrap d-none d-md-table-cell";
@@ -180,6 +180,8 @@ $(document).ready(function () {
   /*----------------------------------------*/
 
   $("#searchInp").on("keyup", function () {
+
+    const searchInput = $(this).val();
     
     // Personel table
     if ($("#personnelBtn").hasClass("active")) {;
@@ -189,7 +191,7 @@ $(document).ready(function () {
         type: "POST",
         dataType: "json",
         data: {
-          search: searchInput
+          txt: searchInput
         },
 
         success: function (result) {
@@ -198,35 +200,37 @@ $(document).ready(function () {
 
             clearTable("personnel");
             
-            $.each(result.data, function () {
-              
-              $("#personnelTableBody").append(
+            if(result.data.found && result.data.found.length > 0) {
+              $.each(result.data. found, function () {
                 
-                $("<tr>").append(
+                $("#personnelTableBody").append(
                   
-                  $("<td>", { text: `${this.lastName}, ${this.firstName}`, class: "align-middle text-nowrap" }),
+                  $("<tr>").append(
+                    
+                    $("<td>", { text: `${this.lastName}, ${this.firstName}`, class: "align-middle text-nowrap" }),
 
-                  $("<td>", { text: this.jobTitle, class: tdClass }),
+                    $("<td>", { text: this.jobTitle, class: tdClass }),
 
-                  $("<td>", { text: this.department, class: tdClass }),
+                    $("<td>", { text: this.departmentName, class: tdClass }),
 
-                  $("<td>", { text: this.location, class: tdClass }),
+                    $("<td>", { text: this.locationName, class: tdClass }),
 
-                  $("<td>", { text: this.email, class: tdClass }),
+                    $("<td>", { text: this.email, class: tdClass }),
 
-                  $("<td>", { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Personnel")).append(createButton(this.id, "delete", "Personnel"))
+                    $("<td>", { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Personnel")).append(createButton(this.id, "delete", "Personnel"))
+                  )
+                );
+              });
+
+            } else {
+              
+              $("#personnelTableBody").html(
+                $("<tr>").append(
+                  $("<td>", { colspan: 6, text: "No data found", class: "text-center" })
                 )
               );
-            });
 
-          } else {
-            
-            $("#personnelTableBody").html(
-              $("<tr>").append(
-                $("<td>", { colspan: 5, text: "No data found" })
-              )
-            );
-
+            }
           }
         },
 
@@ -347,25 +351,26 @@ $(document).ready(function () {
   /*----------------------------------------*/
 
   $("#refreshBtn").click(function () {
-    
+      
+    const ClearSearchInput = $("#searchInp").val("");
+
     if ($("#personnelBtn").hasClass("active")) {
-      
       // Refresh personnel table
-      
+      getAllPersonnel();
+      ClearSearchInput;
+
+    } else if ($("#departmentsBtn").hasClass("active")) {
+      // Refresh department table
+      getAllDepartments();
+      ClearSearchInput;
+
     } else {
-      
-      if ($("#departmentsBtn").hasClass("active")) {
-        
-        // Refresh department table
-        
-      } else {
-        
-        // Refresh location table
-        
-      }
-      
+      // Refresh location table
+      getAllLocations();
+      ClearSearchInput;
+
     }
-    
+
   });
 
   $("#filterBtn").click(function () {
@@ -381,21 +386,21 @@ $(document).ready(function () {
   });
 
   $("#personnelBtn").click(function () {
-    
     // Call function to refresh personnel table
-    
+    getAllPersonnel();
+    $("#searchInp").val("");
   });
-
+  
   $("#departmentsBtn").click(function () {
-    
     // Call function to refresh department table
-    
+    getAllDepartments();
+    $("#searchInp").val("");
   });
-
+  
   $("#locationsBtn").click(function () {
-    
     // Call function to refresh location table
-    
+    getAllLocations();
+    $("#searchInp").val("");
   });
 
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
