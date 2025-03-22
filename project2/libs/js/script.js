@@ -4,6 +4,7 @@ $(document).ready(function () {
   // Call functions to populate tables
   getAllPersonnel();
   getAllDepartments();
+  getAllLocations();
 
   /*----------------------------------------*/
   /* Global variables */
@@ -18,7 +19,7 @@ $(document).ready(function () {
       $("#departmentTableBody").html("");
     }
     if (tableType === "locations") {
-      $("#locationsTableBody").html("");
+      $("#locationTableBody").html("");
     }
   };
 
@@ -133,7 +134,45 @@ $(document).ready(function () {
 
     });
 
-  }
+  };
+
+  function getAllLocations () {
+    
+    $.ajax({
+      url: "libs/php/getAllLocations.php",
+      type: "GET",
+      dataType: "json",
+      success: function (result) {
+
+        if (result.status.code == 200) {
+          
+          clearTable("locations");
+          
+          $.each(result.data, function () {
+
+            $("#locationTableBody").append(
+
+              $("<tr>").append(
+                
+                $("<td>", { text: this.name, class: "align-middle text-nowrap" }),
+
+                $("<td>", { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Locations")).append(createButton(this.id, "delete", "Locations"))
+              )
+            );
+          });
+
+        }
+      },
+
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+
+    });
+
+  };
 
 
   /*----------------------------------------*/
