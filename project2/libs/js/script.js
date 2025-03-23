@@ -5,9 +5,12 @@ $(document).ready(function () {
   getAllPersonnel();
   getAllDepartments();
   getAllLocations();
+  clearSearchInput();
 
   // Clear search input
-  $("#searchInp").val("");
+  function clearSearchInput() {
+    $("#searchInp").val("");
+  }
 
   /*----------------------------------------*/
   /* Global variables */
@@ -391,19 +394,19 @@ $(document).ready(function () {
   $("#personnelBtn").click(function () {
     // Call function to refresh personnel table
     getAllPersonnel();
-    $("#searchInp").val("");
+    clearSearchInput();
   });
   
   $("#departmentsBtn").click(function () {
     // Call function to refresh department table
     getAllDepartments();
-    $("#searchInp").val("");
+    clearSearchInput();
   });
   
   $("#locationsBtn").click(function () {
     // Call function to refresh location table
     getAllLocations();
-    $("#searchInp").val("");
+    clearSearchInput();
   });
 
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
