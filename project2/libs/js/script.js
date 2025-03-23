@@ -363,17 +363,17 @@ $(document).ready(function () {
     if ($("#personnelBtn").hasClass("active")) {
       // Refresh personnel table
       getAllPersonnel();
-      ClearSearchInput;
+      ClearSearchInput();
 
     } else if ($("#departmentsBtn").hasClass("active")) {
       // Refresh department table
       getAllDepartments();
-      ClearSearchInput;
+      ClearSearchInput();
 
     } else {
       // Refresh location table
       getAllLocations();
-      ClearSearchInput;
+      ClearSearchInpu();
 
     }
 
