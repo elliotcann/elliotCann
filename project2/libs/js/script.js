@@ -50,9 +50,14 @@ $(document).ready(function () {
 
   }
 
+  // Current personnel id
+  let currentPersonnelId
+
   /*----------------------------------------*/
   /* GET ALL DATA */
   /*----------------------------------------*/
+
+  // Get all personnel
   function getAllPersonnel () {
     
     $.ajax({
@@ -99,6 +104,7 @@ $(document).ready(function () {
 
   };
 
+  // Get all departments
   function getAllDepartments () {
     
     $.ajax({
@@ -139,6 +145,7 @@ $(document).ready(function () {
 
   };
 
+  // Get all locations
   function getAllLocations () {
     
     $.ajax({
@@ -176,6 +183,70 @@ $(document).ready(function () {
     });
 
   };
+
+  /*----------------------------------------*/
+  /* DELETE FUNCTIONS */
+  /*----------------------------------------*/
+
+  $("#deletePersonnelModal").on("show.bs.modal", function (e) {
+
+    currentPersonnelId = $(e.relatedTarget).attr("data-id");
+    
+    $.ajax({
+      url: "libs/php/getPersonnelByID.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: currentPersonnelId
+      },
+      success: function (result) {
+
+        if (result.status.code == 200) {
+
+          $("#deletePersonnelName").html(
+            `Are you sure you want to delete <strong>${result.data.personnel[0].firstName} ${result.data.personnel[0].lastName}</strong> from the database?`
+          );
+          
+        } else {
+          $("#deletePersonnelModal .modal-title").replaceWith(
+            "Error retrieving data"
+          );
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        $("#deletePersonnelModal .modal-title").replaceWith(
+          "Error retrieving data"
+        );
+      }
+    });
+  }
+  );
+
+  $("#deletePersonnelBtn").on("click", function () {
+    
+    $.ajax({
+      url: "libs/php/deletePersonnel.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: currentPersonnelId
+      },
+      success: function (result) {
+        
+        if (result.status.code == 200) {
+          getAllPersonnel();
+          $("#deletePersonnelModal").modal("hide");
+        }
+
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+    });
+  }
+  );
 
 
   /*----------------------------------------*/
@@ -415,9 +486,6 @@ $(document).ready(function () {
       type: "POST",
       dataType: "json",
       data: {
-        // Retrieve the data-id attribute from the calling button
-        // see https://getbootstrap.com/docs/5.0/components/modal/#varying-modal-content
-        // for the non-jQuery JavaScript alternative
         id: $(e.relatedTarget).attr("data-id") 
       },
       success: function (result) {
