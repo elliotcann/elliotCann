@@ -52,6 +52,7 @@ $(document).ready(function () {
 
   // Current personnel id
   let currentPersonnelId
+  let currentDepartmentId
 
   /*----------------------------------------*/
   /* GET ALL DATA */
@@ -188,6 +189,7 @@ $(document).ready(function () {
   /* DELETE FUNCTIONS */
   /*----------------------------------------*/
 
+  // Delete personnel modal
   $("#deletePersonnelModal").on("show.bs.modal", function (e) {
 
     currentPersonnelId = $(e.relatedTarget).attr("data-id");
@@ -222,10 +224,11 @@ $(document).ready(function () {
   }
   );
 
+  // Delete personnel submit
   $("#deletePersonnelBtn").on("click", function () {
     
     $.ajax({
-      url: "libs/php/deletePersonnel.php",
+      url: "libs/php/deletePersonnelByID.php",
       type: "POST",
       dataType: "json",
       data: {
@@ -247,6 +250,51 @@ $(document).ready(function () {
     });
   }
   );
+
+  // Delete department modal
+  $("#deleteDepartmentsModal").on("show.bs.modal", function (e) {
+    
+    currentDepartmentId = $(e.relatedTarget).attr("data-id");
+    
+    $.ajax({
+      url: "libs/php/getDepartmentByID.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: currentDepartmentId
+      },
+      success: function (result) {
+
+        if (result.status.code == 200) {
+
+          if (result.data && result.data.length > 0) {
+            
+            $("#deleteDepartmentsName").html(
+              `You are unable to delete <strong>${result.data[0].name}</strong> as <strong>${count(data)} personnel</strong> are assigned to this department.`
+            );
+                
+          } else if (result.data && result.data.length === 0) {
+            $("#deleteDepartmentsName").html(
+              `Are you sure you want to delete <strong>${result.data[0].name}</strong> from the database?`
+            );
+            
+          } else {
+            $("#deleteDepartmentsModal .modal-title").replaceWith(
+              "Error retrieving data"
+            );
+          }
+          
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        $("#deleteDepartmentsModal .modal-title").replaceWith(
+          "Error retrieving data"
+        );
+      }
+    });
+  }
+  );
+
 
 
   /*----------------------------------------*/
