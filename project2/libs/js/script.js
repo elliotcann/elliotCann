@@ -357,23 +357,21 @@ $(document).ready(function () {
   /*----------------------------------------*/
 
   $("#refreshBtn").click(function () {
-      
-    const ClearSearchInput = $("#searchInp").val("");
 
     if ($("#personnelBtn").hasClass("active")) {
       // Refresh personnel table
       getAllPersonnel();
-      ClearSearchInput();
+      clearSearchInput();
 
     } else if ($("#departmentsBtn").hasClass("active")) {
       // Refresh department table
       getAllDepartments();
-      ClearSearchInput();
+      clearSearchInput();
 
     } else {
       // Refresh location table
       getAllLocations();
-      ClearSearchInpu();
+      clearSearchInput();
 
     }
 
