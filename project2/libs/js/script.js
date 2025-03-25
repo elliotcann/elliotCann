@@ -924,7 +924,7 @@ $(document).ready(function () {
 
   $("#addBtn").click(function () {
 
-    if ($("#peronnelBtn").hasClass("active")) {
+    if ($("#personnelBtn").hasClass("active")) {
       
       $("#addPersonnelModal").modal("show");
     
