@@ -383,8 +383,11 @@ $(document).ready(function () {
         if (result.status.code == 200) {
           const locationName = result.data[0].name;
           const departmentCount = parseInt(result.data[0].departmentCount);
+
+          $("#deleteLocationsBtns").show();
+          $("#deleteLocationsCancelBtn").show();
         
-        if (result.data && result.data.length > 0) {
+        if (departmentCount > 0) {
 
             $("#deleteLocationsName").html(
               `You are unable to delete <strong>${locationName}</strong> as <strong>${departmentCount} Departments</strong> are assigned to this location.`
@@ -392,23 +395,17 @@ $(document).ready(function () {
           
             $("#deleteLocationsBtns").hide();
 
-          } else if (result.data && result.data.length === 0) {
+          } else {
 
             $("#deleteLocationsName").html(
               `Are you sure you want to delete <strong>${locationName}</strong> from the database?`
             );
 
             $("#deleteLocationsCancelBtn").hide();
-            
-          } else {
 
-            $("#deleteLocationsModal .modal-title").replaceWith(
-              "Error retrieving data"
-            );
+          };
 
-          }
-
-        };
+        }
       },
 
       error: function (jqXHR, textStatus, errorThrown) {
@@ -888,7 +885,7 @@ $(document).ready(function () {
           ).show();
         }
       }
-      
+
     });
   });
 
