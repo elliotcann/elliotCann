@@ -266,16 +266,22 @@ $(document).ready(function () {
       success: function (result) {
 
         if (result.status.code == 200) {
+          const departmentName = result.data[0].name;
+          const personnelCount = parseInt(result.data[0].personnelCount);
 
           if (result.data && result.data.length > 0) {
             
             $("#deleteDepartmentsName").html(
-              `You are unable to delete <strong>${result.data[0].name}</strong> as <strong>${count(data)} personnel</strong> are assigned to this department.`
+              `You are unable to delete <strong>${departmentName}</strong> as <strong>${personnelCount} Personnel</strong> are assigned to this department.`
             );
+
+            $("#deleteDepartmentsBtns").hide();
+
+            $("#deleteDepartmentsCancelBtn").show();
                 
           } else if (result.data && result.data.length === 0) {
             $("#deleteDepartmentsName").html(
-              `Are you sure you want to delete <strong>${result.data[0].name}</strong> from the database?`
+              `Are you sure you want to delete <strong>${departmentName}</strong> from the database?`
             );
             
           } else {
@@ -288,6 +294,68 @@ $(document).ready(function () {
       },
       error: function (jqXHR, textStatus, errorThrown) {
         $("#deleteDepartmentsModal .modal-title").replaceWith(
+          "Error retrieving data"
+        );
+      }
+    });
+  }
+  );
+
+  // Delete department submit
+  $("#deleteDepartmentsBtn").on("click", function () {
+    
+    $.ajax({
+      url: "libs/php/deleteDepartmentByID.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: currentDepartmentId
+      },
+      success: function (result) {
+        
+        if (result.status.code == 200) {
+          getAllDepartments();
+          $("#deleteDepartmentsModal").modal("hide");
+        }
+
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+    });
+  }
+  );
+
+  // Delete location modal
+  $("#deleteLocationsModal").on("show.bs.modal", function (e) {
+    
+    currentLocationId = $(e.relatedTarget).attr("data-id");
+    
+    $.ajax({
+      url: "libs/php/getLocationByID.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: currentLocationId
+      },
+      success: function (result) {
+
+        if (result.status.code == 200) {
+          
+          $("#deleteLocationsName").html(
+            `Are you sure you want to delete <strong>${result.data[0].name}</strong> from the database?`
+          );
+          
+        } else {
+          $("#deleteLocationsModal .modal-title").replaceWith(
+            "Error retrieving data"
+          );
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        $("#deleteLocationsModal .modal-title").replaceWith(
           "Error retrieving data"
         );
       }

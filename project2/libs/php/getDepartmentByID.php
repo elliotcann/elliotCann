@@ -32,7 +32,15 @@
 
 	}	
 
-	$query = $conn->prepare('SELECT id, name, locationID FROM department WHERE id =  ?');
+	// use a JOIN to get department details and personell count
+	$query = $conn->prepare('
+    SELECT d.id, d.name, d.locationID, l.name as locationName, COUNT(p.id) as personnelCount 
+    FROM department d
+    LEFT JOIN location l ON d.locationID = l.id
+    LEFT JOIN personnel p ON d.id = p.departmentID
+    WHERE d.id = ?
+    GROUP BY d.id, d.name, d.locationID, l.name
+	');
 
 	$query->bind_param("i", $_REQUEST['id']);
 
