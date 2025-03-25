@@ -14,6 +14,8 @@ $(document).ready(function () {
   clearSearchInput();
   // Update filter button state on load
   updateFilterButtonState();
+  // Reset filter dropdowns on load
+  resetFilterDropdowns();
 
   // Clear search input
   function clearSearchInput() {
@@ -27,6 +29,14 @@ $(document).ready(function () {
     } else {
       $("#filterBtn").prop("disabled", true).attr("disabled", "disabled");
     }
+  }
+
+  // Reset filter dropdowns
+  function resetFilterDropdowns() {
+
+    $("#filterPersonnelDepartment").html('<option value="">Any Department</option>');
+
+    $("#filterPersonnelLocation").html('<option value="">Any Location</option>');
   }
 
   // Clear Table  
@@ -605,27 +615,145 @@ $(document).ready(function () {
     };
   });
 
+  /*----------------------------------------*/
+  /* FILTER FUNCTIONS */
+  /*----------------------------------------*/
+
+  // Populate department and location dropdowns
+  $("#filterPersonnelModal").on("show.bs.modal", function () {
+
+    $.ajax({
+      url: "libs/php/filterDropdown.php",
+      type: "GET",
+      dataType: "json",
+      success: function (result) {
+        
+        if (result.status.code == 200) {
+
+          $.each(result.data.department, function () {
+
+            $("#filterPersonnelDepartment").append(
+              $("<option>", {
+                value: this.id,
+                text: this.name
+              })
+            );
+
+          });
+
+          $.each(result.data.location, function () {
+
+            $("#filterPersonnelLocation").append(
+              $("<option>", {
+                value: this.id,
+                text: this.name
+              })
+
+            );
+          });
+
+        }
+      },
+
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+
+    });
+
+  });
+
+  $("#filterPersonnelForm").on("submit", function (e) {
+    
+    e.preventDefault();
+
+    const department = $("#filterPersonnelDepartment").val();
+    const location = $("#filterPersonnelLocation").val();
+
+    $.ajax({
+      url: "libs/php/filterPersonnel.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        department: department,
+        location: location
+      },
+      success: function (result) {
+        
+        if (result.status.code == 200) {
+
+          clearTable("personnel");
+
+          if(result.data && result.data.length > 0) {
+
+            $.each(result.data, function () {
+              
+              $("#personnelTableBody").append(
+                
+                $("<tr>").append(
+                  
+                  $("<td>", { text: `${this.lastName}, ${this.firstName}`, class: "align-middle text-nowrap" }),
+
+                  $("<td>", { text: this.jobTitle, class: tdClass }),
+
+                  $("<td>", { text: this.department, class: tdClass }),
+
+                  $("<td>", { text: this.location, class: tdClass }),
+
+                  $("<td>", { text: this.email, class: tdClass }),
+
+                  $("<td>", { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Personnel")).append(createButton(this.id, "delete", "Personnel"))
+                )
+              );
+            });
+
+          } else {
+
+            $("#personnelTableBody").html(
+              $("<tr>").append(
+                $("<td>", { colspan: 6, text: "No data found", class: "text-center" })
+              )
+            );
+
+          }
+        }
+
+        $("#filterPersonnelModal").modal("hide");
+
+      },
+
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+
+    });
+
+  }
+  );
 
   /*----------------------------------------*/
   /* BUTTON FUNCTIONS */
   /*----------------------------------------*/
 
   $("#refreshBtn").click(function () {
+    resetFilterDropdowns();
+    clearSearchInput();
 
     if ($("#personnelBtn").hasClass("active")) {
       // Refresh personnel table
       getAllPersonnel();
-      clearSearchInput();
 
     } else if ($("#departmentsBtn").hasClass("active")) {
       // Refresh department table
       getAllDepartments();
-      clearSearchInput();
 
     } else {
       // Refresh location table
       getAllLocations();
-      clearSearchInput();
 
     }
 
@@ -633,7 +761,7 @@ $(document).ready(function () {
 
   $("#filterBtn").click(function () {
     
-    // Open a modal of your own design that allows the user to apply a filter to the personnel table on either department or location
+    $("#filterPersonnelModal").modal("show");
     
   });
 
@@ -645,6 +773,7 @@ $(document).ready(function () {
 
   $("#personnelBtn").click(function () {
     // Call function to refresh personnel table
+    resetFilterDropdowns();
     getAllPersonnel();
     clearSearchInput();
     updateFilterButtonState();
