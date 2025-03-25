@@ -31,6 +31,18 @@ $(document).ready(function () {
     }
   }
 
+  // Filter active state
+  let filterActive = false;
+
+  // Update filter active state
+  function updateFilterActiveState() {
+    if (filterActive) {
+      $("#filterBtn").addClass("active");
+    } else {
+      $("#filterBtn").removeClass("active");
+    }
+  }
+
   // Reset filter dropdowns
   function resetFilterDropdowns() {
 
@@ -72,6 +84,8 @@ $(document).ready(function () {
     }).append($("<i>", { class: `fa-solid ${iconClass} fa-fw` }));
 
   }
+
+
 
   // Current personnel id
   let currentPersonnelId
@@ -449,6 +463,8 @@ $(document).ready(function () {
   $("#searchInp").on("keyup", function () {
 
     const searchInput = $(this).val();
+    filterActive = false;
+    updateFilterActiveState();
     
     // Personel table
     if ($("#personnelBtn").hasClass("active")) {;
@@ -622,6 +638,8 @@ $(document).ready(function () {
   // Populate department and location dropdowns
   $("#filterPersonnelModal").on("show.bs.modal", function () {
 
+    $("#filterBtn").addClass("active");
+
     $.ajax({
       url: "libs/php/filterDropdown.php",
       type: "GET",
@@ -671,6 +689,11 @@ $(document).ready(function () {
 
     const department = $("#filterPersonnelDepartment").val();
     const location = $("#filterPersonnelLocation").val();
+
+    filterActive = (department !== "" && department !== "Any Department") || 
+    (location !== "" && location !== "Any Location");
+
+    updateFilterActiveState();
 
     $.ajax({
       url: "libs/php/filterPersonnel.php",
@@ -735,13 +758,21 @@ $(document).ready(function () {
   }
   );
 
+  // When modal closes, only remove active class if no filter is applied
+  $("#filterPersonnelModal").on("hide.bs.modal", function() {
+    updateFilterActiveState();
+  });
+
   /*----------------------------------------*/
   /* BUTTON FUNCTIONS */
   /*----------------------------------------*/
 
   $("#refreshBtn").click(function () {
+    
     resetFilterDropdowns();
     clearSearchInput();
+    filterActive = false;
+    updateFilterActiveState(); 
 
     if ($("#personnelBtn").hasClass("active")) {
       // Refresh personnel table
@@ -773,6 +804,8 @@ $(document).ready(function () {
 
   $("#personnelBtn").click(function () {
     // Call function to refresh personnel table
+    filterActive = false;
+    updateFilterActiveState();
     resetFilterDropdowns();
     getAllPersonnel();
     clearSearchInput();
