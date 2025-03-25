@@ -305,7 +305,10 @@ $(document).ready(function () {
           const departmentName = result.data[0].name;
           const personnelCount = parseInt(result.data[0].personnelCount);
 
-          if (result.data && result.data.length > 0) {
+          $("#deleteDepartmentsBtns").show();
+          $("#deleteDepartmentsCancelBtn").show();
+
+          if (personnelCount > 0) {
             
             $("#deleteDepartmentsName").html(
               `You are unable to delete <strong>${departmentName}</strong> as <strong>${personnelCount} Personnel</strong> are assigned to this department.`
@@ -313,22 +316,16 @@ $(document).ready(function () {
 
             $("#deleteDepartmentsBtns").hide();
                 
-          } else if (result.data && result.data.length === 0) {
+          } else {
 
             $("#deleteDepartmentsName").html(
               `Are you sure you want to delete <strong>${departmentName}</strong> from the database?`
             );
 
             $("#deleteDepartmentsCancelBtn").hide();
-            
-          } else {
-
-            $("#deleteDepartmentsModal .modal-title").replaceWith(
-              "Error retrieving data"
-            );
 
           }
-          
+
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
