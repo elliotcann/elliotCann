@@ -1,20 +1,33 @@
 
 $(document).ready(function () {
 
-  // Call functions to populate tables
+
+  /*----------------------------------------*/
+  /* Global variables */
+  /*----------------------------------------*/
+
+  // Call functions to populate tables on load
   getAllPersonnel();
   getAllDepartments();
   getAllLocations();
+  // Clear search input on load
   clearSearchInput();
+  // Update filter button state on load
+  updateFilterButtonState();
 
   // Clear search input
   function clearSearchInput() {
     $("#searchInp").val("");
   }
 
-  /*----------------------------------------*/
-  /* Global variables */
-  /*----------------------------------------*/
+  // Update filter button state
+  function updateFilterButtonState() {
+    if ($("#personnelBtn").hasClass("active")) {
+      $("#filterBtn").prop("disabled", false).removeAttr("disabled");
+    } else {
+      $("#filterBtn").prop("disabled", true).attr("disabled", "disabled");
+    }
+  }
 
   // Clear Table  
   const clearTable = (tableType) => {
@@ -634,18 +647,24 @@ $(document).ready(function () {
     // Call function to refresh personnel table
     getAllPersonnel();
     clearSearchInput();
+    updateFilterButtonState();
+
   });
   
   $("#departmentsBtn").click(function () {
     // Call function to refresh department table
     getAllDepartments();
     clearSearchInput();
+    updateFilterButtonState();
+
   });
   
   $("#locationsBtn").click(function () {
     // Call function to refresh location table
     getAllLocations();
     clearSearchInput();
+    updateFilterButtonState();
+
   });
 
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
