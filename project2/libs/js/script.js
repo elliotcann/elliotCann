@@ -763,8 +763,6 @@ $(document).ready(function () {
   /* ADD FUNCTIONS */
   /*----------------------------------------*/
 
-
-
   // Add personnel modal
 
   // Add department modal
@@ -849,7 +847,50 @@ $(document).ready(function () {
   });
 
   // Add location modal
+  $("#addLocationsModal").on("show.bs.modal", function () {
 
+    $("#addLocationsName").val("");
+
+    // Hide error message if it exists
+    if ($("#addLocationsError").length > 0) {
+        $("#addLocationsError").hide().html("");
+    }
+
+  });
+
+  // submit add location form
+  $("#addLocationsForm").on("submit", function (e) {
+
+    e.preventDefault();
+
+    const name = $("#addLocationsName").val();
+
+    // Add error message div if it doesn't exist
+    if ($("#addLocationsError").length === 0) {
+        $(this).prepend('<div id="addLocationsError" class="mb-3" style="display: none;"></div>');
+    }
+
+    $.ajax({
+      url: "libs/php/insertLocation.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        name: name
+      },
+      success: function (result) {
+        if (result.status.code == 200) {
+          getAllLocations();
+          $("#addLocationsModal").modal("hide");
+        } else if (result.status.code == 409) {
+          // Location already exists
+          $("#addLocationsError").html(
+            `<div class="alert alert-danger">${result.status.description}</div>`
+          ).show();
+        }
+      }
+      
+    });
+  });
 
   /*----------------------------------------*/
   /* BUTTON FUNCTIONS */
