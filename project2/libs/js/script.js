@@ -276,18 +276,21 @@ $(document).ready(function () {
             );
 
             $("#deleteDepartmentsBtns").hide();
-
-            $("#deleteDepartmentsCancelBtn").show();
                 
           } else if (result.data && result.data.length === 0) {
+
             $("#deleteDepartmentsName").html(
               `Are you sure you want to delete <strong>${departmentName}</strong> from the database?`
             );
+
+            $("#deleteDepartmentsCancelBtn").hide();
             
           } else {
+
             $("#deleteDepartmentsModal .modal-title").replaceWith(
               "Error retrieving data"
             );
+
           }
           
         }
@@ -319,14 +322,16 @@ $(document).ready(function () {
         }
 
       },
+
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR);
         console.log(textStatus);
         console.log(errorThrown);
       }
+
     });
-  }
-  );
+
+  });
 
   // Delete location modal
   $("#deleteLocationsModal").on("show.bs.modal", function (e) {
@@ -343,25 +348,74 @@ $(document).ready(function () {
       success: function (result) {
 
         if (result.status.code == 200) {
+          const locationName = result.data[0].name;
+          const departmentCount = parseInt(result.data[0].departmentCount);
+        
+        if (result.data && result.data.length > 0) {
+
+            $("#deleteLocationsName").html(
+              `You are unable to delete <strong>${locationName}</strong> as <strong>${departmentCount} Departments</strong> are assigned to this location.`
+            );
           
-          $("#deleteLocationsName").html(
-            `Are you sure you want to delete <strong>${result.data[0].name}</strong> from the database?`
-          );
-          
-        } else {
-          $("#deleteLocationsModal .modal-title").replaceWith(
-            "Error retrieving data"
-          );
-        }
+            $("#deleteLocationsBtns").hide();
+
+          } else if (result.data && result.data.length === 0) {
+
+            $("#deleteLocationsName").html(
+              `Are you sure you want to delete <strong>${locationName}</strong> from the database?`
+            );
+
+            $("#deleteLocationsCancelBtn").hide();
+            
+          } else {
+
+            $("#deleteLocationsModal .modal-title").replaceWith(
+              "Error retrieving data"
+            );
+
+          }
+
+        };
       },
+
       error: function (jqXHR, textStatus, errorThrown) {
         $("#deleteLocationsModal .modal-title").replaceWith(
           "Error retrieving data"
         );
       }
+
     });
-  }
-  );
+
+  });
+
+  // Delete location submit
+  $("#deleteLocationsBtn").on("click", function () {
+    
+    $.ajax({
+      url: "libs/php/deleteLocationByID.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: currentLocationId
+      },
+      success: function (result) {
+        
+        if (result.status.code == 200) {
+          getAllLocations();
+          $("#deleteLocationsModal").modal("hide");
+        }
+
+      },
+
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+
+    });
+
+  });
 
 
 
