@@ -322,6 +322,48 @@
 
 <!-- DEPARTMENT MODALS -->
 
+<!-- Add Department Modal -->
+<div id="addDepartmentsModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  
+  <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+       
+    <div class="modal-content shadow"> 
+      
+      <div class="modal-header bg-primary bg-gradient text-white">
+        <h5 class="modal-title">Add Department</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+          
+        <form id="addDepartmentsForm">
+
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="addDepartmentsName" placeholder="Department name" required>
+            <label for="addDepartmentsName">Department name</label>
+          </div>
+
+          <div class="form-floating">
+            <select class="form-select" id="addDepartmentsLocation" placeholder="Location">
+            </select>
+            <label for="addDepartmentsLocation">Choose Location</label>
+          </div>  
+
+        </form>
+      
+      </div>
+    
+      <div class="modal-footer">
+        <button type="submit" form="addDepartmentsForm" class="btn btn-outline-primary btn-sm myBtn">ADD</button>
+        <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
+      </div>
+    
+    </div>
+  
+  </div>
+
+</div>
+
 <!-- Edit Department Modal -->
 
 <!-- Delete Department Modal -->
@@ -358,6 +400,43 @@
 </div>
 
 <!-- LOCATION MODALS -->
+
+<!-- Add Location Modal -->
+<div id="addLocationsModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  
+  <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+       
+    <div class="modal-content shadow"> 
+      
+      <div class="modal-header bg-primary bg-gradient text-white">
+        <h5 class="modal-title">Add Location</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body
+      ">
+          
+        <form id="addLocationsForm">
+
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="addLocationsName" placeholder="Location name" required>
+            <label for="addLocationsName">Location name</label>
+          </div>
+
+        </form>
+      
+      </div>
+    
+      <div class="modal-footer">
+        <button type="submit" form="addLocationsForm" class="btn btn-outline-primary btn-sm myBtn">ADD</button>
+        <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
+      </div>
+    
+    </div>
+  
+  </div>
+
+</div>
 
 <!-- Edit Location Modal -->
 

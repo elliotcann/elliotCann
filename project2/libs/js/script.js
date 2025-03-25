@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
 
 
@@ -764,6 +763,98 @@ $(document).ready(function () {
   });
 
   /*----------------------------------------*/
+  /* ADD FUNCTIONS */
+  /*----------------------------------------*/
+
+
+
+  // Add personnel modal
+
+  // Add department modal
+  $("#addDepartmentsModal").on("show.bs.modal", function () {
+
+    $("#addDepartmentsName").val("");
+    $("#addDepartmentsLocation").html("");
+
+    // Hide error message if it exists
+    if ($("#addDepartmentsError").length > 0) {
+        $("#addDepartmentsError").hide().html("");
+    }
+
+    $.ajax({
+      url: "libs/php/getAllLocations.php",
+      type: "GET",
+      dataType: "json",
+      success: function (result) {
+        
+        if (result.status.code == 200) {
+
+          $.each(result.data, function () {
+            $("#addDepartmentsLocation").append(
+              $("<option>", {
+                value: this.id,
+                text: this.name
+              })
+            );
+          });
+
+        }
+      },
+
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+
+    })
+
+  });
+
+  // submit add department form
+  $("#addDepartmentsForm").on("submit", function (e) {
+    
+    e.preventDefault();
+
+    const name = $("#addDepartmentsName").val();
+    const location = $("#addDepartmentsLocation").val();
+    
+    // Add error message div if it doesn't exist
+    if ($("#addDepartmentsError").length === 0) {
+        $(this).prepend('<div id="addDepartmentsError" class="mb-3" style="display: none;"></div>');
+    }
+    
+    $.ajax({
+      url: "libs/php/insertDepartment.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        name: name,
+        locationID: location
+      },
+      success: function (result) {
+        if (result.status.code == 200) {
+          getAllDepartments();
+          $("#addDepartmentsModal").modal("hide");
+        } else if (result.status.code == 409) {
+          // Department already exists
+          $("#addDepartmentsError").html(
+            `<div class="alert alert-danger">${result.status.description}</div>`
+          ).show();
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+    });
+  });
+
+  // Add location modal
+
+
+  /*----------------------------------------*/
   /* BUTTON FUNCTIONS */
   /*----------------------------------------*/
 
@@ -797,9 +888,21 @@ $(document).ready(function () {
   });
 
   $("#addBtn").click(function () {
+
+    if ($("#peronnelBtn").hasClass("active")) {
+      
+      $("#addPersonnelModal").modal("show");
     
-    // Replicate the logic of the refresh button click to open the add modal for the table that is currently on display
-    
+    } else if ($("#departmentsBtn").hasClass("active")) {
+      
+      $("#addDepartmentsModal").modal("show");
+
+    } else {
+      
+      $("#addLocationsModal").modal("show");
+
+    }
+
   });
 
   $("#personnelBtn").click(function () {
