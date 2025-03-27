@@ -36,14 +36,21 @@ $(document).ready(function () {
 
   };
 
-  // <p> Alert Danger Classes
+  // <p> Alert Classes
   const alertDanger = "alert alert-danger";
-  // <p> Alert Warning Classes
   const alertWarning = "alert alert-warning";
 
   // <td> Classes
   const tdClass = "align-middle text-nowrap d-none d-md-table-cell";
   const btnClass = "btn btn-primary btn-sm me-2 align-right";
+
+  // Function to Show Success Toast
+  function showSuccessToast(message) {
+    $("#successToastMessage").text(message);
+    const toast = new bootstrap.Toast($("#successToast")[0]);
+    toast.show();
+  }
+  
 
   // <button> Classes
   function createButton(id, buttonType, tableType = "Personnel") {
@@ -256,8 +263,12 @@ $(document).ready(function () {
       success: function (result) {
         
         if (result.status.code == 200) {
+          const personnelName = $("#deletePersonnelName").text();
+
           getAllPersonnel();
           $("#deletePersonnelModal").modal("hide");
+
+          showSuccessToast(`${personnelName} has been successfully deleted.`);
         }
 
       },
@@ -333,8 +344,13 @@ $(document).ready(function () {
       success: function (result) {
         
         if (result.status.code == 200) {
+
+          const departmentName = $("#deleteDepartmentsName strong").first().text();
+
           getAllDepartments();
           $("#deleteDepartmentsModal").modal("hide");
+
+          showSuccessToast(`${departmentName} has been successfully deleted.`);
         }
 
       },
@@ -413,8 +429,12 @@ $(document).ready(function () {
       success: function (result) {
         
         if (result.status.code == 200) {
+          const locationName = $("#deleteLocationsName strong").first().text();
+
           getAllLocations();
           $("#deleteLocationsModal").modal("hide");
+
+          showSuccessToast(`${locationName} has been successfully deleted.`);
         }
 
       },
