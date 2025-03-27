@@ -1,5 +1,12 @@
 $(document).ready(function () {
 
+   // Show main content and hide preloader with fade effect
+   function hidePreloader() {
+    $("#preloader").fadeOut(500, function() {
+      $(this).remove();
+    });
+    $("#mainContent").fadeIn(500);
+  }
 
   /*----------------------------------------*/
   /* Global variables */
@@ -18,6 +25,9 @@ $(document).ready(function () {
 
   // Reset filter dropdowns on load
   resetFilterDropdowns();
+
+  // Hide preloader after everything is initialized
+  setTimeout(hidePreloader, 800);
 
   // Clear Table  
   const clearTable = (tableType) => {
