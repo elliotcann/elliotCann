@@ -32,12 +32,12 @@
 
 	}	
 
-	// use a JOIN to get department details and personell count
+	// Get department details
 	$query = $conn->prepare('
 		SELECT d.id, d.name, d.locationID, l.name as locationName, COUNT(p.id) as personnelCount 
 		FROM department d
 		LEFT JOIN location l ON d.locationID = l.id
-		LEFT JOIN personnel p ON d.id = p.departmentID
+		LEFT JOIN personnel p ON p.departmentID = d.id
 		WHERE d.id = ?
 		GROUP BY d.id, d.name, d.locationID, l.name
 	');
@@ -62,19 +62,32 @@
 
 	$result = $query->get_result();
 
-   	$data = [];
+   	$department = [];
 
 	while ($row = mysqli_fetch_assoc($result)) {
 
-		array_push($data, $row);
+		$department[] = $row;
 
+	}
+
+	// Get all locations for dropdown
+	$locationQuery = $conn->prepare('SELECT id, name FROM location ORDER BY name');
+	$locationQuery->execute();
+	$locationResult = $locationQuery->get_result();
+	$locations = [];
+
+	while ($row = mysqli_fetch_assoc($locationResult)) {
+		$locations[] = $row;
 	}
 
 	$output['status']['code'] = "200";
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-	$output['data'] = $data;
+	$output['data'] = array(
+		'department' => $department,
+		'locations' => $locations
+	);
 
 	echo json_encode($output); 
 

@@ -300,8 +300,8 @@ $(document).ready(function () {
       success: function (result) {
 
         if (result.status.code == 200) {
-          const departmentName = result.data[0].name;
-          const personnelCount = parseInt(result.data[0].personnelCount);
+          const departmentName = result.data.department[0].name;
+          const personnelCount = parseInt(result.data.department[0].personnelCount);
 
           $("#deleteDepartmentsBtns").show();
           $("#deleteDepartmentsCancelBtn").show();
@@ -1034,7 +1034,7 @@ $(document).ready(function () {
     });
   });
 
-  // Executes when the form button with type="submit" is clicked
+  // Edit Personnel Modal Submit
   $("#editPersonnelForm").on("submit", function (e) {
     
     e.preventDefault();
@@ -1082,6 +1082,109 @@ $(document).ready(function () {
     });
     
   });
+
+  // Edit department modal
+  $("#editDepartmentsModal").on("show.bs.modal", function (e) {
+    
+    // Hide error message if it exists
+    if ($("#editDepartmentsError").length > 0) {
+      $("#editDepartmentsError").hide().html("");
+    }
+
+    const departmentId = $(e.relatedTarget).attr("data-id");
+    $("#editDepartmentsID").val(departmentId);
+
+    $.ajax({
+      url: "libs/php/getDepartmentByID.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: departmentId
+      },
+      success: function (result) {
+        if (result.status.code == 200) {
+
+          $("#editDepartmentsName").val(result.data.department[0].name);
+
+          $("#editDepartmentsLocation").html("");
+
+          $.each(result.data.locations, function () {
+            $("#editDepartmentsLocation").append(
+              $("<option>", {
+                value: this.id,
+                text: this.name
+              })
+            );
+          });
+
+          $("#editDepartmentsLocation").val(result.data.department[0].locationID);
+
+        } else {
+          $("#editDepartmentsModal .modal-title").replaceWith(
+            "Error retrieving data"
+          );
+        }
+
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        $("#editDepartmentsModal .modal-title").replaceWith(
+          "Error retrieving data"
+        );
+      }
+
+    });
+  });
+
+  // Edit Department Modal Submit
+  $("#editDepartmentsForm").on("submit", function (e) {
+
+    e.preventDefault();
+
+    const department = $("#editDepartmentsName").val();
+    const location = $("#editDepartmentsLocation").val();
+    const locationName = $("#editDepartmentsLocation option:selected").text();
+
+    if ($("#editDepartmentsError").length === 0) {
+      $(this).prepend('<div id="editDepartmentsError" class="mb-3" style="display: none;"></div>');
+    }
+
+    $.ajax({
+      url: "libs/php/updateDepartments.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: $("#editDepartmentsID").val(),
+        name: department,
+        locationID: location
+      },
+      success: function (result) {
+
+        if (result.status.code == 200) {
+
+          getAllDepartments();
+          $("#editDepartmentsModal").modal("hide");
+
+        } else if (result.status.code == 409) {
+
+          // Department already exists
+          $("#editDepartmentsError").html(
+            `<div class="alert alert-danger">${result.status.description}<p>in ${locationName}.</p></div>`
+          ).show();
+
+        }
+
+      },
+
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+
+    });
+  });
+  
+
 
   /*----------------------------------------*/
   /* BUTTON FUNCTIONS */
