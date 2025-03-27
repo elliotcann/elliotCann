@@ -973,6 +973,117 @@ $(document).ready(function () {
   });
 
   /*----------------------------------------*/
+  /* EDIT FUNCTIONS */
+  /*----------------------------------------*/
+
+  // Edit personnel modal
+  $("#editPersonnelModal").on("show.bs.modal", function (e) {
+
+    // Hide error message if it exists
+    if ($("#editPersonnelError").length > 0) {
+      $("#editPersonnelError").hide().html("");
+    }
+    
+    $.ajax({
+      url:
+        "libs/php/getPersonnelByID.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: $(e.relatedTarget).attr("data-id") 
+      },
+      success: function (result) {
+        var resultCode = result.status.code;
+
+        if (resultCode == 200) {
+          
+          // Update the hidden input with the employee id so that
+          // it can be referenced when the form is submitted
+
+          $("#editPersonnelEmployeeID").val(result.data.personnel[0].id);
+
+          $("#editPersonnelFirstName").val(result.data.personnel[0].firstName);
+          $("#editPersonnelLastName").val(result.data.personnel[0].lastName);
+          $("#editPersonnelJobTitle").val(result.data.personnel[0].jobTitle);
+          $("#editPersonnelEmailAddress").val(result.data.personnel[0].email);
+
+          $("#editPersonnelDepartment").html("");
+
+          $.each(result.data.department, function () {
+            $("#editPersonnelDepartment").append(
+              $("<option>", {
+                value: this.id,
+                text: this.name
+              })
+            );
+          });
+
+          $("#editPersonnelDepartment").val(result.data.personnel[0].departmentID);
+          
+        } else {
+          $("#editPersonnelModal .modal-title").replaceWith(
+            "Error retrieving data"
+          );
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        $("#editPersonnelModal .modal-title").replaceWith(
+          "Error retrieving data"
+        );
+      }
+    });
+  });
+
+  // Executes when the form button with type="submit" is clicked
+  $("#editPersonnelForm").on("submit", function (e) {
+    
+    e.preventDefault();
+
+    const firstName = $("#editPersonnelFirstName").val();
+    const lastName = $("#editPersonnelLastName").val();
+    const jobTitle = $("#editPersonnelJobTitle").val();
+    const email = $("#editPersonnelEmailAddress").val();
+    const department = $("#editPersonnelDepartment").val();
+    
+    // Add error message div if it doesn't exist
+    if ($("#editPersonnelError").length === 0) {
+        $(this).prepend('<div id="editPersonnelError" class="mb-3" style="display: none;"></div>');
+    }
+
+    // AJAX call to save form data
+    $.ajax({
+      url: "libs/php/updatePersonnel.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: $("#editPersonnelEmployeeID").val(),
+        firstName: firstName,
+        lastName: lastName,
+        jobTitle: jobTitle,
+        email: email,
+        departmentID: department
+      },
+      success: function (result) {
+        if (result.status.code == 200) {
+          getAllPersonnel();
+          $("#editPersonnelModal").modal("hide");
+        } else if (result.status.code == 409) {
+          // Personnel already exists
+          $("#editPersonnelError").html(
+            `<div class="alert alert-danger">${result.status.description}</div>`
+          ).show();
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+    });
+    
+  });
+
+  /*----------------------------------------*/
   /* BUTTON FUNCTIONS */
   /*----------------------------------------*/
 
@@ -1048,71 +1159,6 @@ $(document).ready(function () {
     clearSearchInput();
     updateFilterButtonState();
 
-  });
-
-  $("#editPersonnelModal").on("show.bs.modal", function (e) {
-    
-    $.ajax({
-      url:
-        "libs/php/getPersonnelByID.php",
-      type: "POST",
-      dataType: "json",
-      data: {
-        id: $(e.relatedTarget).attr("data-id") 
-      },
-      success: function (result) {
-        var resultCode = result.status.code;
-
-        if (resultCode == 200) {
-          
-          // Update the hidden input with the employee id so that
-          // it can be referenced when the form is submitted
-
-          $("#editPersonnelEmployeeID").val(result.data.personnel[0].id);
-
-          $("#editPersonnelFirstName").val(result.data.personnel[0].firstName);
-          $("#editPersonnelLastName").val(result.data.personnel[0].lastName);
-          $("#editPersonnelJobTitle").val(result.data.personnel[0].jobTitle);
-          $("#editPersonnelEmailAddress").val(result.data.personnel[0].email);
-
-          $("#editPersonnelDepartment").html("");
-
-          $.each(result.data.department, function () {
-            $("#editPersonnelDepartment").append(
-              $("<option>", {
-                value: this.id,
-                text: this.name
-              })
-            );
-          });
-
-          $("#editPersonnelDepartment").val(result.data.personnel[0].departmentID);
-          
-        } else {
-          $("#editPersonnelModal .modal-title").replaceWith(
-            "Error retrieving data"
-          );
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        $("#editPersonnelModal .modal-title").replaceWith(
-          "Error retrieving data"
-        );
-      }
-    });
-  });
-
-  // Executes when the form button with type="submit" is clicked
-
-  $("#editPersonnelForm").on("submit", function (e) {
-    
-    // Executes when the form button with type="submit" is clicked
-    // stop the default browser behviour
-
-    e.preventDefault();
-
-    // AJAX call to save form data
-    
   });
 
 });
