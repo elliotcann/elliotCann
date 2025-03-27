@@ -36,6 +36,11 @@ $(document).ready(function () {
 
   };
 
+  // <p> Alert Danger Classes
+  const alertDanger = "alert alert-danger";
+  // <p> Alert Warning Classes
+  const alertWarning = "alert alert-warning";
+
   // <td> Classes
   const tdClass = "align-middle text-nowrap d-none d-md-table-cell";
   const btnClass = "btn btn-primary btn-sm me-2 align-right";
@@ -216,9 +221,11 @@ $(document).ready(function () {
       success: function (result) {
 
         if (result.status.code == 200) {
+          const firstName = result.data.personnel[0].firstName;
+          const lastName = result.data.personnel[0].lastName;
 
           $("#deletePersonnelName").html(
-            `Are you sure you want to delete <strong>${result.data.personnel[0].firstName} ${result.data.personnel[0].lastName}</strong> from the database?`
+            `<div class="${alertWarning}">Are you sure you want to delete <strong>${firstName} ${lastName}</strong> from the database?</div>`
           );
           
         } else {
@@ -287,7 +294,7 @@ $(document).ready(function () {
           if (personnelCount > 0) {
             
             $("#deleteDepartmentsName").html(
-              `You are unable to delete <strong>${departmentName}</strong> as <strong>${personnelCount} Personnel</strong> are assigned to this department.`
+              `<div class="${alertWarning}">You are unable to delete <strong>${departmentName}</strong> as <strong>${personnelCount} Personnel</strong> are assigned to this department.</div>`
             );
 
             $("#deleteDepartmentsBtns").hide();
@@ -295,7 +302,7 @@ $(document).ready(function () {
           } else {
 
             $("#deleteDepartmentsName").html(
-              `Are you sure you want to delete <strong>${departmentName}</strong> from the database?`
+              `<div class="${alertDanger}">Are you sure you want to delete <strong>${departmentName}</strong> from the database?</div>`
             );
 
             $("#deleteDepartmentsCancelBtn").hide();
@@ -366,7 +373,7 @@ $(document).ready(function () {
         if (departmentCount > 0) {
 
             $("#deleteLocationsName").html(
-              `You are unable to delete <strong>${locationName}</strong> as <strong>${departmentCount} Departments</strong> are assigned to this location.`
+              `<div class="${alertDanger}">You are unable to delete <strong>${locationName}</strong> as <strong>${departmentCount} Departments</strong> are assigned to this location.</div>`
             );
           
             $("#deleteLocationsBtns").hide();
@@ -374,8 +381,7 @@ $(document).ready(function () {
           } else {
 
             $("#deleteLocationsName").html(
-              `Are you sure you want to delete <strong>${locationName}</strong> from the database?`
-            );
+              `<div class="${alertWarning}">Are you sure you want to delete <strong>${locationName}</strong> from the database?</div>`);
 
             $("#deleteLocationsCancelBtn").hide();
 
@@ -992,7 +998,7 @@ $(document).ready(function () {
         } else if (result.status.code == 409) {
           // Location already exists
           $("#addLocationsError").html(
-            `<div class="alert alert-danger">${result.status.description}</div>`
+            `<div class="alert alert-danger">Location <strong>${name}</strong> already exists in the database.</div>`
           ).show();
         }
       }
@@ -1282,7 +1288,7 @@ $(document).ready(function () {
 
           // Location already exists
           $("#editLocationsError").html(
-            `<div class="alert alert-danger">${result.status.description}</div>`
+            `<div class="${alertDanger}">Location <strong>${location}</strong> ${result.status.description}</div>`
           ).show();
 
         }
@@ -1374,7 +1380,7 @@ $(document).ready(function () {
   });
   
   $("#locationsBtn").click(function () {
-    
+
     // Call function to refresh location table
     getAllLocations();
     clearSearchInput();
