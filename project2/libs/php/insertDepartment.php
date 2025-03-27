@@ -29,10 +29,13 @@
 
     // First check if department already exists in this location
     $checkQuery = $conn->prepare('SELECT COUNT(*) as count FROM department WHERE name = ? AND locationID = ?');
+
     $checkQuery->bind_param("si", $_REQUEST['name'], $_REQUEST['locationID']);
+
     $checkQuery->execute();
     
     $result = $checkQuery->get_result();
+
     $departmentExists = $result->fetch_assoc()['count'] > 0;
     
     if ($departmentExists) {
@@ -49,7 +52,9 @@
 
     // Department doesn't exist, proceed with insert
     $query = $conn->prepare('INSERT INTO department (name, locationID) VALUES(?,?)');
+
     $query->bind_param("si", $_REQUEST['name'], $_REQUEST['locationID']);
+    
     $query->execute();
     
     if (false === $query) {

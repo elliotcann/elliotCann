@@ -115,8 +115,6 @@ $(document).ready(function () {
                 
                 $("<td>", { text: `${this.lastName}, ${this.firstName}`, class: "align-middle text-nowrap" }),
 
-                $("<td>", { text: this.jobTitle, class: tdClass }),
-
                 $("<td>", { text: this.department, class: tdClass }),
 
                 $("<td>", { text: this.location, class: tdClass }),
@@ -486,8 +484,6 @@ $(document).ready(function () {
                     
                     $("<td>", { text: `${this.lastName}, ${this.firstName}`, class: "align-middle text-nowrap" }),
 
-                    $("<td>", { text: this.jobTitle, class: tdClass }),
-
                     $("<td>", { text: this.departmentName, class: tdClass }),
 
                     $("<td>", { text: this.locationName, class: tdClass }),
@@ -712,8 +708,6 @@ $(document).ready(function () {
                   
                   $("<td>", { text: `${this.lastName}, ${this.firstName}`, class: "align-middle text-nowrap" }),
 
-                  $("<td>", { text: this.jobTitle, class: tdClass }),
-
                   $("<td>", { text: this.department, class: tdClass }),
 
                   $("<td>", { text: this.location, class: tdClass }),
@@ -761,6 +755,95 @@ $(document).ready(function () {
   /*----------------------------------------*/
 
   // Add personnel modal
+  $("#addPersonnelModal").on("show.bs.modal", function () {
+
+    $("#addPersonnelFirstName").val("");
+    $("#addPersonnelLastName").val("");
+    $("#addPersonnelJobTitle").val("");
+    $("#addPersonnelEmailAddress").val("");
+    $("#addPersonnelDepartment").html("");
+
+    // Hide error message if it exists
+    if ($("#addPersonnelError").length > 0) {
+        $("#addPersonnelError").hide().html("");
+    }
+
+    $.ajax({
+      url: "libs/php/getAllDepartments.php",
+      type: "GET",
+      dataType: "json",
+      success: function (result) {
+        
+        if (result.status.code == 200) {
+
+          $.each(result.data, function () {
+            $("#addPersonnelDepartment").append(
+              $("<option>", {
+                value: this.id,
+                text: this.name
+              })
+            );
+          });
+
+        }
+      },
+
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+
+    })
+
+  });
+
+  // submit add personnel form
+  $("#addPersonnelForm").on("submit", function (e) {
+    
+    e.preventDefault();
+
+    const firstName = $("#addPersonnelFirstName").val();
+    const lastName = $("#addPersonnelLastName").val();
+    const jobTitle = $("#addPersonnelJobTitle").val();
+    const email = $("#addPersonnelEmailAddress").val();
+    const department = $("#addPersonnelDepartment").val();
+    
+    // Add error message div if it doesn't exist
+    if ($("#addPersonnelError").length === 0) {
+        $(this).prepend('<div id="addPersonnelError" class="mb-3" style="display: none;"></div>');
+    }
+    
+    $.ajax({
+      url: "libs/php/insertPersonnel.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        firstName: firstName,
+        lastName: lastName,
+        jobTitle: jobTitle,
+        email: email,
+        departmentID: department
+      },
+      success: function (result) {
+        if (result.status.code == 200) {
+          getAllPersonnel();
+          $("#addPersonnelModal").modal("hide");
+        } else if (result.status.code == 409) {
+          // Personnel already exists
+          $("#addPersonnelError").html(
+            `<div class="alert alert-danger">${result.status.description}</div>`
+          ).show();
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+    });
+  }
+  );
 
   // Add department modal
   $("#addDepartmentsModal").on("show.bs.modal", function () {
