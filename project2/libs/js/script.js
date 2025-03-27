@@ -672,6 +672,7 @@ $(document).ready(function () {
 
   });
 
+  // Filter personnel form
   $("#filterPersonnelForm").on("submit", function (e) {
     
     e.preventDefault();
@@ -976,7 +977,7 @@ $(document).ready(function () {
   /* EDIT FUNCTIONS */
   /*----------------------------------------*/
 
-  // Edit personnel modal
+  // Edit Personnel Modal Show
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
 
     // Hide error message if it exists
@@ -1083,7 +1084,7 @@ $(document).ready(function () {
     
   });
 
-  // Edit department modal
+  // Edit Department Modal Show
   $("#editDepartmentsModal").on("show.bs.modal", function (e) {
     
     // Hide error message if it exists
@@ -1184,7 +1185,91 @@ $(document).ready(function () {
     });
   });
   
+  // Edit Location Modal Show
+  $("#editLocationsModal").on("show.bs.modal", function (e) {
+    
+    // Hide error message if it exists
+    if ($("#editLocationsError").length > 0) {
+      $("#editLocationsError").hide().html("");
+    }
 
+    const locationId = $(e.relatedTarget).attr("data-id");
+    $("#editLocationsID").val(locationId);
+
+    $.ajax({
+      url: "libs/php/getLocationByID.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: locationId
+      },
+      success: function (result) {
+        if (result.status.code == 200) {
+
+          $("#editLocationsName").val(result.data[0].name);
+
+        } else {
+          $("#editLocationsModal .modal-title").replaceWith(
+            "Error retrieving data"
+          );
+        }
+
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        $("#editLocationsModal .modal-title").replaceWith(
+          "Error retrieving data"
+        );
+      }
+
+    });
+  }
+  );
+
+  // Edit Location Modal Submit
+  $("#editLocationsForm").on("submit", function (e) {
+
+    e.preventDefault();
+
+    const location = $("#editLocationsName").val();
+
+    if ($("#editLocationsError").length === 0) {
+      $(this).prepend('<div id="editLocationsError" class="mb-3" style="display: none;"></div>');
+    }
+
+    $.ajax({
+      url: "libs/php/updateLocations.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: $("#editLocationsID").val(),
+        name: location
+      },
+      success: function (result) {
+
+        if (result.status.code == 200) {
+
+          getAllLocations();
+          $("#editLocationsModal").modal("hide");
+
+        } else if (result.status.code == 409) {
+
+          // Location already exists
+          $("#editLocationsError").html(
+            `<div class="alert alert-danger">${result.status.description}</div>`
+          ).show();
+
+        }
+
+      },
+
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+
+    });
+  });
 
   /*----------------------------------------*/
   /* BUTTON FUNCTIONS */

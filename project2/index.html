@@ -457,7 +457,6 @@
 
 </div>
 
-
 <!-- Delete Department Modal -->
 <div id="deleteDepartmentsModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
   
@@ -531,6 +530,46 @@
 </div>
 
 <!-- Edit Location Modal -->
+<div id="editLocationsModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  
+  <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+       
+    <div class="modal-content shadow"> 
+      
+      <div class="modal-header bg-primary bg-gradient text-white">
+        <h5 class="modal-title">Edit Location</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+          
+        <form id="editLocationsForm">
+
+          <div>
+            <input type="hidden" id="editLocationsID" name="editLocationsID">
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="editLocationsName" placeholder="Location name" required>
+            <label for="editLocationsName">Location</label>
+          </div>
+
+        </form>
+      
+      </div>
+    
+      <div class="modal-footer">
+        <button type="submit" form="editLocationsForm" class="btn btn-outline-primary btn-sm myBtn">SAVE</button>
+        <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
+      </div>
+    
+    </div>
+  
+  </div>
+
+</div>
+
+
 
 <!-- Delete Location Modal -->
 <div id="deleteLocationsModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
