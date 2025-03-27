@@ -41,7 +41,7 @@ $personnelExists = $result->fetch_assoc()['count'] > 0;
 if ($personnelExists) {
     $output['status']['code'] = "409"; // Conflict status code
     $output['status']['name'] = "failure";
-    $output['status']['description'] = "Personnel with this email already exists";
+    $output['status']['description'] = "already exists in the database.";
     $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output['data'] = [];
     

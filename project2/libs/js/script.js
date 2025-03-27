@@ -225,7 +225,7 @@ $(document).ready(function () {
           const lastName = result.data.personnel[0].lastName;
 
           $("#deletePersonnelName").html(
-            `<div class="${alertWarning}">Are you sure you want to delete <strong>${firstName} ${lastName}</strong> from the database?</div>`
+            `<div class="${alertWarning}">Are you sure you want to delete <strong>${firstName} ${lastName}</strong> from personnel?</div>`
           );
           
         } else {
@@ -294,7 +294,7 @@ $(document).ready(function () {
           if (personnelCount > 0) {
             
             $("#deleteDepartmentsName").html(
-              `<div class="${alertWarning}">You are unable to delete <strong>${departmentName}</strong> as <strong>${personnelCount} Personnel</strong> are assigned to this department.</div>`
+              `<div class="${alertDanger}">You are unable to delete <strong>${departmentName}</strong> as <strong>${personnelCount} Personnel</strong> are assigned to this department.</div>`
             );
 
             $("#deleteDepartmentsBtns").hide();
@@ -302,7 +302,7 @@ $(document).ready(function () {
           } else {
 
             $("#deleteDepartmentsName").html(
-              `<div class="${alertDanger}">Are you sure you want to delete <strong>${departmentName}</strong> from the database?</div>`
+              `<div class="${alertWarning}">Are you sure you want to delete the <strong>${departmentName}</strong> department?</div>`
             );
 
             $("#deleteDepartmentsCancelBtn").hide();
@@ -373,7 +373,7 @@ $(document).ready(function () {
         if (departmentCount > 0) {
 
             $("#deleteLocationsName").html(
-              `<div class="${alertDanger}">You are unable to delete <strong>${locationName}</strong> as <strong>${departmentCount} Departments</strong> are assigned to this location.</div>`
+              `<div class="${alertDanger}">You are unable to delete <strong>${locationName}</strong> as <strong>${departmentCount} Departments </strong> are assigned to this location.</div>`
             );
           
             $("#deleteLocationsBtns").hide();
@@ -859,22 +859,30 @@ $(document).ready(function () {
         email: email,
         departmentID: department
       },
+
       success: function (result) {
+
         if (result.status.code == 200) {
+
           getAllPersonnel();
           $("#addPersonnelModal").modal("hide");
+
         } else if (result.status.code == 409) {
-          // Personnel already exists
+
+          // Personnel with email already exists
           $("#addPersonnelError").html(
-            `<div class="alert alert-danger">${result.status.description}</div>`
+            `<div class="${alertDanger}">Email <strong>${email}</strong> is already assigned to another personnel.</div>`
           ).show();
+
         }
       },
+
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR);
         console.log(textStatus);
         console.log(errorThrown);
       }
+
     });
   }
   );
@@ -927,6 +935,7 @@ $(document).ready(function () {
 
     const name = $("#addDepartmentsName").val();
     const location = $("#addDepartmentsLocation").val();
+    const locationName = $("#addDepartmentsLocation option:selected").text();
     
     // Add error message div if it doesn't exist
     if ($("#addDepartmentsError").length === 0) {
@@ -948,7 +957,7 @@ $(document).ready(function () {
         } else if (result.status.code == 409) {
           // Department already exists
           $("#addDepartmentsError").html(
-            `<div class="alert alert-danger">${result.status.description}</div>`
+            `<div class="${alertDanger}">There is already a <strong>${name}</strong> department in <strong>${locationName}</strong>.</div>`
           ).show();
         }
       },
@@ -998,7 +1007,7 @@ $(document).ready(function () {
         } else if (result.status.code == 409) {
           // Location already exists
           $("#addLocationsError").html(
-            `<div class="alert alert-danger">Location <strong>${name}</strong> already exists in the database.</div>`
+            `<div class="${alertDanger}"><strong>${name}</strong> is already an existing location.</div>`
           ).show();
         }
       }
@@ -1097,22 +1106,30 @@ $(document).ready(function () {
         email: email,
         departmentID: department
       },
+
       success: function (result) {
+
         if (result.status.code == 200) {
+
           getAllPersonnel();
           $("#editPersonnelModal").modal("hide");
+
         } else if (result.status.code == 409) {
+
           // Personnel already exists
           $("#editPersonnelError").html(
-            `<div class="alert alert-danger">${result.status.description}</div>`
+            `<div class="${alertDanger}">Email <strong>${email}</strong> is already assigned to another personnel.</div>`
           ).show();
+
         }
       },
+
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR);
         console.log(textStatus);
         console.log(errorThrown);
       }
+
     });
     
   });
@@ -1202,7 +1219,7 @@ $(document).ready(function () {
 
           // Department already exists
           $("#editDepartmentsError").html(
-            `<div class="alert alert-danger">${result.status.description}<p>in ${locationName}.</p></div>`
+            `<div class="${alertDanger}"><strong>${department}</strong> department already exists in <strong>${locationName}</strong>.</div>`
           ).show();
 
         }
@@ -1288,7 +1305,7 @@ $(document).ready(function () {
 
           // Location already exists
           $("#editLocationsError").html(
-            `<div class="${alertDanger}">Location <strong>${location}</strong> ${result.status.description}</div>`
+            `<div class="${alertDanger}"><strong>${location}</strong> is already and existing location.</div>`
           ).show();
 
         }
