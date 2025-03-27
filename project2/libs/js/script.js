@@ -263,7 +263,7 @@ $(document).ready(function () {
       success: function (result) {
         
         if (result.status.code == 200) {
-          const personnelName = $("#deletePersonnelName").text();
+          const personnelName = $("#deletePersonnelName strong").first().text();
 
           getAllPersonnel();
           $("#deletePersonnelModal").modal("hide");
@@ -883,9 +883,12 @@ $(document).ready(function () {
       success: function (result) {
 
         if (result.status.code == 200) {
+          const personnelName = `${firstName} ${lastName}`;
 
           getAllPersonnel();
           $("#addPersonnelModal").modal("hide");
+
+          showSuccessToast(`${personnelName} has been successfully added.`);
 
         } else if (result.status.code == 409) {
 
@@ -972,8 +975,12 @@ $(document).ready(function () {
       },
       success: function (result) {
         if (result.status.code == 200) {
+
           getAllDepartments();
           $("#addDepartmentsModal").modal("hide");
+
+          showSuccessToast(`${name} has been successfully added.`);
+
         } else if (result.status.code == 409) {
           // Department already exists
           $("#addDepartmentsError").html(
@@ -1022,8 +1029,11 @@ $(document).ready(function () {
       },
       success: function (result) {
         if (result.status.code == 200) {
+
           getAllLocations();
           $("#addLocationsModal").modal("hide");
+
+          showSuccessToast(`${name} has been successfully added.`);
         } else if (result.status.code == 409) {
           // Location already exists
           $("#addLocationsError").html(
@@ -1130,9 +1140,12 @@ $(document).ready(function () {
       success: function (result) {
 
         if (result.status.code == 200) {
+          const personnelName = `${firstName} ${lastName}`;
 
           getAllPersonnel();
           $("#editPersonnelModal").modal("hide");
+
+          showSuccessToast(`${personnelName} has been successfully edited.`);
 
         } else if (result.status.code == 409) {
 
@@ -1235,6 +1248,8 @@ $(document).ready(function () {
           getAllDepartments();
           $("#editDepartmentsModal").modal("hide");
 
+          showSuccessToast(`${department} has been successfully edited.`);
+
         } else if (result.status.code == 409) {
 
           // Department already exists
@@ -1320,6 +1335,8 @@ $(document).ready(function () {
 
           getAllLocations();
           $("#editLocationsModal").modal("hide");
+
+          showSuccessToast(`${location} has been successfully edited.`);
 
         } else if (result.status.code == 409) {
 
