@@ -28,7 +28,7 @@
 
     $query = $conn->prepare('SELECT `l`.`id`, `l`.`name` FROM `location` `l` WHERE `l`.`name` LIKE ? ORDER BY `l`.`name`');
 
-    $likeText = "%" . $_GET['txt'] . "%";
+    $likeText = "%" . $_POST['txt'] . "%";
     
     $query->bind_param("s", $likeText);
 

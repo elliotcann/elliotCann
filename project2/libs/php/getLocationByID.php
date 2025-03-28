@@ -33,7 +33,7 @@
         GROUP BY l.id, l.name
     ');
 
-    $query->bind_param("i", $_GET['id']);
+    $query->bind_param("i", $_POST['id']);
 
     $query->execute();
 

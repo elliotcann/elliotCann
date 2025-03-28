@@ -41,15 +41,15 @@
     $params = [];
 
     // Department filter
-    if(isset($_GET['department']) && $_GET['department'] != "") {
+    if(isset($_POST['department']) && $_POST['department'] != "") {
         $sql .= " AND p.departmentID = ?";
-        $params[] = $_GET['department'];
+        $params[] = $_POST['department'];
     }
 
     // Location filter
-    if(isset($_GET['location']) && $_GET['location'] != "") {
+    if(isset($_POST['location']) && $_POST['location'] != "") {
         $sql .= " AND d.locationID = ?";
-        $params[] = $_GET['location'];
+        $params[] = $_POST['location'];
     }
 
     $sql .= " ORDER BY p.lastName, p.firstName";

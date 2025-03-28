@@ -28,7 +28,7 @@
 
     $query = $conn->prepare('SELECT `d`.`id`, `d`.`name`, `l`.`id` as `locationID`, `l`.`name` AS `locationName` FROM `department` `d` LEFT JOIN `location` `l` ON (`l`.`id` = `d`.`locationID`) WHERE `d`.`name` LIKE ? OR `l`.`name` LIKE ? ORDER BY `d`.`name`, `l`.`name`');
 
-    $likeText = "%" . $_GET['txt'] . "%";
+    $likeText = "%" . $_POST['txt'] . "%";
 
     $query->bind_param("ss", $likeText, $likeText);
 

@@ -34,7 +34,7 @@
 		GROUP BY d.id, d.name, d.locationID, l.name
 	');
 
-	$query->bind_param("i", $_GET['id']);
+	$query->bind_param("i", $_POST['id']);
 
 	$query->execute();
 	
