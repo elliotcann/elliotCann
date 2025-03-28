@@ -1,7 +1,4 @@
 <?php
-    
-    ini_set('display_errors', 'On');
-    error_reporting(E_ALL);
 
     $executionStartTime = microtime(true);
 
@@ -31,7 +28,7 @@
 
     $query = $conn->prepare('SELECT `l`.`id`, `l`.`name` FROM `location` `l` WHERE `l`.`name` LIKE ? ORDER BY `l`.`name`');
 
-    $likeText = "%" . $_REQUEST['txt'] . "%";
+    $likeText = "%" . $_GET['txt'] . "%";
     
     $query->bind_param("s", $likeText);
 

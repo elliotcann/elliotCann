@@ -1,8 +1,5 @@
 <?php
 
-    ini_set('display_errors', 'On');
-    error_reporting(E_ALL);
-
     $executionStartTime = microtime(true);
 
     include("config.php");
@@ -31,7 +28,7 @@
 
     $query = $conn->prepare('SELECT `d`.`id`, `d`.`name`, `l`.`id` as `locationID`, `l`.`name` AS `locationName` FROM `department` `d` LEFT JOIN `location` `l` ON (`l`.`id` = `d`.`locationID`) WHERE `d`.`name` LIKE ? OR `l`.`name` LIKE ? ORDER BY `d`.`name`, `l`.`name`');
 
-    $likeText = "%" . $_REQUEST['txt'] . "%";
+    $likeText = "%" . $_GET['txt'] . "%";
 
     $query->bind_param("ss", $likeText, $likeText);
 
