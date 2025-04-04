@@ -491,7 +491,18 @@
       </div>
 
       <div class="modal-body">
-        <div id="deleteDepartmentsName"></div>
+        <div id="deleteDepartmentsName">
+          <!-- Error message (shown when department has personnel) -->
+          <div id="departmentErrorMessage" class="alert alert-danger" style="display:none;">
+            You are unable to delete <strong id="departmentNameError">Department Name</strong> as 
+            <strong id="personnelCount">0 Personnel</strong> are assigned to this department.
+          </div>
+          
+          <!-- Confirmation message (shown when department has no personnel) -->
+          <div id="departmentConfirmMessage" class="alert alert-warning" style="display:none;">
+            Are you sure you want to delete the <strong id="departmentNameConfirm">Department Name</strong> department?
+          </div>
+        </div>
         <form id="deleteDepartmentsForm">
           <input type="hidden" id="deleteDepartmentsID" name="id">
         </form>
