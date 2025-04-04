@@ -615,7 +615,18 @@
       </div>
 
       <div class="modal-body">
-        <div id="deleteLocationsName"></div>
+        <div id="deleteLocationsName">
+          <!-- Error message (shown when location has departments) -->
+          <div id="locationErrorMessage" class="alert alert-danger" style="display:none;">
+            You are unable to delete <strong id="locationNameError">Location Name</strong> as 
+            <strong id="departmentCount">0 Departments</strong> are assigned to this location.
+          </div>
+          
+          <!-- Confirmation message (shown when location has no departments) -->
+          <div id="locationConfirmMessage" class="alert alert-warning" style="display:none;">
+            Are you sure you want to delete the <strong id="locationNameConfirm">Location Name</strong> location?
+          </div>
+        </div>
         <form id="deleteLocationsForm">
           <input type="hidden" id="deleteLocationsID" name="id">
         </form>

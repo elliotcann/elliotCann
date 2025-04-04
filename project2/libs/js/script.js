@@ -382,7 +382,7 @@ $(document).ready(function () {
         // If the result code is 200, show success message and refresh the department table
         if (result.status.code == 200) {
 
-          const departmentName = $("#deleteDepartmentsName strong").first().text();
+          const departmentName = $("#departmentConfirmMessage strong").text();
           getAllDepartments();
           $("#deleteDepartmentsModal").modal("hide");
           showSuccessToast(`${departmentName} has been successfully deleted.`);
@@ -396,8 +396,10 @@ $(document).ready(function () {
   $("#deleteLocationsModal").on("show.bs.modal", function (e) {  
     // Get the location ID from the button that triggered the modal 
     const locationId = $(e.relatedTarget).attr("data-id");
+    
     // Set the hidden input value
     $("#deleteLocationsID").val(locationId);
+    
     // Get location name and department count   
     $.ajax({
       url: "libs/php/getLocationByID.php",
@@ -406,72 +408,31 @@ $(document).ready(function () {
       data: {
         id: locationId
       },
-
       success: function (result) {
         // If the result code is 200, get the location name and department count
         if (result.status.code == 200) {
           const locationName = result.data[0].name;
           const departmentCount = parseInt(result.data[0].departmentCount);
+          
           // Show/hide buttons
           $("#deleteLocationsBtns").show();
           $("#deleteLocationsCancelBtn").show();
 
-          // Create document fragment to improve performance
-          const frag = document.createDocumentFragment();
-
-          // Create message container div
-          const messageDiv = document.createElement("div");
-
           if (departmentCount > 0) {
-            // If department count is greater than 0, show an error message
-            messageDiv.className = alertDanger;
-            
-            // First part of message
-            messageDiv.appendChild(document.createTextNode("You are unable to delete "));
-            
-            // Location name in bold
-            const nameStrong = document.createElement("strong");
-            nameStrong.textContent = locationName;
-            messageDiv.appendChild(nameStrong);
-            
-            // Middle part of message
-            messageDiv.appendChild(document.createTextNode(" as "));
-            
-            // Department count in bold
-            const countStrong = document.createElement("strong");
-            countStrong.textContent = `${departmentCount} Departments`;
-            messageDiv.appendChild(countStrong);
-            
-            // Last part of message
-            messageDiv.appendChild(document.createTextNode(" are assigned to this location."));
+            // Can't delete - show error message
+            $("#locationNameError").text(locationName);
+            $("#departmentCount").text(`${departmentCount} Departments`);
+            $("#locationErrorMessage").show();
+            $("#locationConfirmMessage").hide();
             
             // Hide delete button
             $("#deleteLocationsBtns").hide();
-
           } else {
-            // If department count is 0, show the delete confirmation message
-            messageDiv.className = alertWarning;
-            
-            // First part of message
-            messageDiv.appendChild(document.createTextNode("Are you sure you want to delete the "));
-            
-            // Location name in bold
-            const nameStrong = document.createElement("strong");
-            nameStrong.textContent = locationName;
-            messageDiv.appendChild(nameStrong);
-            
-            // Last part of message
-            messageDiv.appendChild(document.createTextNode(" location?"));
-
+            // Can delete - show confirmation message
+            $("#locationNameConfirm").text(locationName);
+            $("#locationConfirmMessage").show();
+            $("#locationErrorMessage").hide();
           }
-          
-          // Add div to fragment
-          frag.appendChild(messageDiv);
-          
-          // Clear and add fragment to container
-          const nameContainer = document.getElementById("deleteLocationsName");
-          nameContainer.innerHTML = "";
-          nameContainer.appendChild(frag);
         }
       }
     });
@@ -491,16 +452,13 @@ $(document).ready(function () {
       data: {
         id: locationId
       },
-
       success: function (result) {    
-
         if (result.status.code == 200) {
-          // If the result code is 200, show success message and refresh the location table
-          const locationName = $("#deleteLocationsName strong").first().text();
+          // Get the location name from the strong element in the visible message div
+          const locationName = $("#locationConfirmMessage strong").text();
           getAllLocations();
           $("#deleteLocationsModal").modal("hide");
           showSuccessToast(`${locationName} has been successfully deleted.`);
-
         }
       }
     });
