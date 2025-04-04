@@ -277,32 +277,8 @@ $(document).ready(function () {
           const firstName = result.data.personnel[0].firstName;
           const lastName = result.data.personnel[0].lastName;
          
-          // Create document fragment to improve performance
-          const frag = document.createDocumentFragment();
-
-          // Create warning container
-          const warningDiv = document.createElement("div");
-          warningDiv.className = alertWarning;
-
-          // Create text for first part of message
-          warningDiv.appendChild(document.createTextNode("Are you sure you want to delete "));
-
-          // Create strong element for personnel name
-          const nameStrong = document.createElement("strong");
-          nameStrong.textContent = `${firstName} ${lastName}`;
-          warningDiv.appendChild(nameStrong);
-
-          // Create text for second part of message
-          warningDiv.appendChild(document.createTextNode(" from personnel?"));
-
-          // Add div to fragment
-          frag.appendChild(warningDiv);
-          
-          // Clear and add fragment to container
-          const nameContainer = document.getElementById("deletePersonnelName");
-          nameContainer.innerHTML = "";
-          nameContainer.appendChild(frag);
-
+          // Simply update the name in the existing HTML
+          document.getElementById("personnelFullName").textContent = `${firstName} ${lastName}`;
         }
       }
     });
@@ -329,7 +305,7 @@ $(document).ready(function () {
         if (result.status.code == 200) {
 
           // Get the personnel name from the modal
-          const personnelName = $("#deletePersonnelName strong").first().text();
+          const personnelName = $("#personnelFullName").text();
           // Show success message and refresh the personnel table
           getAllPersonnel();
           $("#deletePersonnelModal").modal("hide");
