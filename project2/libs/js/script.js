@@ -707,19 +707,7 @@ $(document).ready(function () {
 
   // Add Personnel Modal Show
   $("#addPersonnelModal").on("show.bs.modal", function () {
-    // Clear the form fields
-    $("#addPersonnelFirstName").val("");
-    $("#addPersonnelLastName").val("");
-    $("#addPersonnelJobTitle").val("");
-    $("#addPersonnelEmailAddress").val("");
-    $("#addPersonnelDepartment").html("");
 
-    // Hide error message if it exists
-    if ($("#addPersonnelError").length > 0) {
-
-        $("#addPersonnelError").hide().html("");
-
-    }
     // Get all departments
     $.ajax({
       url: "libs/php/getAllDepartments.php",
@@ -795,17 +783,17 @@ $(document).ready(function () {
     });
   });
 
+  // Add Personnel Modal Hide
+  $("#addPersonnelModal").on("hidden.bs.modal", function () {
+    // Reset the form
+    $(this).find("form")[0].reset();
+    // Clear any error messages
+    $(this).find(".alert").hide().html("");
+  });
+
   // Add Department Modal Show
   $("#addDepartmentsModal").on("show.bs.modal", function () {
-    // Clear the form fields
-    $("#addDepartmentsName").val("");
-    $("#addDepartmentsLocation").html("");
 
-    // Hide error message if it exists
-    if ($("#addDepartmentsError").length > 0) {
-
-        $("#addDepartmentsError").hide().html("");
-    }
     // Get all locations
     $.ajax({
       url: "libs/php/getAllLocations.php",
@@ -875,15 +863,12 @@ $(document).ready(function () {
     });
   });
 
-  // Add Location Modal Show
-  $("#addLocationsModal").on("show.bs.modal", function () {
-    // Clear the form fields
-    $("#addLocationsName").val("");
-    // Hide error message if it exists
-    if ($("#addLocationsError").length > 0) {
-
-        $("#addLocationsError").hide().html("");
-    }
+  // Add Department Modal Hide
+  $("#addDepartmentsModal").on("hidden.bs.modal", function () {
+    // Reset the form
+    $(this).find("form")[0].reset();
+    // Clear any error messages
+    $(this).find(".alert").hide().html("");
 
   });
 
@@ -928,18 +913,22 @@ $(document).ready(function () {
     });
   });
 
+  // Add Location Modal Hide
+  $("#addLocationsModal").on("hidden.bs.modal", function () {
+    // Reset the form
+    $(this).find("form")[0].reset();
+    // Clear any error messages
+    $(this).find(".alert").hide().html("");
+
+  });
+
   /*----------------------------------------*/
   /* EDIT FUNCTIONS */
   /*----------------------------------------*/
 
   // Edit Personnel Modal Show
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
-    // Hide error message if it exists
-    if ($("#editPersonnelError").length > 0) {
 
-      $("#editPersonnelError").hide().html("");
-
-    }
     // AJAX call to get personnel data by ID
     $.ajax({
       url:
@@ -1041,15 +1030,18 @@ $(document).ready(function () {
     });
   });
 
+  // Edit Personnel Modal Hide
+  $("#editPersonnelModal").on("hidden.bs.modal", function () {
+    // Reset the form
+    $(this).find("form")[0].reset();
+    // Clear any error messages
+    $(this).find(".alert").hide().html("");
+
+  });
+
   // Edit Department Modal Show
   $("#editDepartmentsModal").on("show.bs.modal", function (e) {
     
-    // Hide error message if it exists
-    if ($("#editDepartmentsError").length > 0) {
-
-      $("#editDepartmentsError").hide().html("");
-
-    }
     // Get the department ID from the button that triggered the modal
     const departmentId = $(e.relatedTarget).attr("data-id");
     $("#editDepartmentsID").val(departmentId);
@@ -1140,16 +1132,19 @@ $(document).ready(function () {
 
     });
   });
+
+  // Edit Department Modal Hide
+  $("#editDepartmentsModal").on("hidden.bs.modal", function () {
+    // Reset the form
+    $(this).find("form")[0].reset();
+    // Clear any error messages
+    $(this).find(".alert").hide().html("");
+
+  });
   
   // Edit Location Modal Show
   $("#editLocationsModal").on("show.bs.modal", function (e) {
     
-    // Hide error message if it exists
-    if ($("#editLocationsError").length > 0) {
-
-      $("#editLocationsError").hide().html("");
-
-    }
     // Get the location ID from the button that triggered the modal
     const locationId = $(e.relatedTarget).attr("data-id");
     $("#editLocationsID").val(locationId);
@@ -1223,6 +1218,15 @@ $(document).ready(function () {
       }
 
     });
+  });
+
+  // Edit Location Modal Hide
+  $("#editLocationsModal").on("hidden.bs.modal", function () {
+    // Reset the form
+    $(this).find("form")[0].reset();
+    // Clear any error messages
+    $(this).find(".alert").hide().html("");
+
   });
 
   /*----------------------------------------*/
