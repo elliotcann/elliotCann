@@ -259,14 +259,18 @@ $(document).ready(function () {
   // Delete Department Modal Show
   $("#deleteDepartmentsModal").on("show.bs.modal", function (e) {
     // Get the department ID from the button that triggered the modal
-    currentDepartmentId = $(e.relatedTarget).attr("data-id");
+    const departmentId = $(e.relatedTarget).attr("data-id");
+
+    // Set the hidden input value
+    $("#deleteDepartmentsID").val(departmentId);
+
     // Get department name and personnel count
     $.ajax({
       url: "libs/php/getDepartmentByID.php",
       type: "POST",
       dataType: "json",
       data: {
-        id: currentDepartmentId
+        id: departmentId
       },
 
       success: function (result) {
@@ -277,6 +281,7 @@ $(document).ready(function () {
           const personnelCount = parseInt(result.data.department[0].personnelCount);
           $("#deleteDepartmentsBtns").show();
           $("#deleteDepartmentsCancelBtn").show();
+
           // Show the delete confirmation message
           if (personnelCount > 0) {    
             // If personnel count is greater than 0, show an error message    
@@ -290,7 +295,6 @@ $(document).ready(function () {
             $("#deleteDepartmentsName").html(
               `<div class="${alertWarning}">Are you sure you want to delete the <strong>${departmentName}</strong> department?</div>`
             );
-            $("#deleteDepartmentsCancelBtn").hide();
 
           }
         }
@@ -299,14 +303,19 @@ $(document).ready(function () {
   });
 
   // Delete Department Form Submit
-  $("#deleteDepartmentsBtn").on("click", function () {
+  $("#deleteDepartmentsForm").on("submit", function (e) {
+    // Prevent default form submission
+    e.preventDefault();
+
+    const departmentId = $("#deleteDepartmentsID").val();
+
     // AJAX call to delete the department
     $.ajax({
       url: "libs/php/deleteDepartmentByID.php",
       type: "POST",
       dataType: "json",
       data: {
-        id: currentDepartmentId
+        id: departmentId
       },
 
       success: function (result) {

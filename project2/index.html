@@ -487,18 +487,19 @@
       </div>
 
       <div class="modal-body">
-        <p id="deleteDepartmentsName"></p>
+        <div id="deleteDepartmentsName"></div>
+        <form id="deleteDepartmentsForm">
+          <input type="hidden" id="deleteDepartmentsID" name="id">
+        </form>
       </div>
 
-      <!-- YES or NO Buttons -->
-      <div id="deleteDepartmentsBtns" class="modal-footer">
-        <button id="deleteDepartmentsBtn" type="button" class="btn btn-outline-primary btn-sm myBtn">YES</button>
-        <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">NO</button>
-      </div>
-      <!-- CANCEL Button -->
-
-      <div id="deleteDepartmentsCancelBtn" class="modal-footer">
-        <button class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CLOSE</button>
+      <div class="modal-footer">
+        <div id="deleteDepartmentsBtns">
+          <button type="submit" form="deleteDepartmentsForm" class="btn btn-danger btn-sm myBtn">DELETE</button>
+        </div>
+        <div id="deleteDepartmentsCancelBtn">
+          <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CLOSE</button>
+        </div>
       </div>
 
     </div>
