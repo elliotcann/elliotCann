@@ -322,12 +322,15 @@
       </div>
 
       <div class="modal-body">
-        <p id="deletePersonnelName"></p>
+        <div id="deletePersonnelName"></div>
+        <form id="deletePersonnelForm">
+          <input type="hidden" id="deletePersonnelID" name="id">
+        </form>
       </div>
 
       <div class="modal-footer">
-        <button id="deletePersonnelBtn" type="button" class="btn btn-outline-primary btn-sm myBtn">YES</button>
-        <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">NO</button>
+        <button form="deletePersonnelForm" type="submit" class="btn btn-danger btn-sm myBtn">DELETE</button>
+        <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
       </div>
 
     </div>

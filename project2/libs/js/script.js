@@ -189,14 +189,18 @@ $(document).ready(function () {
   // Delete Personnel Modal Show
   $("#deletePersonnelModal").on("show.bs.modal", function (e) {
     // Get the personnel ID from the button that triggered the modal
-    currentPersonnelId = $(e.relatedTarget).attr("data-id");
+    const personnelId = $(e.relatedTarget).attr("data-id");
+
+    // Set the hidden input value 
+    $("#deletePersonnelID").val(personnelId);
+
     // Get personnel name
     $.ajax({
       url: "libs/php/getPersonnelByID.php",
       type: "POST",
       dataType: "json",
       data: {
-        id: currentPersonnelId
+        id: personnelId
       },
 
       success: function (result) {
@@ -222,14 +226,19 @@ $(document).ready(function () {
   });
 
   // Delete Personnel Form Submit
-  $("#deletePersonnelBtn").on("click", function () {
+  $("#deletePersonnelForm").on("submit", function (e) {
+    // Prevent default form submission
+    e.preventDefault();
+    // Get the personnel ID from the hidden input
+    const personnelId = $("#deletePersonnelID").val();
+
     // AJAX call to delete the personnel
     $.ajax({
       url: "libs/php/deletePersonnelByID.php",
       type: "POST",
       dataType: "json",
       data: {
-        id: currentPersonnelId
+        id: personnelId
       },
 
       success: function (result) {   
