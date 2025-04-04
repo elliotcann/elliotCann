@@ -12,10 +12,8 @@ $(document).ready(function () {
     $("#mainContent").fadeIn(500);
   }
 
-  // Call functions to populate tables on load
+  // Call functions to populate personnel tables on load
   getAllPersonnel();
-  getAllDepartments();
-  getAllLocations();
 
   // Clear search input on load
   clearSearchInput();
@@ -95,31 +93,28 @@ $(document).ready(function () {
   /*----------------------------------------*/
 
   // Get All Personnel
-  function getAllPersonnel () {
-    // AJAX call to get all personnel
+  function getAllPersonnel() {
     $.ajax({
       url: "libs/php/getAllPersonnel.php",
       type: "GET",
       dataType: "json",
-
-      success: function (result) {
-
+      success: function(result) {
         if (result.status.code == 200) {
           // Clear the table before appending new data
           clearTable("personnel");
 
-          $.each(result.data, function () {
-            // Append each row to the table body
+          $.each(result.data, function() {
+            // Create TR with data attributes for department and location NAMES
             $("#personnelTableBody").append(
-
-              $("<tr>").append(
-
+              $("<tr>", {
+                "data-department-name": this.department, 
+                "data-location-name": this.location
+              }).append(
                 $("<td>", { text: `${this.lastName}, ${this.firstName}`, class: "align-middle text-nowrap" }),
                 $("<td>", { text: this.department, class: tdClass }),
                 $("<td>", { text: this.location, class: tdClass }),
                 $("<td>", { text: this.email, class: tdClass }),
                 $("<td>", { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Personnel")).append(createButton(this.id, "delete", "Personnel"))
-
               )
             );
           });
@@ -578,9 +573,9 @@ $(document).ready(function () {
 
   // Filter Personnel Modal Show
   $("#filterPersonnelModal").on("show.bs.modal", function () {
-    // Reset filter dropdowns
+    // Show filter button as active
     $("#filterBtn").addClass("active");
-    // Reset filter dropdowns
+    
     $.ajax({
       url: "libs/php/filterDropdown.php",
       type: "GET",
@@ -616,72 +611,76 @@ $(document).ready(function () {
     });
   });
 
-  // Filter Personnel Form Submit
-  $("#filterPersonnelForm").on("submit", function (e) {
-    // Prevent default form submission
-    e.preventDefault();
-    // Get the selected values from the filter dropdowns
-    const department = $("#filterPersonnelDepartment").val();
-    const location = $("#filterPersonnelLocation").val();
-    // Check if filter is active
-    filterActive = (department !== "" && department !== "Any Department") || 
-    (location !== "" && location !== "Any Location");
-    // Update filter button state
-    updateFilterActiveState();
-    // AJAX call to filter personnel
-    $.ajax({
-      url: "libs/php/filterPersonnel.php",
-      type: "POST",
-      dataType: "json",
-      data: {
-        department: department,
-        location: location
-      },
-
-      success: function (result) {
+  // Filter Personnel Department Change
+  $("#filterPersonnelDepartment").on("change", function() {
+    const departmentId = $(this).val();
+    const departmentName = $(this).find("option:selected").text();
+    
+    if (departmentId !== "") {
+      // Clear the other filter
+      $("#filterPersonnelLocation").val("");
+      
+      // Show/hide rows based on department name
+      let foundMatches = false;
+      $("#personnelTableBody tr").each(function() {
+        const rowDeptName = $(this).attr("data-department-name");
         
-        if (result.status.code == 200) {
-          // Clear the table before appending new data
-          clearTable("personnel");
-          // Append each row to the table body
-          if(result.data && result.data.length > 0) {
-
-            $.each(result.data, function () {
-              
-              $("#personnelTableBody").append(
-                $("<tr>").append(                
-                  $("<td>", { text: `${this.lastName}, ${this.firstName}`, class: "align-middle text-nowrap" }),
-                  $("<td>", { text: this.department, class: tdClass }),
-                  $("<td>", { text: this.location, class: tdClass }),
-                  $("<td>", { text: this.email, class: tdClass }),
-                  $("<td>", { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Personnel")).append(createButton(this.id, "delete", "Personnel"))
-                )
-              );
-
-            });
-          // If no data is found, show a message
-          } else {
-
-            $("#personnelTableBody").html(
-              $("<tr>").append(
-                $("<td>", { colspan: 6, text: "No data found", class: "text-center" })
-              )
-            );
-
-          }
+        if (rowDeptName === departmentName) {
+          $(this).show();
+          foundMatches = true;
+        } else {
+          $(this).hide();
         }
-        // Hide the filter modal
-        $("#filterPersonnelModal").modal("hide");
+      });
+      
+      // Set filter state
+      filterActive = true;
+    } else {
+      // If "Any Department" is selected, show all rows
+      $("#personnelTableBody tr").show();
+      filterActive = false;
+    }
+    
+    updateFilterActiveState();
+  });
 
-      }
-    });
+  // Filter Personnel Location Change
+  $("#filterPersonnelLocation").on("change", function() {
+    const locationId = $(this).val();
+    const locationName = $(this).find("option:selected").text();
+    
+    if (locationId !== "") {
+      // Clear the other filter
+      $("#filterPersonnelDepartment").val("");
+      
+      // Show/hide rows based on location name
+      let foundMatches = false;
+      $("#personnelTableBody tr").each(function() {
+        const rowLocName = $(this).attr("data-location-name");
+        
+        if (rowLocName === locationName) {
+          $(this).show();
+          foundMatches = true;
+        } else {
+          $(this).hide();
+        }
+      });
+      
+      // Set filter state
+      filterActive = true;
+    } else {
+      // If "Any Location" is selected, show all rows
+      $("#personnelTableBody tr").show();
+      filterActive = false;
+    }
+    
+    updateFilterActiveState();
   });
 
   // Filter Personnel Modal Hide
   $("#filterPersonnelModal").on("hide.bs.modal", function() {
 
     updateFilterActiveState();
-
   });
 
   /*----------------------------------------*/
@@ -1217,8 +1216,9 @@ $(document).ready(function () {
     resetFilterDropdowns();
     clearSearchInput();
     filterActive = false;
-    updateFilterActiveState(); 
-
+    updateFilterActiveState();
+    
+    $("#personnelTableBody tr").show();
     if ($("#personnelBtn").hasClass("active")) {
 
       // Refresh personnel table
