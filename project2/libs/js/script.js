@@ -120,13 +120,13 @@ $(document).ready(function () {
             // Department cell
             const deptCell = document.createElement("td");
             deptCell.className = tdClass;
-            deptCell.textContent = personnel.departmentName;
+            deptCell.textContent = personnel.department;
             row.appendChild(deptCell);
 
             // Location cell
             const locCell = document.createElement("td");
             locCell.className = tdClass;
-            locCell.textContent = personnel.locationName;
+            locCell.textContent = personnel.location;
             row.appendChild(locCell);
 
             // Email cell
@@ -277,6 +277,8 @@ $(document).ready(function () {
           const firstName = result.data.personnel[0].firstName;
           const lastName = result.data.personnel[0].lastName;
           // Show the delete confirmation message
+
+
           $("#deletePersonnelName").html(
             `<div class="${alertWarning}">Are you sure you want to delete <strong>${firstName} ${lastName}</strong> from personnel?</div>`
           );
