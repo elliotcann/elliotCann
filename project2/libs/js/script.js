@@ -82,11 +82,7 @@ $(document).ready(function () {
     const toast = new bootstrap.Toast($("#successToast")[0]);
     toast.show();
 
-  }
-
-  // Current Personnel ID
-  let currentPersonnelId
-  let currentDepartmentId
+  };
 
   /*----------------------------------------*/
   /* GET ALL DATA */
