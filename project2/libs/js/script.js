@@ -335,14 +335,16 @@ $(document).ready(function () {
   // Delete Location Modal Show
   $("#deleteLocationsModal").on("show.bs.modal", function (e) {  
     // Get the location ID from the button that triggered the modal 
-    currentLocationId = $(e.relatedTarget).attr("data-id");
+    const locationId = $(e.relatedTarget).attr("data-id");
+    // Set the hidden input value
+    $("#deleteLocationsID").val(locationId);
     // Get location name and department count   
     $.ajax({
       url: "libs/php/getLocationByID.php",
       type: "POST",
       dataType: "json",
       data: {
-        id: currentLocationId
+        id: locationId
       },
 
       success: function (result) {
@@ -365,8 +367,6 @@ $(document).ready(function () {
             // If department count is 0, show the delete confirmation message
             $("#deleteLocationsName").html(
               `<div class="${alertWarning}">Are you sure you want to delete <strong>${locationName}</strong> from the database?</div>`);
-            $("#deleteLocationsCancelBtn").hide();
-
           };
         }
       }
@@ -374,14 +374,18 @@ $(document).ready(function () {
   });
 
   // Delete Location Form Submit
-  $("#deleteLocationsBtn").on("click", function () {    
+  $("#deleteLocationsForm").on("submit", function (e) {
+    // Prevent default form submission
+    e.preventDefault();
+    // Get the location ID from the hidden input
+    const locationId = $("#deleteLocationsID").val();
     // AJAX call to delete the location
     $.ajax({
       url: "libs/php/deleteLocationByID.php",
       type: "POST",
       dataType: "json",
       data: {
-        id: currentLocationId
+        id: locationId
       },
 
       success: function (result) {    

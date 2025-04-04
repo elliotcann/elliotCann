@@ -600,18 +600,19 @@
       </div>
 
       <div class="modal-body">
-        <p id="deleteLocationsName"></p>
+        <div id="deleteLocationsName"></div>
+        <form id="deleteLocationsForm">
+          <input type="hidden" id="deleteLocationsID" name="id">
+        </form>
       </div>
 
-      <!-- YES or NO Buttons -->
-      <div id="deleteLocationsBtns" class="modal-footer">
-        <button id="deleteLocationsBtn" type="button" class="btn btn-outline-primary btn-sm myBtn">YES</button>
-        <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">NO</button>
-      </div>
-      <!-- CANCEL Button -->
-
-      <div id="deleteLocationsCancelBtn" class="modal-footer">
-        <button class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CLOSE</button>
+      <div class="modal-footer">
+        <div id="deleteLocationsBtns">
+          <button type="submit" form="deleteLocationsForm" class="btn btn-danger btn-sm myBtn">DELETE</button>
+        </div>
+        <div id="deleteLocationsCancelBtn">
+          <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CLOSE</button>
+        </div>
       </div>
 
     </div>
@@ -620,7 +621,7 @@
 
 </div>
 
-<!-- Toast -->
+<!-- TOAST MESSAGE -->
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
   <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex">
