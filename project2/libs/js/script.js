@@ -53,25 +53,28 @@ $(document).ready(function () {
   const btnClass = "btn btn-primary btn-sm me-2 align-right";
   
   // <button> Classes
-  function createButton(id, buttonType, tableType = "Personnel") {
-
+  function createButtonElement(id, buttonType, tableType = "Personnel") {
+    // Set icon class based on button type
     const iconClass = buttonType === "edit" ? "fa-pencil" : "fa-trash";
     const modalTarget = `#${buttonType}${tableType}Modal`;
 
-    return $("<button>", {
+    // Create button element
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = btnClass;
+    button.setAttribute("data-bs-toggle", "modal");
+    button.setAttribute("data-bs-target", modalTarget);
+    button.setAttribute("data-id", id);
 
-      type: "button",
-      class: btnClass,
-      "data-bs-toggle": "modal",
-      "data-bs-target": modalTarget,
-      "data-id": id
+    // Create icon element
+    const icon = document.createElement("i");
+    icon.className = `fa-solid ${iconClass}`;
 
-    }).append($("<i>", {
+    // Append icon to button
+    button.appendChild(icon);
 
-       class: `fa-solid ${iconClass} fa-fw`
+    return button;
 
-      }
-    ));
   };
 
   // Function to Show Success Toast
@@ -99,21 +102,53 @@ $(document).ready(function () {
           // Clear the table before appending new data
           clearTable("personnel");
 
-          $.each(result.data, function() {
-            // Create TR with data attributes for department and location NAMES
-            $("#personnelTableBody").append(
-              $("<tr>", {
-                "data-department-name": this.department, 
-                "data-location-name": this.location
-              }).append(
-                $("<td>", { text: `${this.lastName}, ${this.firstName}`, class: "align-middle text-nowrap" }),
-                $("<td>", { text: this.department, class: tdClass }),
-                $("<td>", { text: this.location, class: tdClass }),
-                $("<td>", { text: this.email, class: tdClass }),
-                $("<td>", { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Personnel")).append(createButton(this.id, "delete", "Personnel"))
-              )
-            );
+          // Create a document fragment to improve performance
+          const frag = document.createDocumentFragment();
+
+          result.data.forEach(function(personnel) {
+            // Create a row with data attributes for filtering
+            const row = document.createElement("tr");
+            row.setAttribute("data-department-name", personnel.departmentName);
+            row.setAttribute("data-location-name", personnel.locationName);
+
+            // Name cell
+            const nameCell = document.createElement("td");
+            nameCell.className = "align-middle text-nowrap";
+            nameCell.textContent = `${personnel.lastName}, ${personnel.firstName}`;
+            row.appendChild(nameCell);
+
+            // Department cell
+            const deptCell = document.createElement("td");
+            deptCell.className = tdClass;
+            deptCell.textContent = personnel.departmentName;
+            row.appendChild(deptCell);
+
+            // Location cell
+            const locCell = document.createElement("td");
+            locCell.className = tdClass;
+            locCell.textContent = personnel.locationName;
+            row.appendChild(locCell);
+
+            // Email cell
+            const emailCell = document.createElement("td");
+            emailCell.className = tdClass;
+            emailCell.textContent = personnel.email;
+            row.appendChild(emailCell);
+
+            // Action cell
+            const actionCell = document.createElement("td");
+            actionCell.className = "text-end pe-0";
+            actionCell.appendChild(createButtonElement(personnel.id, "edit"));
+            actionCell.appendChild(createButtonElement(personnel.id, "delete"));
+            row.appendChild(actionCell);
+
+            // Add row to fragment
+            frag.appendChild(row);
+
           });
+
+          // Append the fragment to the table body
+          document.getElementById("personnelTableBody").appendChild(frag);
         }
       }
     });
@@ -132,19 +167,39 @@ $(document).ready(function () {
         if (result.status.code == 200) {
           // Clear the table before appending new data
           clearTable("departments");
-          // Append each row to the table body
-          $.each(result.data, function () {
-
-            $("#departmentTableBody").append(
-
-              $("<tr>").append(
-                $("<td>", { text: this.name, class: "align-middle text-nowrap" }),
-                $("<td>", { text: this.location, class: tdClass }),
-                $("<td>" , { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Departments")).append(createButton(this.id, "delete", "Departments"))
-
-              )
-            );
+        
+          // Create a document fragment to improve performance
+          const frag = document.createDocumentFragment();
+          
+          result.data.forEach(function(department) {
+            // Create a row
+            const row = document.createElement("tr");
+            
+            // Department name cell
+            const nameCell = document.createElement("td");
+            nameCell.className = "align-middle text-nowrap";
+            nameCell.textContent = department.name;
+            row.appendChild(nameCell);
+            
+            // Location cell
+            const locationCell = document.createElement("td");
+            locationCell.className = tdClass;
+            locationCell.textContent = department.location;
+            row.appendChild(locationCell);
+            
+            // Action cell
+            const actionCell = document.createElement("td");
+            actionCell.className = "text-end pe-0";
+            actionCell.appendChild(createButtonElement(department.id, "edit", "Departments"));
+            actionCell.appendChild(createButtonElement(department.id, "delete", "Departments"));
+            row.appendChild(actionCell);
+            
+            // Add row to fragment
+            frag.appendChild(row);
           });
+
+          // Append the fragment to the table body
+          document.getElementById("departmentTableBody").appendChild(frag);
         }
       }
     });
@@ -162,17 +217,33 @@ $(document).ready(function () {
         if (result.status.code == 200) {        
           // Clear the table before appending new data
           clearTable("locations");
-          // Append each row to the table body        
-          $.each(result.data, function () {
 
-            $("#locationTableBody").append(
-              $("<tr>").append(               
-                $("<td>", { text: this.name, class: "align-middle text-nowrap" }),
-                $("<td>", { class: "text-end pe-0"}).append(createButton(this.id, "edit", "Locations")).append(createButton(this.id, "delete", "Locations"))
-
-              )
-            );
+          // Create a document fragment to improve performance
+          const frag = document.createDocumentFragment();
+          
+          result.data.forEach(function(location) {
+            // Create a row
+            const row = document.createElement("tr");
+            
+            // Location name cell
+            const nameCell = document.createElement("td");
+            nameCell.className = "align-middle text-nowrap";
+            nameCell.textContent = location.name;
+            row.appendChild(nameCell);
+            
+            // Action cell
+            const actionCell = document.createElement("td");
+            actionCell.className = "text-end pe-0";
+            actionCell.appendChild(createButtonElement(location.id, "edit", "Locations"));
+            actionCell.appendChild(createButtonElement(location.id, "delete", "Locations"));
+            row.appendChild(actionCell);
+            
+            // Add row to fragment
+            frag.appendChild(row);
           });
+
+          // Append the fragment to the table body
+          document.getElementById("locationTableBody").appendChild(frag);
         }
       }
     });
