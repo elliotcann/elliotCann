@@ -1290,6 +1290,7 @@ $(document).ready(function () {
   $("#personnelBtn").click(function () {
 
     // Call function to refresh personnel table
+    $("#searchInp").attr("placeholder", "Search Personnel");
     filterActive = false;
     updateFilterActiveState();
     resetFilterDropdowns();
@@ -1301,6 +1302,7 @@ $(document).ready(function () {
   
   $("#departmentsBtn").click(function () {
 
+    $("#searchInp").attr("placeholder", "Search Departments");
     // Call function to refresh department table
     getAllDepartments();
     clearSearchInput();
@@ -1310,6 +1312,7 @@ $(document).ready(function () {
   
   $("#locationsBtn").click(function () {
 
+    $("#searchInp").attr("placeholder", "Search Locations");
     // Call function to refresh location table
     getAllLocations();
     clearSearchInput();
