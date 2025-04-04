@@ -108,8 +108,8 @@ $(document).ready(function () {
           result.data.forEach(function(personnel) {
             // Create a row with data attributes for filtering
             const row = document.createElement("tr");
-            row.setAttribute("data-department-name", personnel.departmentName);
-            row.setAttribute("data-location-name", personnel.locationName);
+            row.setAttribute("data-department-name", personnel.department);
+            row.setAttribute("data-location-name", personnel.location);
 
             // Name cell
             const nameCell = document.createElement("td");
