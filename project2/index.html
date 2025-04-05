@@ -207,6 +207,12 @@
       </div>
 
       <div class="modal-body">
+
+        <div id="addPersonnelError" class="mb-3" style="display: none;">
+          <div class="alert alert-danger">
+            <span id="errorMessageText">Email <strong id="errorMessageEmail"></strong> is already assigned to another personnel.</span>
+          </div>
+        </div>
           
         <form id="addPersonnelForm">
 
@@ -405,6 +411,12 @@
       </div>
 
       <div class="modal-body">
+
+        <div id="addDepartmentsError" class="mb-3" style="display: none;">
+          <div class="alert alert-danger">
+            There is already a <strong id="errorDepartmentName"></strong> department in <strong id="errorLocationName"></strong>.
+          </div>
+        </div>
           
         <form id="addDepartmentsForm">
 
@@ -537,8 +549,13 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <div class="modal-body
-      ">
+      <div class="modal-body">
+
+        <div id="addLocationsError" class="mb-3" style="display: none;">
+          <div class="alert alert-danger">
+            <strong id="errorLocationName"></strong> is already an existing location.
+          </div>
+        </div>
           
         <form id="addLocationsForm">
 
@@ -624,7 +641,7 @@
           
           <!-- Confirmation message (shown when location has no departments) -->
           <div id="locationConfirmMessage" class="alert alert-warning" style="display:none;">
-            Are you sure you want to delete the <strong id="locationNameConfirm">Location Name</strong> location?
+            Are you sure you want to delete <strong id="locationNameConfirm">Location Name</strong> from locations?
           </div>
         </div>
         <form id="deleteLocationsForm">

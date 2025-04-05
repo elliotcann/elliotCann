@@ -891,12 +891,6 @@ $(document).ready(function () {
     const email = $("#addPersonnelEmailAddress").val();
     const department = $("#addPersonnelDepartment").val();
     
-    // Add error message div if it doesn't exist
-    if ($("#addPersonnelError").length === 0) {
-
-        $(this).prepend('<div id="addPersonnelError" class="mb-3" style="display: none;"></div>');
-    }
-    // AJAX call to save form data
     $.ajax({
       url: "libs/php/insertPersonnel.php",
       type: "POST",
@@ -919,11 +913,8 @@ $(document).ready(function () {
           showSuccessToast(`${personnelName} has been successfully added.`);
 
         } else if (result.status.code == 409) {
-
-          // Personnel with email already exists
-          $("#addPersonnelError").html(
-            `<div class="${alertDanger}">Email <strong>${email}</strong> is already assigned to another personnel.</div>`
-          ).show();
+          // Personnel with the same email already exists
+          $("#errorMessageEmail").text(email);
 
         }
 
@@ -977,11 +968,6 @@ $(document).ready(function () {
     const location = $("#addDepartmentsLocation").val();
     const locationName = $("#addDepartmentsLocation option:selected").text();
     
-    // Add error message div if it doesn't exist
-    if ($("#addDepartmentsError").length === 0) {
-
-        $(this).prepend('<div id="addDepartmentsError" class="mb-3" style="display: none;"></div>');
-    }
     // AJAX call to save form data
     $.ajax({
       url: "libs/php/insertDepartment.php",
@@ -1002,9 +988,9 @@ $(document).ready(function () {
 
         } else if (result.status.code == 409) {
           // Department already exists
-          $("#addDepartmentsError").html(
-            `<div class="${alertDanger}">There is already a <strong>${name}</strong> department in <strong>${locationName}</strong>.</div>`
-          ).show();
+          $("#errorDepartmentName").text(name);
+          $("#errorLocationName").text(locationName);
+          $("#addDepartmentsError").show();
 
         }
       }
@@ -1027,12 +1013,7 @@ $(document).ready(function () {
     e.preventDefault();
     // Get the form values
     const name = $("#addLocationsName").val();
-    // Add error message div if it doesn't exist
-    if ($("#addLocationsError").length === 0) {
 
-        $(this).prepend('<div id="addLocationsError" class="mb-3" style="display: none;"></div>');
-
-    }
     // AJAX call to save form data
     $.ajax({
       url: "libs/php/insertLocation.php",
@@ -1053,9 +1034,9 @@ $(document).ready(function () {
         } else if (result.status.code == 409) {
 
           // Location already exists
-          $("#addLocationsError").html(
-            `<div class="${alertDanger}"><strong>${name}</strong> is already an existing location.</div>`
-          ).show();
+          $("#errorLocationName").text(name);
+          $("#addLocationsError").show();
+          
         }
       }
 
