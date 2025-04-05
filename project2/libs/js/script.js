@@ -1004,6 +1004,13 @@ $(document).ready(function () {
 
   });
 
+  // Add Location Modal Show
+  $("#addLocationsModal").on("show.bs.modal", function () {
+
+    $("#addLocationsError").hide();
+
+  });
+
   // Add Location Form Submit
   $("#addLocationsForm").on("submit", function (e) {
     // Prevent default form submission
@@ -1314,7 +1321,7 @@ $(document).ready(function () {
   $("#editLocationsModal").on("hidden.bs.modal", function () {
     // Reset the form
     $(this).find("form")[0].reset();
-    
+
   });
 
   /*----------------------------------------*/
