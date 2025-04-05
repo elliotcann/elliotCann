@@ -44,13 +44,9 @@ $(document).ready(function () {
 
   };
 
-  // <p> Alert Classes
-  const alertDanger = "alert alert-danger";
-  const alertWarning = "alert alert-warning";
-
   // <td> Classes
   const tdClass = "align-middle text-nowrap d-none d-md-table-cell";
-  const btnClass = "btn btn-primary btn-sm me-2 align-right";
+  const btnClass = "btn btn-primary btn-sm";
   
   // <button> Classes
   function createButtonElement(id, buttonType, tableType = "Personnel") {
@@ -61,7 +57,7 @@ $(document).ready(function () {
     // Create button element
     const button = document.createElement("button");
     button.type = "button";
-    button.className = btnClass;
+    button.className = btnClass + " me-2";
     button.setAttribute("data-bs-toggle", "modal");
     button.setAttribute("data-bs-target", modalTarget);
     button.setAttribute("data-id", id);
