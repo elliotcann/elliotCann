@@ -269,6 +269,12 @@
       </div>
 
       <div class="modal-body">
+
+        <div id="editPersonnelError" class="mb-3" style="display: none;">
+          <div class="alert alert-danger">
+            Email <strong id="editErrorEmail"></strong> is already assigned to another personnel.
+          </div>
+        </div>
           
         <form id="editPersonnelForm">
 
@@ -459,6 +465,12 @@
       </div>
 
       <div class="modal-body">
+
+        <div id="editDepartmentsError" class="mb-3" style="display: none;">
+          <div class="alert alert-danger">
+            <strong id="editErrorDepartmentName"></strong> department already exists in <strong id="editErrorLocationName"></strong>.
+          </div>
+        </div>
           
         <form id="editDepartmentsForm">
 
@@ -592,6 +604,12 @@
       </div>
 
       <div class="modal-body">
+
+        <div id="editLocationsError" class="mb-3" style="display: none;">
+          <div class="alert alert-danger">
+            <strong id="editErrorLocationName"></strong> is already an existing location.
+          </div>
+        </div>
           
         <form id="editLocationsForm">
 

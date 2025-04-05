@@ -1036,7 +1036,7 @@ $(document).ready(function () {
           // Location already exists
           $("#errorLocationName").text(name);
           $("#addLocationsError").show();
-          
+
         }
       }
 
@@ -1093,14 +1093,9 @@ $(document).ready(function () {
           });
           // Update hidden form value of departmentID
           $("#editPersonnelDepartment").val(result.data.personnel[0].departmentID);
-          
-        } else {
-          // If the result code is not 200, show an error message
-          $("#editPersonnelModal .modal-title").replaceWith(
-            "Error retrieving data"
-          );
 
         }
+
       }
     });
   });
@@ -1115,13 +1110,6 @@ $(document).ready(function () {
     const jobTitle = $("#editPersonnelJobTitle").val();
     const email = $("#editPersonnelEmailAddress").val();
     const department = $("#editPersonnelDepartment").val();
-    
-    // Add error message div if it doesn't exist
-    if ($("#editPersonnelError").length === 0) {
-
-        $(this).prepend('<div id="editPersonnelError" class="mb-3" style="display: none;"></div>');
-
-    }
 
     // AJAX call to save form data
     $.ajax({
@@ -1149,9 +1137,8 @@ $(document).ready(function () {
         } else if (result.status.code == 409) {
 
           // Personnel already exists
-          $("#editPersonnelError").html(
-            `<div class="${alertDanger}">Email <strong>${email}</strong> is already assigned to another personnel.</div>`
-          ).show();
+          $("#editErrorEmail").text(email);
+          $("#editPersonnelError").show();
 
         }
 
@@ -1204,18 +1191,12 @@ $(document).ready(function () {
           // Update hidden form value of locationID
           $("#editDepartmentsLocation").val(result.data.department[0].locationID);
 
-        } else {
-          // If the result code is not 200, show an error message
-          $("#editDepartmentsModal .modal-title").replaceWith(
-            "Error retrieving data"
-          );
-
         }
 
       }
 
     });
-  });
+  }); 
 
   // Edit Department Modal Submit
   $("#editDepartmentsForm").on("submit", function (e) {
@@ -1225,12 +1206,7 @@ $(document).ready(function () {
     const department = $("#editDepartmentsName").val();
     const location = $("#editDepartmentsLocation").val();
     const locationName = $("#editDepartmentsLocation option:selected").text();
-    // Add error message div if it doesn't exist
-    if ($("#editDepartmentsError").length === 0) {
 
-      $(this).prepend('<div id="editDepartmentsError" class="mb-3" style="display: none;"></div>');
-
-    }
     // AJAX call to save form data
     $.ajax({
       url: "libs/php/updateDepartments.php",
@@ -1252,9 +1228,9 @@ $(document).ready(function () {
 
         } else if (result.status.code == 409) {
           // Department already exists
-          $("#editDepartmentsError").html(
-            `<div class="${alertDanger}"><strong>${department}</strong> department already exists in <strong>${locationName}</strong>.</div>`
-          ).show();
+          $("#editErrorDepartmentName").text(department);
+          $("#editErrorLocationName").text(locationName);
+          $("#editDepartmentsError").show();
 
         }
 
@@ -1293,12 +1269,6 @@ $(document).ready(function () {
           // Get the location name from the result
           $("#editLocationsName").val(result.data[0].name);
 
-        } else {
-          // If the result code is not 200, show an error message
-          $("#editLocationsModal .modal-title").replaceWith(
-            "Error retrieving data"
-          );
-
         }
 
       }
@@ -1313,11 +1283,6 @@ $(document).ready(function () {
     // Get the form values
     const location = $("#editLocationsName").val();
 
-    if ($("#editLocationsError").length === 0) {
-      // Add error message div if it doesn't exist
-      $(this).prepend('<div id="editLocationsError" class="mb-3" style="display: none;"></div>');
-
-    }
     // AJAX call to save form data
     $.ajax({
       url: "libs/php/updateLocations.php",
@@ -1339,9 +1304,8 @@ $(document).ready(function () {
         } else if (result.status.code == 409) {
 
           // Location already exists
-          $("#editLocationsError").html(
-            `<div class="${alertDanger}"><strong>${location}</strong> is already and existing location.</div>`
-          ).show();
+          $("#editErrorLocationName").text(location);
+          $("#editLocationsError").show();
 
         }
 
