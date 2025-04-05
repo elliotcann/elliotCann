@@ -1050,8 +1050,6 @@ $(document).ready(function () {
   $("#addLocationsModal").on("hidden.bs.modal", function () {
     // Reset the form
     $(this).find("form")[0].reset();
-    // Clear any error messages
-    $(this).find(".alert").hide();
 
   });
 
