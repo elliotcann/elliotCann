@@ -910,8 +910,6 @@ $(document).ready(function () {
 
         } else if (result.status.code == 409) {
           // Personnel with the same email already exists
-
-          $("#errorMessageEmail").text(email);
           $("#addPersonnelError").show();
 
         }
@@ -986,8 +984,6 @@ $(document).ready(function () {
 
         } else if (result.status.code == 409) {
           // Department already exists
-          $("#errorDepartmentName").text(name);
-          $("#errorLocationName").text(locationName);
           $("#addDepartmentsError").show();
 
         }
@@ -1032,7 +1028,6 @@ $(document).ready(function () {
         } else if (result.status.code == 409) {
 
           // Location already exists
-          $("#errorLocationName").text(name);
           $("#addLocationsError").show();
 
         }
@@ -1135,7 +1130,6 @@ $(document).ready(function () {
         } else if (result.status.code == 409) {
 
           // Personnel already exists
-          $("#editErrorEmail").text(email);
           $("#editPersonnelError").show();
 
         }
@@ -1226,8 +1220,6 @@ $(document).ready(function () {
 
         } else if (result.status.code == 409) {
           // Department already exists
-          $("#editErrorDepartmentName").text(department);
-          $("#editErrorLocationName").text(locationName);
           $("#editDepartmentsError").show();
 
         }
@@ -1302,7 +1294,6 @@ $(document).ready(function () {
         } else if (result.status.code == 409) {
 
           // Location already exists
-          $("#editErrorLocationName").text(location);
           $("#editLocationsError").show();
 
         }
