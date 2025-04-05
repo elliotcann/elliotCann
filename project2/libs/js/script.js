@@ -910,7 +910,9 @@ $(document).ready(function () {
 
         } else if (result.status.code == 409) {
           // Personnel with the same email already exists
+
           $("#errorMessageEmail").text(email);
+          $("#addPersonnelError").show();
 
         }
 
