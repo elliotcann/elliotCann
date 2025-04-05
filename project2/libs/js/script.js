@@ -853,6 +853,9 @@ $(document).ready(function () {
   // Add Personnel Modal Show
   $("#addPersonnelModal").on("show.bs.modal", function () {
 
+    $("#addPersonnelDepartment").empty();
+    $("#addPersonnelError").hide();
+
     // Get all departments
     $.ajax({
       url: "libs/php/getAllDepartments.php",
@@ -910,7 +913,7 @@ $(document).ready(function () {
 
         } else if (result.status.code == 409) {
           // Personnel with the same email already exists
-          $("#addPersonnelError").show();
+          $("#addPersonnelError").css('display', 'block').show();
 
         }
 
@@ -923,13 +926,14 @@ $(document).ready(function () {
   $("#addPersonnelModal").on("hidden.bs.modal", function () {
     // Reset the form
     $(this).find("form")[0].reset();
-    $("#addPersonnelDepartment").empty();
-    // Clear any error messages
-    $(this).find(".alert").hide();
+
   });
 
   // Add Department Modal Show
   $("#addDepartmentsModal").on("show.bs.modal", function () {
+
+    $("#addDepartmentsLocation").empty();
+    $("#addDepartmentsError").hide();
 
     // Get all locations
     $.ajax({
@@ -985,7 +989,7 @@ $(document).ready(function () {
 
         } else if (result.status.code == 409) {
           // Department already exists
-          $("#addDepartmentsError").show();
+          $("#addDepartmentsError").css('display', 'block').show();
 
         }
       }
@@ -997,9 +1001,6 @@ $(document).ready(function () {
   $("#addDepartmentsModal").on("hidden.bs.modal", function () {
     // Reset the form
     $(this).find("form")[0].reset();
-    $("#addDepartmentsLocation").empty();
-    // Clear any error messages
-    $(this).find(".alert").hide();
 
   });
 
@@ -1030,7 +1031,7 @@ $(document).ready(function () {
         } else if (result.status.code == 409) {
 
           // Location already exists
-          $("#addLocationsError").show();
+          $("#addLocationsError").css('display', 'block').show();
 
         }
       }
@@ -1053,6 +1054,9 @@ $(document).ready(function () {
 
   // Edit Personnel Modal Show
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
+
+    $("#editPersonnelDepartment").empty();
+    $("#editPersonnelError").hide();
 
     // AJAX call to get personnel data by ID
     $.ajax({
@@ -1132,7 +1136,7 @@ $(document).ready(function () {
         } else if (result.status.code == 409) {
 
           // Personnel already exists
-          $("#editPersonnelError").show();
+          $("#editPersonnelError").css('display', 'block').show();
 
         }
 
@@ -1145,15 +1149,14 @@ $(document).ready(function () {
   $("#editPersonnelModal").on("hidden.bs.modal", function () {
     // Reset the form
     $(this).find("form")[0].reset();
-    $("#editPersonnelDepartment").empty();
-    // Clear any error messages
-    $(this).find(".alert").hide();
-    
 
   });
 
   // Edit Department Modal Show
   $("#editDepartmentsModal").on("show.bs.modal", function (e) {
+
+    $("#editDepartmentsLocation").empty();
+    $("#editDepartmentsError").hide();
     
     // Get the department ID from the button that triggered the modal
     const departmentId = $(e.relatedTarget).attr("data-id");
@@ -1224,7 +1227,7 @@ $(document).ready(function () {
 
         } else if (result.status.code == 409) {
           // Department already exists
-          $("#editDepartmentsError").show();
+          $("#editDepartmentsError").css('display', 'block').show();
 
         }
 
@@ -1237,15 +1240,14 @@ $(document).ready(function () {
   $("#editDepartmentsModal").on("hidden.bs.modal", function () {
     // Reset the form
     $(this).find("form")[0].reset();
-    $("#editDepartmentsLocation").empty();
-    // Clear any error messages
-    $(this).find(".alert").hide();
 
   });
   
   // Edit Location Modal Show
   $("#editLocationsModal").on("show.bs.modal", function (e) {
-    
+
+    $("#editLocationsError").hide();
+
     // Get the location ID from the button that triggered the modal
     const locationId = $(e.relatedTarget).attr("data-id");
     $("#editLocationsID").val(locationId);
@@ -1299,7 +1301,7 @@ $(document).ready(function () {
         } else if (result.status.code == 409) {
 
           // Location already exists
-          $("#editLocationsError").show();
+          $("#editLocationsError").css('display', 'block').show();
 
         }
 
@@ -1312,9 +1314,7 @@ $(document).ready(function () {
   $("#editLocationsModal").on("hidden.bs.modal", function () {
     // Reset the form
     $(this).find("form")[0].reset();
-    // Clear any error messages
-    $(this).find(".alert").hide();
-
+    
   });
 
   /*----------------------------------------*/
