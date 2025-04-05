@@ -923,8 +923,9 @@ $(document).ready(function () {
   $("#addPersonnelModal").on("hidden.bs.modal", function () {
     // Reset the form
     $(this).find("form")[0].reset();
+    $("#addPersonnelDepartment").empty();
     // Clear any error messages
-    $(this).find(".alert").hide().html("");
+    $(this).find(".alert").hide();
   });
 
   // Add Department Modal Show
@@ -996,8 +997,9 @@ $(document).ready(function () {
   $("#addDepartmentsModal").on("hidden.bs.modal", function () {
     // Reset the form
     $(this).find("form")[0].reset();
+    $("#addDepartmentsLocation").empty();
     // Clear any error messages
-    $(this).find(".alert").hide().html("");
+    $(this).find(".alert").hide();
 
   });
 
@@ -1041,7 +1043,7 @@ $(document).ready(function () {
     // Reset the form
     $(this).find("form")[0].reset();
     // Clear any error messages
-    $(this).find(".alert").hide().html("");
+    $(this).find(".alert").hide();
 
   });
 
@@ -1143,8 +1145,10 @@ $(document).ready(function () {
   $("#editPersonnelModal").on("hidden.bs.modal", function () {
     // Reset the form
     $(this).find("form")[0].reset();
+    $("#editPersonnelDepartment").empty();
     // Clear any error messages
-    $(this).find(".alert").hide().html("");
+    $(this).find(".alert").hide();
+    
 
   });
 
@@ -1233,8 +1237,9 @@ $(document).ready(function () {
   $("#editDepartmentsModal").on("hidden.bs.modal", function () {
     // Reset the form
     $(this).find("form")[0].reset();
+    $("#editDepartmentsLocation").empty();
     // Clear any error messages
-    $(this).find(".alert").hide().html("");
+    $(this).find(".alert").hide();
 
   });
   
@@ -1308,7 +1313,7 @@ $(document).ready(function () {
     // Reset the form
     $(this).find("form")[0].reset();
     // Clear any error messages
-    $(this).find(".alert").hide().html("");
+    $(this).find(".alert").hide();
 
   });
 
